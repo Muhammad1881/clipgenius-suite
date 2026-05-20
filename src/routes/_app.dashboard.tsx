@@ -20,74 +20,78 @@ const stats = [
 
 function Dashboard() {
   return (
-    <div className="p-8 max-w-7xl mx-auto">
+    <div className="p-6 sm:p-8 max-w-7xl mx-auto relative">
+      <div className="absolute inset-x-0 top-0 h-80 bg-mesh opacity-50 -z-10 pointer-events-none" />
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold">Welcome back, Alex 👋</h1>
-          <p className="text-muted-foreground mt-1">Here's what's happening with your shorts pipeline.</p>
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Welcome back, Alex 👋</h1>
+          <p className="text-muted-foreground mt-1.5">Here's what's happening with your shorts pipeline.</p>
         </div>
-        <Button asChild className="bg-gradient-primary text-primary-foreground hover:opacity-90 rounded-xl glow">
+        <Button asChild className="btn-premium rounded-xl h-11 px-5">
           <Link to="/upload"><Upload className="size-4 mr-2" /> New upload</Link>
         </Button>
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
         {stats.map((s) => (
-          <div key={s.label} className="glass rounded-2xl p-5">
+          <div key={s.label} className="glass rounded-2xl p-5 hover-lift border-gradient">
             <div className="flex items-center justify-between">
-              <s.icon className="size-5 text-accent" />
-              <span className="text-xs text-accent">{s.change}</span>
+              <div className="size-9 rounded-lg bg-gradient-vivid grid place-items-center shadow-card">
+                <s.icon className="size-4 text-primary-foreground" />
+              </div>
+              <span className="text-xs text-accent font-medium">{s.change}</span>
             </div>
-            <div className="mt-4 text-3xl font-display font-semibold">{s.value}</div>
+            <div className="mt-4 text-3xl font-display font-semibold tracking-tight">{s.value}</div>
             <div className="text-sm text-muted-foreground mt-1">{s.label}</div>
           </div>
         ))}
       </div>
 
-      <div className="mt-10 grid lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 glass rounded-2xl p-6">
+      <div className="mt-10 grid lg:grid-cols-3 gap-5 sm:gap-6">
+        <div className="lg:col-span-2 glass rounded-2xl p-5 sm:p-6 border-gradient">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-lg font-semibold">Recent projects</h2>
-            <Link to="/results" className="text-sm text-muted-foreground hover:text-foreground">View all →</Link>
+            <h2 className="text-lg font-semibold tracking-tight">Recent projects</h2>
+            <Link to="/results" className="text-sm text-muted-foreground hover:text-foreground transition-colors">View all →</Link>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {projects.map((p) => (
-              <Link to="/results" key={p.title} className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition">
-                <div className="size-14 rounded-lg bg-gradient-to-br from-primary/40 to-accent/30 grid place-items-center shrink-0">
+              <Link to="/results" key={p.title} className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                <div className="size-14 rounded-lg bg-gradient-to-br from-primary/40 to-accent/30 grid place-items-center shrink-0 shadow-card">
                   <Play className="size-5 text-foreground" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="font-medium truncate">{p.title}</div>
-                  <div className="text-xs text-muted-foreground">{p.date} · {p.clips} clips</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">{p.date} · {p.clips} clips</div>
                 </div>
-                <div className="hidden sm:flex items-center gap-1 text-sm text-accent">
+                <div className="hidden sm:flex items-center gap-1 text-sm text-accent font-medium">
                   <TrendingUp className="size-3.5" /> {p.score}
                 </div>
-                <span className="hidden sm:inline text-xs glass px-2 py-1 rounded-md">{p.status}</span>
-                <button className="text-muted-foreground hover:text-foreground"><MoreHorizontal className="size-4" /></button>
+                <span className="hidden sm:inline text-xs glass px-2.5 py-1 rounded-md">{p.status}</span>
+                <button className="text-muted-foreground hover:text-foreground transition-colors"><MoreHorizontal className="size-4" /></button>
               </Link>
             ))}
           </div>
         </div>
 
-        <div className="space-y-6">
-          <div className="glass-strong rounded-2xl p-6 glow">
+        <div className="space-y-5 sm:space-y-6">
+          <div className="glass-strong rounded-2xl p-6 glow border-gradient relative overflow-hidden">
+            <div className="absolute inset-0 -z-10 opacity-60 animate-aurora" style={{background: "var(--gradient-mesh)"}} />
             <div className="text-xs uppercase tracking-widest text-accent">Credits</div>
             <div className="mt-2 flex items-baseline gap-1">
-              <span className="text-4xl font-display font-semibold">240</span>
+              <span className="text-4xl font-display font-semibold tracking-tight">240</span>
               <span className="text-muted-foreground text-sm">/ 500</span>
             </div>
             <div className="mt-4 h-2 rounded-full bg-white/10 overflow-hidden">
-              <div className="h-full bg-gradient-primary" style={{ width: "48%" }} />
+              <div className="h-full bg-gradient-vivid transition-all" style={{ width: "48%" }} />
             </div>
-            <p className="text-xs text-muted-foreground mt-3">Renews in 14 days. 1 credit ≈ 1 minute of video.</p>
-            <Button asChild className="mt-5 w-full bg-gradient-primary text-primary-foreground hover:opacity-90 rounded-xl">
+            <p className="text-xs text-muted-foreground mt-3 leading-relaxed">Renews in 14 days. 1 credit ≈ 1 minute of video.</p>
+            <Button asChild className="mt-5 w-full btn-premium rounded-xl">
               <Link to="/pricing">Upgrade to Pro</Link>
             </Button>
           </div>
-          <div className="glass rounded-2xl p-6">
-            <div className="font-semibold">💡 Tip of the day</div>
-            <p className="text-sm text-muted-foreground mt-2">Add a hook in the first 1.5 seconds — Clipra's data shows it doubles retention on TikTok.</p>
+          <div className="glass rounded-2xl p-6 border-gradient">
+            <div className="font-semibold tracking-tight">💡 Tip of the day</div>
+            <p className="text-sm text-muted-foreground mt-2 leading-relaxed">Add a hook in the first 1.5 seconds — Clipra's data shows it doubles retention on TikTok.</p>
           </div>
         </div>
       </div>

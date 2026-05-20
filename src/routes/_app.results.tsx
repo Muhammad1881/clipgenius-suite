@@ -18,24 +18,26 @@ function Results() {
   const [copied, setCopied] = useState<number | null>(null);
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
+    <div className="p-6 sm:p-8 max-w-7xl mx-auto relative">
+      <div className="absolute inset-x-0 top-0 h-80 bg-mesh opacity-40 -z-10 pointer-events-none" />
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="text-xs uppercase tracking-widest text-accent">Project</div>
-          <h1 className="text-3xl font-semibold mt-1">Podcast Ep. 42 — Lex Friedman</h1>
+          <h1 className="text-2xl sm:text-3xl font-semibold mt-1 tracking-tight">Podcast Ep. 42 — Lex Friedman</h1>
           <p className="text-muted-foreground mt-1">{clips.length} viral clips generated · 47 min source</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="ghost" className="glass hover:bg-white/10 rounded-xl"><RefreshCw className="size-4 mr-2" /> Regenerate all</Button>
-          <Button className="bg-gradient-primary text-primary-foreground hover:opacity-90 rounded-xl"><Download className="size-4 mr-2" /> Download all</Button>
+          <Button variant="ghost" className="glass hover:bg-white/10 rounded-xl border border-white/10"><RefreshCw className="size-4 mr-2" /> Regenerate all</Button>
+          <Button className="btn-premium rounded-xl"><Download className="size-4 mr-2" /> Download all</Button>
         </div>
       </div>
 
       <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {clips.map((c, i) => (
-          <div key={i} className="glass rounded-2xl overflow-hidden group hover:bg-white/[0.07] transition">
-            <div className="aspect-[9/16] relative bg-gradient-to-br from-primary/40 via-card to-accent/30 grid place-items-center">
-              <button className="size-14 rounded-full bg-white/90 text-background grid place-items-center hover:scale-110 transition">
+          <div key={i} className="glass rounded-2xl overflow-hidden group hover-lift border-gradient">
+            <div className="aspect-[9/16] relative bg-gradient-to-br from-primary/40 via-card to-accent/30 grid place-items-center overflow-hidden">
+              <div className="absolute inset-0 bg-mesh opacity-50 group-hover:scale-110 transition-transform duration-700" />
+              <button className="relative size-14 rounded-full bg-white/90 text-background grid place-items-center hover:scale-110 transition-transform shadow-elevated">
                 <Play className="size-5 fill-current ml-0.5" />
               </button>
               <div className="absolute top-3 left-3 glass px-2 py-1 rounded-md text-xs flex items-center gap-1">
@@ -51,14 +53,14 @@ function Results() {
               <div className="text-xs text-muted-foreground">{c.views}</div>
               <div className="font-medium mt-1 line-clamp-2 text-sm">{c.title}</div>
               <div className="mt-4 flex gap-2">
-                <Button size="sm" className="flex-1 bg-gradient-primary text-primary-foreground hover:opacity-90 rounded-lg">
+                <Button size="sm" className="flex-1 btn-premium rounded-lg">
                   <Download className="size-3.5 mr-1.5" /> Download
                 </Button>
-                <Button size="sm" variant="ghost" className="glass hover:bg-white/10 rounded-lg"
+                <Button size="sm" variant="ghost" className="glass hover:bg-white/10 rounded-lg border border-white/10"
                   onClick={() => { navigator.clipboard?.writeText(c.title); setCopied(i); setTimeout(() => setCopied(null), 1500); }}>
                   {copied === i ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
                 </Button>
-                <Button size="sm" variant="ghost" className="glass hover:bg-white/10 rounded-lg">
+                <Button size="sm" variant="ghost" className="glass hover:bg-white/10 rounded-lg border border-white/10">
                   <RefreshCw className="size-3.5" />
                 </Button>
               </div>
