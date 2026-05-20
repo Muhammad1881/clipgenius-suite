@@ -14,9 +14,9 @@ function AppLayout() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   return (
     <div className="min-h-screen flex bg-background text-foreground">
-      <aside className="hidden md:flex w-64 shrink-0 flex-col border-r border-border/60 bg-sidebar p-4">
+      <aside className="hidden md:flex w-64 shrink-0 flex-col border-r border-border/60 bg-sidebar/80 backdrop-blur-xl p-4 sticky top-0 h-screen">
         <Link to="/" className="flex items-center gap-2 font-display font-semibold px-2 py-3">
-          <span className="grid place-items-center size-8 rounded-lg bg-gradient-primary glow">
+          <span className="grid place-items-center size-8 rounded-lg bg-gradient-vivid glow">
             <Sparkles className="size-4 text-primary-foreground" />
           </span>
           Clipra
@@ -36,14 +36,14 @@ function AppLayout() {
         </nav>
 
         <div className="mt-auto space-y-3">
-          <div className="glass rounded-2xl p-4">
+          <div className="glass rounded-2xl p-4 border-gradient">
             <div className="flex items-center justify-between text-xs text-muted-foreground">
               <span>Credits</span><span className="text-foreground font-medium">240 / 500</span>
             </div>
             <div className="mt-2 h-1.5 rounded-full bg-white/10 overflow-hidden">
-              <div className="h-full bg-gradient-primary" style={{ width: "48%" }} />
+              <div className="h-full bg-gradient-vivid" style={{ width: "48%" }} />
             </div>
-            <Link to="/pricing" className="mt-3 block text-center text-xs rounded-lg bg-gradient-primary text-primary-foreground py-2 font-medium">
+            <Link to="/pricing" className="btn-premium mt-3 block text-center text-xs rounded-lg py-2 font-medium">
               Upgrade plan
             </Link>
           </div>
