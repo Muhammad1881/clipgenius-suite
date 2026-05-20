@@ -25,37 +25,38 @@ function Processing() {
   const pct = Math.min(100, (current / steps.length) * 100);
 
   return (
-    <div className="min-h-screen p-8 grid place-items-center">
+    <div className="min-h-screen p-6 sm:p-8 grid place-items-center relative">
+      <div className="absolute inset-0 bg-mesh opacity-50 -z-10 animate-aurora" />
       <div className="w-full max-w-2xl">
         <div className="text-center">
           <div className="relative mx-auto size-32 grid place-items-center">
-            <div className="absolute inset-0 rounded-full bg-gradient-primary opacity-30 blur-2xl animate-pulse-glow" />
+            <div className="absolute inset-0 rounded-full bg-gradient-vivid opacity-40 blur-2xl animate-pulse-glow" />
             <div className="absolute inset-0 rounded-full border border-white/10" />
             <div className="absolute inset-2 rounded-full border border-primary/40 animate-spin" style={{animationDuration: "3s"}} />
             <div className="absolute inset-5 rounded-full border border-accent/40 animate-spin" style={{animationDuration: "5s", animationDirection: "reverse"}} />
-            <div className="relative size-16 rounded-2xl bg-gradient-primary grid place-items-center glow">
+            <div className="relative size-16 rounded-2xl bg-gradient-vivid grid place-items-center glow shadow-elevated">
               <Wand2 className="size-7 text-primary-foreground" />
             </div>
           </div>
-          <h1 className="text-3xl font-semibold mt-8">Working our magic ✨</h1>
+          <h1 className="text-2xl sm:text-3xl font-semibold mt-8 tracking-tight">Working our magic ✨</h1>
           <p className="text-muted-foreground mt-2">Sit tight — usually takes 2-5 minutes.</p>
           <div className="mt-6 max-w-sm mx-auto">
             <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
-              <div className="h-full bg-gradient-primary transition-all duration-700" style={{ width: `${pct}%` }} />
+              <div className="h-full bg-gradient-vivid transition-all duration-700" style={{ width: `${pct}%` }} />
             </div>
             <div className="mt-2 text-xs text-muted-foreground">{Math.round(pct)}% complete</div>
           </div>
         </div>
 
-        <div className="mt-12 glass-strong rounded-3xl p-3">
+        <div className="mt-10 sm:mt-12 glass-strong rounded-3xl p-3 border-gradient">
           <ul>
             {steps.map((s, i) => {
               const state = i < current ? "done" : i === current ? "active" : "pending";
               return (
-                <li key={s.label} className={`flex items-center gap-4 p-4 rounded-2xl transition ${state === "active" ? "bg-white/5" : ""}`}>
-                  <div className={`size-10 rounded-xl grid place-items-center shrink-0 ${
+                <li key={s.label} className={`flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 ${state === "active" ? "bg-white/5" : ""}`}>
+                  <div className={`size-10 rounded-xl grid place-items-center shrink-0 transition-all ${
                     state === "done" ? "bg-accent/20 text-accent" :
-                    state === "active" ? "bg-gradient-primary text-primary-foreground glow" : "bg-white/5 text-muted-foreground"
+                    state === "active" ? "bg-gradient-vivid text-primary-foreground glow scale-110" : "bg-white/5 text-muted-foreground"
                   }`}>
                     {state === "done" ? <Check className="size-5" /> :
                      state === "active" ? <Loader2 className="size-5 animate-spin" /> :

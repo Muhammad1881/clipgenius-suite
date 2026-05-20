@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
 
@@ -29,33 +29,48 @@ const plans = [
 
 export function PricingCards() {
   return (
-    <div className="grid md:grid-cols-3 gap-6">
+    <div className="grid md:grid-cols-3 gap-5 lg:gap-6">
       {plans.map((p) => (
         <div
           key={p.name}
-          className={`relative rounded-3xl p-8 ${p.featured ? "glass-strong glow" : "glass"}`}
+          className={`relative rounded-3xl p-7 sm:p-8 border-gradient hover-lift ${
+            p.featured
+              ? "glass-strong glow md:-translate-y-2"
+              : "glass"
+          }`}
         >
           {p.featured && (
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs px-3 py-1 rounded-full bg-gradient-primary text-primary-foreground font-medium">
-              Most popular
-            </div>
+            <>
+              <div className="absolute inset-x-8 -top-px h-px bg-gradient-to-r from-transparent via-primary to-transparent" />
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs px-3 py-1 rounded-full bg-gradient-vivid text-primary-foreground font-medium shadow-card flex items-center gap-1">
+                <Sparkles className="size-3" /> Most popular
+              </div>
+            </>
           )}
-          <div className="text-sm text-muted-foreground">{p.name}</div>
+          <div className="text-sm text-muted-foreground uppercase tracking-wider">{p.name}</div>
           <div className="mt-3 flex items-baseline gap-1">
-            <span className="text-4xl font-display font-semibold">{p.price}</span>
+            <span className="text-5xl font-display font-semibold tracking-tight">{p.price}</span>
             <span className="text-muted-foreground text-sm">/mo</span>
           </div>
-          <p className="text-sm text-muted-foreground mt-2">{p.desc}</p>
+          <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{p.desc}</p>
           <Button
             asChild
-            className={`w-full mt-6 rounded-xl ${p.featured ? "bg-gradient-primary text-primary-foreground hover:opacity-90" : "glass hover:bg-white/10"}`}
+            className={`w-full mt-6 rounded-xl h-11 ${
+              p.featured
+                ? "btn-premium"
+                : "glass hover:bg-white/10 border border-white/10 transition-all"
+            }`}
           >
             <Link to="/dashboard">{p.cta}</Link>
           </Button>
-          <ul className="mt-7 space-y-3 text-sm">
+          <div className="my-7 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <ul className="space-y-3 text-sm">
             {p.features.map((f) => (
-              <li key={f} className="flex items-center gap-2">
-                <Check className="size-4 text-accent" /> {f}
+              <li key={f} className="flex items-center gap-3">
+                <span className={`grid place-items-center size-5 rounded-full ${p.featured ? "bg-gradient-vivid" : "bg-white/5"}`}>
+                  <Check className={`size-3 ${p.featured ? "text-primary-foreground" : "text-accent"}`} />
+                </span>
+                {f}
               </li>
             ))}
           </ul>
