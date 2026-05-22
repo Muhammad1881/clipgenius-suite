@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PricingCards } from "@/components/PricingCards";
+import { ExampleClips } from "@/components/ExampleClips";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import heroBg from "@/assets/hero-bg.jpg";
 
@@ -162,7 +163,13 @@ function Landing() {
         </div>
       </section>
 
+      {/* EXAMPLE CLIPS SHOWCASE */}
+      <section id="examples" className="py-20 sm:py-28">
+        <ExampleClips />
+      </section>
+
       {/* PRICING PREVIEW */}
+
       <section className="py-20 sm:py-28 mx-auto max-w-7xl px-5 sm:px-6">
         <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-14">
           <div className="text-xs uppercase tracking-widest text-accent">Pricing</div>
