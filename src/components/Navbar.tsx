@@ -39,9 +39,9 @@ export function Navbar() {
             ))}
           </div>
           <div className="flex items-center gap-2">
-            <Link to="/dashboard" className="text-sm text-muted-foreground hover:text-foreground hidden sm:inline transition-colors">Sign in</Link>
+            <Link to="/login" className="text-sm text-muted-foreground hover:text-foreground hidden sm:inline transition-colors">Sign in</Link>
             <Button asChild size="sm" className="btn-premium rounded-xl hidden sm:inline-flex">
-              <Link to="/dashboard">Get started</Link>
+              <Link to="/signup">Get started</Link>
             </Button>
             <button
               onClick={() => setOpen((v) => !v)}
@@ -62,7 +62,7 @@ export function Navbar() {
               <a key={l.label} href={l.href} onClick={() => setOpen(false)} className="px-3 py-2.5 rounded-xl text-sm hover:bg-white/5 transition">{l.label}</a>
             ))}
             <Button asChild size="sm" className="btn-premium rounded-xl mt-2">
-              <Link to="/dashboard" onClick={() => setOpen(false)}>Get started</Link>
+              <Link to="/signup" onClick={() => setOpen(false)}>Get started</Link>
             </Button>
           </div>
         </div>
