@@ -1,31 +1,30 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Upload, Play, MoreHorizontal, TrendingUp, Clock, Sparkles } from "lucide-react";
+import { Upload, Play, TrendingUp, Clock, Sparkles, FolderOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ExampleClips } from "@/components/ExampleClips";
 
 export const Route = createFileRoute("/_app/dashboard")({ component: Dashboard });
 
-const projects = [
-  { title: "Podcast Ep. 42 — Lex Friedman", date: "2 hours ago", clips: 12, score: 94, status: "Ready" },
-  { title: "Webinar: AI in 2026", date: "Yesterday", clips: 8, score: 88, status: "Ready" },
-  { title: "Vlog — Tokyo Day 3", date: "3 days ago", clips: 6, score: 76, status: "Ready" },
-  { title: "Interview with Sarah K.", date: "Last week", clips: 14, score: 91, status: "Ready" },
-];
+// Real user data would come from the backend. New users start with no projects.
+const userProjects: Array<{ title: string; date: string; clips: number; score: number; status: string }> = [];
 
 const stats = [
-  { label: "Videos this month", value: "18", icon: Play, change: "+24%" },
-  { label: "Clips generated", value: "240", icon: Sparkles, change: "+38%" },
-  { label: "Avg viral score", value: "87", icon: TrendingUp, change: "+6%" },
-  { label: "Processing time saved", value: "42h", icon: Clock, change: "+12h" },
+  { label: "Videos this month", value: "0", icon: Play, change: "—" },
+  { label: "Clips generated", value: "0", icon: Sparkles, change: "—" },
+  { label: "Avg viral score", value: "—", icon: TrendingUp, change: "—" },
+  { label: "Processing time saved", value: "0h", icon: Clock, change: "—" },
 ];
 
 function Dashboard() {
+  const hasProjects = userProjects.length > 0;
+
   return (
     <div className="p-6 sm:p-8 max-w-7xl mx-auto relative">
       <div className="absolute inset-x-0 top-0 h-80 bg-mesh opacity-50 -z-10 pointer-events-none" />
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Welcome back, Alex 👋</h1>
-          <p className="text-muted-foreground mt-1.5">Here's what's happening with your shorts pipeline.</p>
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Welcome to Clipra 👋</h1>
+          <p className="text-muted-foreground mt-1.5">Upload your first video to start generating viral shorts.</p>
         </div>
         <Button asChild className="btn-premium rounded-xl h-11 px-5">
           <Link to="/upload"><Upload className="size-4 mr-2" /> New upload</Link>
@@ -39,7 +38,7 @@ function Dashboard() {
               <div className="size-9 rounded-lg bg-gradient-vivid grid place-items-center shadow-card">
                 <s.icon className="size-4 text-primary-foreground" />
               </div>
-              <span className="text-xs text-accent font-medium">{s.change}</span>
+              <span className="text-xs text-muted-foreground font-medium">{s.change}</span>
             </div>
             <div className="mt-4 text-3xl font-display font-semibold tracking-tight">{s.value}</div>
             <div className="text-sm text-muted-foreground mt-1">{s.label}</div>
@@ -50,27 +49,30 @@ function Dashboard() {
       <div className="mt-10 grid lg:grid-cols-3 gap-5 sm:gap-6">
         <div className="lg:col-span-2 glass rounded-2xl p-5 sm:p-6 border-gradient">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-lg font-semibold tracking-tight">Recent projects</h2>
-            <Link to="/results" className="text-sm text-muted-foreground hover:text-foreground transition-colors">View all →</Link>
+            <h2 className="text-lg font-semibold tracking-tight">Your projects</h2>
+            {hasProjects && (
+              <Link to="/results" className="text-sm text-muted-foreground hover:text-foreground transition-colors">View all →</Link>
+            )}
           </div>
-          <div className="space-y-1.5">
-            {projects.map((p) => (
-              <Link to="/results" key={p.title} className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors">
-                <div className="size-14 rounded-lg bg-gradient-to-br from-primary/40 to-accent/30 grid place-items-center shrink-0 shadow-card">
-                  <Play className="size-5 text-foreground" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium truncate">{p.title}</div>
-                  <div className="text-xs text-muted-foreground mt-0.5">{p.date} · {p.clips} clips</div>
-                </div>
-                <div className="hidden sm:flex items-center gap-1 text-sm text-accent font-medium">
-                  <TrendingUp className="size-3.5" /> {p.score}
-                </div>
-                <span className="hidden sm:inline text-xs glass px-2.5 py-1 rounded-md">{p.status}</span>
-                <button className="text-muted-foreground hover:text-foreground transition-colors"><MoreHorizontal className="size-4" /></button>
-              </Link>
-            ))}
-          </div>
+
+          {hasProjects ? (
+            <div className="space-y-1.5">
+              {/* Real projects render here once the backend is wired up */}
+            </div>
+          ) : (
+            <div className="text-center py-12 px-4 rounded-xl border border-dashed border-white/10 bg-white/[0.015]">
+              <div className="mx-auto size-14 rounded-2xl glass grid place-items-center mb-4">
+                <FolderOpen className="size-6 text-muted-foreground" />
+              </div>
+              <h3 className="font-semibold tracking-tight">No projects yet</h3>
+              <p className="text-sm text-muted-foreground mt-1.5 max-w-sm mx-auto leading-relaxed">
+                Your uploaded videos and generated clips will appear here. Get started with your first upload.
+              </p>
+              <Button asChild className="btn-premium rounded-xl h-10 px-5 mt-5">
+                <Link to="/upload"><Upload className="size-4 mr-2" /> Upload your first video</Link>
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="space-y-5 sm:space-y-6">
@@ -78,13 +80,13 @@ function Dashboard() {
             <div className="absolute inset-0 -z-10 opacity-60 animate-aurora" style={{background: "var(--gradient-mesh)"}} />
             <div className="text-xs uppercase tracking-widest text-accent">Credits</div>
             <div className="mt-2 flex items-baseline gap-1">
-              <span className="text-4xl font-display font-semibold tracking-tight">240</span>
-              <span className="text-muted-foreground text-sm">/ 500</span>
+              <span className="text-4xl font-display font-semibold tracking-tight">30</span>
+              <span className="text-muted-foreground text-sm">/ 30</span>
             </div>
             <div className="mt-4 h-2 rounded-full bg-white/10 overflow-hidden">
-              <div className="h-full bg-gradient-vivid transition-all" style={{ width: "48%" }} />
+              <div className="h-full bg-gradient-vivid transition-all" style={{ width: "100%" }} />
             </div>
-            <p className="text-xs text-muted-foreground mt-3 leading-relaxed">Renews in 14 days. 1 credit ≈ 1 minute of video.</p>
+            <p className="text-xs text-muted-foreground mt-3 leading-relaxed">Free plan. 1 credit ≈ 1 minute of video.</p>
             <Button asChild className="mt-5 w-full btn-premium rounded-xl">
               <Link to="/pricing">Upgrade to Pro</Link>
             </Button>
@@ -94,6 +96,15 @@ function Dashboard() {
             <p className="text-sm text-muted-foreground mt-2 leading-relaxed">Add a hook in the first 1.5 seconds — Clipra's data shows it doubles retention on TikTok.</p>
           </div>
         </div>
+      </div>
+
+      {/* EXAMPLE CLIPS — separate showcase, not user content */}
+      <div className="mt-12">
+        <ExampleClips
+          compact
+          eyebrow="Example clips"
+          title="See what Clipra can do"
+        />
       </div>
     </div>
   );
