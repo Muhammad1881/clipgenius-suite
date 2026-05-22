@@ -62,7 +62,7 @@ export function Navbar() {
               <a key={l.label} href={l.href} onClick={() => setOpen(false)} className="px-3 py-2.5 rounded-xl text-sm hover:bg-white/5 transition">{l.label}</a>
             ))}
             <Button asChild size="sm" className="btn-premium rounded-xl mt-2">
-              <Link to="/dashboard" onClick={() => setOpen(false)}>Get started</Link>
+              <Link to="/signup" onClick={() => setOpen(false)}>Get started</Link>
             </Button>
           </div>
         </div>
