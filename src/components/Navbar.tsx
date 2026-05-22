@@ -39,9 +39,9 @@ export function Navbar() {
             ))}
           </div>
           <div className="flex items-center gap-2">
-            <Link to="/dashboard" className="text-sm text-muted-foreground hover:text-foreground hidden sm:inline transition-colors">Sign in</Link>
+            <Link to="/login" className="text-sm text-muted-foreground hover:text-foreground hidden sm:inline transition-colors">Sign in</Link>
             <Button asChild size="sm" className="btn-premium rounded-xl hidden sm:inline-flex">
-              <Link to="/dashboard">Get started</Link>
+              <Link to="/signup">Get started</Link>
             </Button>
             <button
               onClick={() => setOpen((v) => !v)}
