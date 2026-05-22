@@ -163,7 +163,13 @@ function Landing() {
         </div>
       </section>
 
+      {/* EXAMPLE CLIPS SHOWCASE */}
+      <section id="examples" className="py-20 sm:py-28">
+        <ExampleClips />
+      </section>
+
       {/* PRICING PREVIEW */}
+
       <section className="py-20 sm:py-28 mx-auto max-w-7xl px-5 sm:px-6">
         <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-14">
           <div className="text-xs uppercase tracking-widest text-accent">Pricing</div>
