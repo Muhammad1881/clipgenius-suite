@@ -1,27 +1,76 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState, useCallback } from "react";
-import { Upload as UploadIcon, FileVideo, Link2, X, Sparkles } from "lucide-react";
+import { Upload as UploadIcon, FileVideo, Link2, X, Sparkles, Loader2, Download, TrendingUp, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/_app/upload")({ component: UploadPage });
 
+const API_URL = "http://178.105.192.132:5000/upload";
+
+type Clip = {
+  title?: string;
+  score?: number;
+  url?: string;
+  video_url?: string;
+  preview_url?: string;
+  download_url?: string;
+  [k: string]: unknown;
+};
+
+type Phase = "idle" | "uploading" | "processing" | "done" | "error";
+
 function UploadPage() {
-  const nav = useNavigate();
   const [drag, setDrag] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [progress, setProgress] = useState(0);
-  const [done, setDone] = useState(false);
+  const [phase, setPhase] = useState<Phase>("idle");
+  const [error, setError] = useState<string | null>(null);
+  const [clips, setClips] = useState<Clip[]>([]);
 
   const onFile = useCallback((f: File) => {
-    setFile(f); setProgress(0); setDone(false);
-    const t = setInterval(() => {
-      setProgress((p) => {
-        if (p >= 100) { clearInterval(t); setDone(true); return 100; }
-        return p + 4;
-      });
-    }, 80);
+    setFile(f); setProgress(0); setPhase("idle"); setError(null); setClips([]);
   }, []);
+
+  const reset = () => {
+    setFile(null); setProgress(0); setPhase("idle"); setError(null); setClips([]);
+  };
+
+  const upload = () => {
+    if (!file) return;
+    setPhase("uploading"); setError(null); setClips([]); setProgress(0);
+
+    const form = new FormData();
+    form.append("video", file);
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", API_URL);
+
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) setProgress(Math.round((e.loaded / e.total) * 100));
+    };
+    xhr.upload.onload = () => setPhase("processing");
+
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          const data = JSON.parse(xhr.responseText);
+          const arr: Clip[] = Array.isArray(data?.clips) ? data.clips : Array.isArray(data) ? data : [];
+          setClips(arr);
+          setPhase("done");
+        } catch {
+          setError("Invalid response from server"); setPhase("error");
+        }
+      } else {
+        setError(`Upload failed (${xhr.status})`); setPhase("error");
+      }
+    };
+    xhr.onerror = () => {
+      setError("Network error. The backend may be unreachable or blocked by mixed-content (HTTPS → HTTP)."); setPhase("error");
+    };
+
+    xhr.send(form);
+  };
 
   return (
     <div className="p-6 sm:p-8 max-w-4xl mx-auto relative">
@@ -72,31 +121,123 @@ function UploadPage() {
               <div className="font-medium truncate">{file.name}</div>
               <div className="text-xs text-muted-foreground mt-0.5">{(file.size / 1024 / 1024).toFixed(1)} MB · video/{file.type.split("/")[1] || "mp4"}</div>
             </div>
-            <button onClick={() => { setFile(null); setProgress(0); setDone(false); }} className="text-muted-foreground hover:text-foreground transition-colors">
+            <button onClick={reset} className="text-muted-foreground hover:text-foreground transition-colors">
               <X className="size-4" />
             </button>
           </div>
 
-          <div className="mt-5">
-            <div className="flex items-center justify-between text-xs mb-2">
-              <span className="text-muted-foreground">{done ? "Upload complete" : "Uploading..."}</span>
-              <span className="text-foreground font-medium">{progress}%</span>
+          {(phase === "uploading" || phase === "processing") && (
+            <div className="mt-5">
+              <div className="flex items-center justify-between text-xs mb-2">
+                <span className="text-muted-foreground">
+                  {phase === "uploading" ? "Uploading..." : "Processing on server..."}
+                </span>
+                <span className="text-foreground font-medium">{phase === "uploading" ? `${progress}%` : ""}</span>
+              </div>
+              <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                <div
+                  className={`h-full bg-gradient-vivid transition-all duration-300 ${phase === "processing" ? "animate-pulse w-full" : ""}`}
+                  style={phase === "uploading" ? { width: `${progress}%` } : undefined}
+                />
+              </div>
             </div>
-            <div className="h-2 rounded-full bg-white/10 overflow-hidden">
-              <div className="h-full bg-gradient-vivid transition-all duration-300" style={{ width: `${progress}%` }} />
+          )}
+
+          {phase === "error" && (
+            <div className="mt-5 flex items-start gap-3 rounded-xl border border-destructive/40 bg-destructive/10 p-4 text-sm">
+              <AlertCircle className="size-4 text-destructive mt-0.5 shrink-0" />
+              <div className="text-destructive">{error}</div>
             </div>
-          </div>
+          )}
 
-          <div className="mt-6 grid sm:grid-cols-3 gap-3 text-sm">
-            <div className="glass rounded-xl p-3"><div className="text-xs text-muted-foreground">Duration</div><div className="font-medium mt-1">~ 47 min</div></div>
-            <div className="glass rounded-xl p-3"><div className="text-xs text-muted-foreground">Resolution</div><div className="font-medium mt-1">1920 × 1080</div></div>
-            <div className="glass rounded-xl p-3"><div className="text-xs text-muted-foreground">Est. credits</div><div className="font-medium mt-1">47 credits</div></div>
-          </div>
-
-          <Button disabled={!done} onClick={() => nav({ to: "/processing" })}
-            className="mt-6 w-full btn-premium rounded-xl h-12 disabled:opacity-50">
-            <Sparkles className="size-4 mr-2" /> Generate viral shorts
+          <Button
+            disabled={phase === "uploading" || phase === "processing"}
+            onClick={upload}
+            className="mt-6 w-full btn-premium rounded-xl h-12 disabled:opacity-50"
+          >
+            {phase === "uploading" || phase === "processing" ? (
+              <><Loader2 className="size-4 mr-2 animate-spin" /> {phase === "uploading" ? "Uploading" : "Generating clips"}</>
+            ) : (
+              <><Sparkles className="size-4 mr-2" /> Generate viral shorts</>
+            )}
           </Button>
+        </div>
+      )}
+
+      {phase === "processing" && (
+        <div className="mt-8 glass rounded-2xl p-8 text-center border-gradient">
+          <div className="relative mx-auto size-20 grid place-items-center">
+            <div className="absolute inset-0 rounded-full bg-gradient-vivid opacity-40 blur-2xl animate-pulse-glow" />
+            <div className="relative size-14 rounded-2xl bg-gradient-vivid grid place-items-center glow">
+              <Loader2 className="size-6 text-primary-foreground animate-spin" />
+            </div>
+          </div>
+          <h2 className="text-lg font-semibold mt-5">Finding viral moments…</h2>
+          <p className="text-sm text-muted-foreground mt-1">Our AI is analyzing your video. This may take a few minutes.</p>
+        </div>
+      )}
+
+      {phase === "done" && (
+        <div className="mt-10">
+          <div className="flex items-end justify-between gap-4 mb-5">
+            <div>
+              <div className="text-xs uppercase tracking-widest text-accent">Results</div>
+              <h2 className="text-xl sm:text-2xl font-semibold mt-1 tracking-tight">
+                {clips.length} clip{clips.length === 1 ? "" : "s"} generated
+              </h2>
+            </div>
+          </div>
+
+          {clips.length === 0 ? (
+            <div className="glass rounded-2xl p-8 text-center text-muted-foreground">
+              The server returned no clips.
+            </div>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {clips.map((c, i) => {
+                const videoSrc = (c.video_url || c.url || c.preview_url) as string | undefined;
+                const downloadHref = (c.download_url || c.url || c.video_url) as string | undefined;
+                const title = (c.title as string) || `Clip ${i + 1}`;
+                const score = typeof c.score === "number" ? Math.round(c.score) : undefined;
+                return (
+                  <div key={i} className="glass rounded-2xl overflow-hidden group hover-lift border-gradient">
+                    <div className="aspect-[9/16] relative bg-gradient-to-br from-primary/40 via-card to-accent/30 overflow-hidden">
+                      {videoSrc ? (
+                        <video src={videoSrc} controls className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="absolute inset-0 grid place-items-center text-xs text-muted-foreground">No preview</div>
+                      )}
+                      {score !== undefined && (
+                        <div className="absolute top-3 left-3 glass px-2 py-1 rounded-md text-xs flex items-center gap-1 pointer-events-none">
+                          <TrendingUp className="size-3 text-accent" />
+                          <span className="text-accent font-medium">{score}</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4">
+                      <div className="font-medium line-clamp-2 text-sm">{title}</div>
+                      <div className="mt-4">
+                        <Button
+                          asChild={!!downloadHref}
+                          size="sm"
+                          disabled={!downloadHref}
+                          className="w-full btn-premium rounded-lg"
+                        >
+                          {downloadHref ? (
+                            <a href={downloadHref} download target="_blank" rel="noreferrer">
+                              <Download className="size-3.5 mr-1.5" /> Download
+                            </a>
+                          ) : (
+                            <span><Download className="size-3.5 mr-1.5" /> Download</span>
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
     </div>
