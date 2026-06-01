@@ -52,21 +52,30 @@ function UploadPage() {
     xhr.upload.onload = () => setPhase("processing");
 
     xhr.onload = () => {
+      const raw = xhr.responseText;
+      let parsed: any = null;
+      try { parsed = JSON.parse(raw); } catch { /* not json */ }
+
       if (xhr.status >= 200 && xhr.status < 300) {
-        try {
-          const data = JSON.parse(xhr.responseText);
-          const arr: Clip[] = Array.isArray(data?.clips) ? data.clips : Array.isArray(data) ? data : [];
-          setClips(arr);
-          setPhase("done");
-        } catch {
-          setError("Invalid response from server"); setPhase("error");
-        }
+        const arr: Clip[] = Array.isArray(parsed?.clips)
+          ? parsed.clips
+          : Array.isArray(parsed) ? parsed : [];
+        setClips(arr);
+        setPhase("done");
       } else {
-        setError(`Upload failed (${xhr.status})`); setPhase("error");
+        const msg =
+          parsed?.error ||
+          parsed?.message ||
+          parsed?.detail ||
+          (raw && raw.length < 500 ? raw : "") ||
+          `Upload failed (${xhr.status} ${xhr.statusText || ""})`.trim();
+        setError(msg);
+        setPhase("error");
       }
     };
     xhr.onerror = () => {
-      setError("Network error. The backend may be unreachable or blocked by mixed-content (HTTPS → HTTP)."); setPhase("error");
+      setError(`Could not reach ${API_URL}. Check that the backend is online and CORS allows this origin.`);
+      setPhase("error");
     };
 
     xhr.send(form);
