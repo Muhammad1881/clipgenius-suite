@@ -61,7 +61,7 @@ function UploadPage() {
     };
     xhr.upload.onload = () => setPhase("processing");
 
-    xhr.onload = () => {
+    xhr.onload = async () => {
       const raw = xhr.responseText;
       let parsed: any = null;
       try { parsed = JSON.parse(raw); } catch { /* not json */ }
@@ -72,6 +72,29 @@ function UploadPage() {
           : Array.isArray(parsed) ? parsed : [];
         setClips(arr);
         setPhase("done");
+
+        // Persist project history
+        try {
+          const { data: userData } = await supabase.auth.getUser();
+          const uid = userData.user?.id;
+          if (uid) {
+            const { error: insertErr } = await supabase.from("projects").insert({
+              user_id: uid,
+              video_name: file.name,
+              transcript: (parsed?.transcript ?? null) as string | null,
+              viral_moments: parsed?.viral_moments ?? parsed?.moments ?? null,
+              clips: arr,
+            });
+            if (insertErr) {
+              console.error("Failed to save project:", insertErr);
+              toast.error("Clips generated, but couldn't save project history.");
+            } else {
+              toast.success("Project saved to your history.");
+            }
+          }
+        } catch (e) {
+          console.error(e);
+        }
       } else {
         const msg =
           parsed?.error ||
