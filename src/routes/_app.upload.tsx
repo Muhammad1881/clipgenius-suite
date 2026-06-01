@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/_app/upload")({ component: UploadPage });
 
-const API_URL = "https://atrophy-roving-reclaim.ngrok-free.dev/upload";
+const API_URL = "https://api.clipra.bond/upload";
 
 type Clip = {
   title?: string;
