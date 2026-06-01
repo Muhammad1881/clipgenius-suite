@@ -50,6 +50,39 @@ export type Database = {
         }
         Relationships: []
       }
+      projects: {
+        Row: {
+          clips: Json
+          created_at: string
+          id: string
+          transcript: string | null
+          updated_at: string
+          user_id: string
+          video_name: string
+          viral_moments: Json | null
+        }
+        Insert: {
+          clips?: Json
+          created_at?: string
+          id?: string
+          transcript?: string | null
+          updated_at?: string
+          user_id: string
+          video_name: string
+          viral_moments?: Json | null
+        }
+        Update: {
+          clips?: Json
+          created_at?: string
+          id?: string
+          transcript?: string | null
+          updated_at?: string
+          user_id?: string
+          video_name?: string
+          viral_moments?: Json | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
