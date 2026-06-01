@@ -3,6 +3,8 @@ import { useState, useCallback } from "react";
 import { Upload as UploadIcon, FileVideo, Link2, X, Sparkles, Loader2, Download, TrendingUp, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/upload")({ component: UploadPage });
 
@@ -59,7 +61,7 @@ function UploadPage() {
     };
     xhr.upload.onload = () => setPhase("processing");
 
-    xhr.onload = () => {
+    xhr.onload = async () => {
       const raw = xhr.responseText;
       let parsed: any = null;
       try { parsed = JSON.parse(raw); } catch { /* not json */ }
@@ -70,6 +72,29 @@ function UploadPage() {
           : Array.isArray(parsed) ? parsed : [];
         setClips(arr);
         setPhase("done");
+
+        // Persist project history
+        try {
+          const { data: userData } = await supabase.auth.getUser();
+          const uid = userData.user?.id;
+          if (uid) {
+            const { error: insertErr } = await supabase.from("projects").insert({
+              user_id: uid,
+              video_name: file.name,
+              transcript: (parsed?.transcript ?? null) as string | null,
+              viral_moments: parsed?.viral_moments ?? parsed?.moments ?? null,
+              clips: arr as any,
+            });
+            if (insertErr) {
+              console.error("Failed to save project:", insertErr);
+              toast.error("Clips generated, but couldn't save project history.");
+            } else {
+              toast.success("Project saved to your history.");
+            }
+          }
+        } catch (e) {
+          console.error(e);
+        }
       } else {
         const msg =
           parsed?.error ||
