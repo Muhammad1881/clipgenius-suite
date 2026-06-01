@@ -7,6 +7,14 @@ import { Input } from "@/components/ui/input";
 export const Route = createFileRoute("/_app/upload")({ component: UploadPage });
 
 const API_URL = "https://api.clipra.bond/upload";
+const BACKEND_BASE = "https://api.clipra.bond";
+
+function resolveClipUrl(url: string | undefined): string | undefined {
+  if (!url) return undefined;
+  if (url.startsWith("http")) return url;
+  if (url.startsWith("/")) return `${BACKEND_BASE}${url}`;
+  return url;
+}
 
 type Clip = {
   title?: string;
