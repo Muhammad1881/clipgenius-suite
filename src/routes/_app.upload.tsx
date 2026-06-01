@@ -209,10 +209,10 @@ function UploadPage() {
                 const title = (c.title as string) || `Clip ${i + 1}`;
                 const score = typeof c.score === "number" ? Math.round(c.score) : undefined;
                 return (
-                  <div key={i} className="glass rounded-2xl overflow-hidden group hover-lift border-gradient">
-                    <div className="aspect-[9/16] relative bg-gradient-to-br from-primary/40 via-card to-accent/30 overflow-hidden">
+                  <div key={i} className="glass rounded-2xl overflow-hidden group hover-lift border-gradient flex flex-col">
+                    <div className="aspect-[9/16] max-h-[50vh] relative bg-gradient-to-br from-primary/40 via-card to-accent/30 overflow-hidden rounded-t-2xl">
                       {videoSrc ? (
-                        <video src={videoSrc} controls className="w-full h-full object-cover" />
+                        <video src={videoSrc} controls className="w-full h-full object-contain rounded-t-2xl" />
                       ) : (
                         <div className="absolute inset-0 grid place-items-center text-xs text-muted-foreground">No preview</div>
                       )}
