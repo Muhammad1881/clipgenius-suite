@@ -21,6 +21,8 @@ export type Database = {
           credits: number
           display_name: string | null
           id: string
+          minutes_used: number
+          monthly_minutes: number
           plan: string
           updated_at: string
           user_id: string
@@ -32,6 +34,8 @@ export type Database = {
           credits?: number
           display_name?: string | null
           id?: string
+          minutes_used?: number
+          monthly_minutes?: number
           plan?: string
           updated_at?: string
           user_id: string
@@ -43,6 +47,8 @@ export type Database = {
           credits?: number
           display_name?: string | null
           id?: string
+          minutes_used?: number
+          monthly_minutes?: number
           plan?: string
           updated_at?: string
           user_id?: string
