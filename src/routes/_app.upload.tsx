@@ -122,6 +122,24 @@ function UploadPage() {
             } else {
               toast.success("Project saved to your history.");
             }
+
+            // Deduct minutes
+            if (durationMin != null && profile) {
+              const used = Math.min(
+                profile.monthly_minutes,
+                profile.minutes_used + Math.ceil(durationMin),
+              );
+              const { error: updateErr } = await supabase
+                .from("profiles")
+                .update({ minutes_used: used })
+                .eq("user_id", uid);
+              if (updateErr) {
+                console.error("Failed to update minutes:", updateErr);
+              } else {
+                await refetchProfile();
+                window.dispatchEvent(new Event("profile:refresh"));
+              }
+            }
           }
         } catch (e) {
           console.error(e);
