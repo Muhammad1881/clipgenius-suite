@@ -14,7 +14,7 @@ const plans = [
     name: "Starter",
     price: "$13.99",
     desc: "For creators getting serious about shorts.",
-    features: ["300 minutes / month", "Up to 2 hr uploads", "1080p exports", "AI viral scoring", "Custom branding", "Priority queue"],
+    features: ["300 minutes / month", "Up to 60 min uploads", "1080p exports", "AI viral scoring", "Custom branding", "Priority queue"],
     cta: "Get Starter",
     featured: true,
   },
@@ -22,7 +22,7 @@ const plans = [
     name: "Creator",
     price: "$19",
     desc: "Built for power creators who publish daily.",
-    features: ["500 minutes / month", "Up to 2 hr uploads", "1080p exports", "AI viral scoring", "Custom branding", "Priority queue"],
+    features: ["500 minutes / month", "Up to 120 min uploads", "1080p exports", "AI viral scoring", "Custom branding", "Priority queue"],
     cta: "Get Creator",
   },
 ];
