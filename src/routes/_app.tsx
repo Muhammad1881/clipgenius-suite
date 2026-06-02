@@ -2,6 +2,7 @@ import { Link, Outlet, useRouterState, useNavigate, createFileRoute, redirect } 
 import { LayoutDashboard, Upload, FolderOpen, CreditCard, Sparkles, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useProfile } from "@/hooks/useProfile";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app")({
@@ -24,7 +25,11 @@ const nav = [
 function AppLayout() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   const { user } = useAuth();
+  const { profile } = useProfile();
   const navigate = useNavigate();
+
+  const remaining = profile ? profile.monthly_minutes - profile.minutes_used : 0;
+  const total = profile?.monthly_minutes ?? 30;
 
   const displayName = (user?.user_metadata?.display_name as string)
     || (user?.user_metadata?.username as string)
@@ -65,10 +70,10 @@ function AppLayout() {
         <div className="mt-auto space-y-3">
           <div className="glass rounded-2xl p-4 border-gradient">
             <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span>Credits</span><span className="text-foreground font-medium">30 / 30</span>
+              <span>Remaining minutes</span><span className="text-foreground font-medium">{remaining} / {total}</span>
             </div>
             <div className="mt-2 h-1.5 rounded-full bg-white/10 overflow-hidden">
-              <div className="h-full bg-gradient-vivid" style={{ width: "100%" }} />
+              <div className="h-full bg-gradient-vivid" style={{ width: `${total > 0 ? (remaining / total) * 100 : 0}%` }} />
             </div>
             <Link to="/pricing" className="btn-premium mt-3 block text-center text-xs rounded-lg py-2 font-medium">
               Upgrade plan
