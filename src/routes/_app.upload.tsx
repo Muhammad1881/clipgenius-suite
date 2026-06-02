@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useProfile } from "@/hooks/useProfile";
 
 export const Route = createFileRoute("/_app/upload")({ component: UploadPage });
 
@@ -33,21 +34,51 @@ type Phase = "idle" | "uploading" | "processing" | "done" | "error";
 function UploadPage() {
   const [drag, setDrag] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+  const [durationMin, setDurationMin] = useState<number | null>(null);
   const [progress, setProgress] = useState(0);
   const [phase, setPhase] = useState<Phase>("idle");
   const [error, setError] = useState<string | null>(null);
   const [clips, setClips] = useState<Clip[]>([]);
+  const { profile, refetch: refetchProfile } = useProfile();
 
-  const onFile = useCallback((f: File) => {
-    setFile(f); setProgress(0); setPhase("idle"); setError(null); setClips([]);
+  const remainingMinutes = profile ? profile.monthly_minutes - profile.minutes_used : 0;
+
+  const readDurationMinutes = (f: File): Promise<number> =>
+    new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(f);
+      const v = document.createElement("video");
+      v.preload = "metadata";
+      v.onloadedmetadata = () => {
+        URL.revokeObjectURL(url);
+        resolve(v.duration / 60);
+      };
+      v.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Could not read video duration.")); };
+      v.src = url;
+    });
+
+  const onFile = useCallback(async (f: File) => {
+    setFile(f); setProgress(0); setPhase("idle"); setError(null); setClips([]); setDurationMin(null);
+    try {
+      const mins = await readDurationMinutes(f);
+      setDurationMin(mins);
+    } catch (e: any) {
+      setError(e?.message || "Could not read video duration.");
+    }
   }, []);
 
   const reset = () => {
-    setFile(null); setProgress(0); setPhase("idle"); setError(null); setClips([]);
+    setFile(null); setProgress(0); setPhase("idle"); setError(null); setClips([]); setDurationMin(null);
   };
 
   const upload = () => {
     if (!file) return;
+    if (durationMin != null && Math.ceil(durationMin) > remainingMinutes) {
+      const msg = "You do not have enough minutes remaining.";
+      setError(msg);
+      setPhase("error");
+      toast.error(msg);
+      return;
+    }
     setPhase("uploading"); setError(null); setClips([]); setProgress(0);
 
     const form = new FormData();
@@ -90,6 +121,24 @@ function UploadPage() {
               toast.error("Clips generated, but couldn't save project history.");
             } else {
               toast.success("Project saved to your history.");
+            }
+
+            // Deduct minutes
+            if (durationMin != null && profile) {
+              const used = Math.min(
+                profile.monthly_minutes,
+                profile.minutes_used + Math.ceil(durationMin),
+              );
+              const { error: updateErr } = await supabase
+                .from("profiles")
+                .update({ minutes_used: used })
+                .eq("user_id", uid);
+              if (updateErr) {
+                console.error("Failed to update minutes:", updateErr);
+              } else {
+                await refetchProfile();
+                window.dispatchEvent(new Event("profile:refresh"));
+              }
             }
           }
         } catch (e) {
@@ -161,7 +210,10 @@ function UploadPage() {
             </div>
             <div className="flex-1 min-w-0">
               <div className="font-medium truncate">{file.name}</div>
-              <div className="text-xs text-muted-foreground mt-0.5">{(file.size / 1024 / 1024).toFixed(1)} MB · video/{file.type.split("/")[1] || "mp4"}</div>
+              <div className="text-xs text-muted-foreground mt-0.5">
+                {(file.size / 1024 / 1024).toFixed(1)} MB · video/{file.type.split("/")[1] || "mp4"}
+                {durationMin != null && <> · {Math.ceil(durationMin)} min · {remainingMinutes} min remaining</>}
+              </div>
             </div>
             <button onClick={reset} className="text-muted-foreground hover:text-foreground transition-colors">
               <X className="size-4" />
@@ -192,8 +244,18 @@ function UploadPage() {
             </div>
           )}
 
+          {durationMin != null && Math.ceil(durationMin) > remainingMinutes && phase !== "uploading" && phase !== "processing" && (
+            <div className="mt-5 text-sm text-destructive">
+              You do not have enough minutes remaining.
+            </div>
+          )}
+
           <Button
-            disabled={phase === "uploading" || phase === "processing"}
+            disabled={
+              phase === "uploading" ||
+              phase === "processing" ||
+              (durationMin != null && Math.ceil(durationMin) > remainingMinutes)
+            }
             onClick={upload}
             className="mt-6 w-full btn-premium rounded-xl h-12 disabled:opacity-50"
           >
