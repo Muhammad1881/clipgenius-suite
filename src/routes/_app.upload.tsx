@@ -34,21 +34,51 @@ type Phase = "idle" | "uploading" | "processing" | "done" | "error";
 function UploadPage() {
   const [drag, setDrag] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+  const [durationMin, setDurationMin] = useState<number | null>(null);
   const [progress, setProgress] = useState(0);
   const [phase, setPhase] = useState<Phase>("idle");
   const [error, setError] = useState<string | null>(null);
   const [clips, setClips] = useState<Clip[]>([]);
+  const { profile, refetch: refetchProfile } = useProfile();
 
-  const onFile = useCallback((f: File) => {
-    setFile(f); setProgress(0); setPhase("idle"); setError(null); setClips([]);
+  const remainingMinutes = profile ? profile.monthly_minutes - profile.minutes_used : 0;
+
+  const readDurationMinutes = (f: File): Promise<number> =>
+    new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(f);
+      const v = document.createElement("video");
+      v.preload = "metadata";
+      v.onloadedmetadata = () => {
+        URL.revokeObjectURL(url);
+        resolve(v.duration / 60);
+      };
+      v.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Could not read video duration.")); };
+      v.src = url;
+    });
+
+  const onFile = useCallback(async (f: File) => {
+    setFile(f); setProgress(0); setPhase("idle"); setError(null); setClips([]); setDurationMin(null);
+    try {
+      const mins = await readDurationMinutes(f);
+      setDurationMin(mins);
+    } catch (e: any) {
+      setError(e?.message || "Could not read video duration.");
+    }
   }, []);
 
   const reset = () => {
-    setFile(null); setProgress(0); setPhase("idle"); setError(null); setClips([]);
+    setFile(null); setProgress(0); setPhase("idle"); setError(null); setClips([]); setDurationMin(null);
   };
 
   const upload = () => {
     if (!file) return;
+    if (durationMin != null && Math.ceil(durationMin) > remainingMinutes) {
+      const msg = "You do not have enough minutes remaining.";
+      setError(msg);
+      setPhase("error");
+      toast.error(msg);
+      return;
+    }
     setPhase("uploading"); setError(null); setClips([]); setProgress(0);
 
     const form = new FormData();
