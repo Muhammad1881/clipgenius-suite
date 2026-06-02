@@ -210,7 +210,10 @@ function UploadPage() {
             </div>
             <div className="flex-1 min-w-0">
               <div className="font-medium truncate">{file.name}</div>
-              <div className="text-xs text-muted-foreground mt-0.5">{(file.size / 1024 / 1024).toFixed(1)} MB · video/{file.type.split("/")[1] || "mp4"}</div>
+              <div className="text-xs text-muted-foreground mt-0.5">
+                {(file.size / 1024 / 1024).toFixed(1)} MB · video/{file.type.split("/")[1] || "mp4"}
+                {durationMin != null && <> · {Math.ceil(durationMin)} min · {remainingMinutes} min remaining</>}
+              </div>
             </div>
             <button onClick={reset} className="text-muted-foreground hover:text-foreground transition-colors">
               <X className="size-4" />
