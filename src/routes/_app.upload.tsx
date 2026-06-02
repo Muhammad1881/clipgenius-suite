@@ -244,8 +244,18 @@ function UploadPage() {
             </div>
           )}
 
+          {durationMin != null && Math.ceil(durationMin) > remainingMinutes && phase !== "uploading" && phase !== "processing" && (
+            <div className="mt-5 text-sm text-destructive">
+              You do not have enough minutes remaining.
+            </div>
+          )}
+
           <Button
-            disabled={phase === "uploading" || phase === "processing"}
+            disabled={
+              phase === "uploading" ||
+              phase === "processing" ||
+              (durationMin != null && Math.ceil(durationMin) > remainingMinutes)
+            }
             onClick={upload}
             className="mt-6 w-full btn-premium rounded-xl h-12 disabled:opacity-50"
           >
