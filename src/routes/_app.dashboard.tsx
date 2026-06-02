@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Upload, Play, TrendingUp, Clock, Sparkles, FolderOpen } from "lucide-react";
+import { Upload, TrendingUp, Clock, Sparkles, FolderOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ExampleClips } from "@/components/ExampleClips";
 import { useProfile } from "@/hooks/useProfile";
