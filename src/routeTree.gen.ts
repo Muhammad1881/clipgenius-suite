@@ -14,6 +14,8 @@ import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BillingSuccessRouteImport } from './routes/billing.success'
+import { Route as BillingCancelRouteImport } from './routes/billing.cancel'
 import { Route as AppUploadRouteImport } from './routes/_app.upload'
 import { Route as AppResultsRouteImport } from './routes/_app.results'
 import { Route as AppProcessingRouteImport } from './routes/_app.processing'
@@ -41,6 +43,16 @@ const AppRoute = AppRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BillingSuccessRoute = BillingSuccessRouteImport.update({
+  id: '/billing/success',
+  path: '/billing/success',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BillingCancelRoute = BillingCancelRouteImport.update({
+  id: '/billing/cancel',
+  path: '/billing/cancel',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppUploadRoute = AppUploadRouteImport.update({
@@ -73,6 +85,8 @@ export interface FileRoutesByFullPath {
   '/processing': typeof AppProcessingRoute
   '/results': typeof AppResultsRoute
   '/upload': typeof AppUploadRoute
+  '/billing/cancel': typeof BillingCancelRoute
+  '/billing/success': typeof BillingSuccessRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -83,6 +97,8 @@ export interface FileRoutesByTo {
   '/processing': typeof AppProcessingRoute
   '/results': typeof AppResultsRoute
   '/upload': typeof AppUploadRoute
+  '/billing/cancel': typeof BillingCancelRoute
+  '/billing/success': typeof BillingSuccessRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -95,6 +111,8 @@ export interface FileRoutesById {
   '/_app/processing': typeof AppProcessingRoute
   '/_app/results': typeof AppResultsRoute
   '/_app/upload': typeof AppUploadRoute
+  '/billing/cancel': typeof BillingCancelRoute
+  '/billing/success': typeof BillingSuccessRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -107,6 +125,8 @@ export interface FileRouteTypes {
     | '/processing'
     | '/results'
     | '/upload'
+    | '/billing/cancel'
+    | '/billing/success'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -117,6 +137,8 @@ export interface FileRouteTypes {
     | '/processing'
     | '/results'
     | '/upload'
+    | '/billing/cancel'
+    | '/billing/success'
   id:
     | '__root__'
     | '/'
@@ -128,6 +150,8 @@ export interface FileRouteTypes {
     | '/_app/processing'
     | '/_app/results'
     | '/_app/upload'
+    | '/billing/cancel'
+    | '/billing/success'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -136,6 +160,8 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   PricingRoute: typeof PricingRoute
   SignupRoute: typeof SignupRoute
+  BillingCancelRoute: typeof BillingCancelRoute
+  BillingSuccessRoute: typeof BillingSuccessRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -173,6 +199,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/billing/success': {
+      id: '/billing/success'
+      path: '/billing/success'
+      fullPath: '/billing/success'
+      preLoaderRoute: typeof BillingSuccessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/billing/cancel': {
+      id: '/billing/cancel'
+      path: '/billing/cancel'
+      fullPath: '/billing/cancel'
+      preLoaderRoute: typeof BillingCancelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/upload': {
@@ -228,17 +268,9 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   PricingRoute: PricingRoute,
   SignupRoute: SignupRoute,
+  BillingCancelRoute: BillingCancelRoute,
+  BillingSuccessRoute: BillingSuccessRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
