@@ -1,8 +1,23 @@
-import { Check, Sparkles } from "lucide-react";
+import { Check, Sparkles, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useState } from "react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { createCheckoutSession, type PlanKey } from "@/lib/billing.functions";
 
-const plans = [
+type Plan = {
+  name: string;
+  price: string;
+  desc: string;
+  features: string[];
+  cta: string;
+  featured?: boolean;
+  planKey?: PlanKey;
+};
+
+const plans: Plan[] = [
   {
     name: "Free",
     price: "$0",
@@ -17,6 +32,7 @@ const plans = [
     features: ["300 minutes / month", "Up to 60 min uploads", "1080p exports", "AI viral scoring", "Custom branding", "Priority queue"],
     cta: "Get Starter",
     featured: true,
+    planKey: "starter",
   },
   {
     name: "Creator",
@@ -24,19 +40,43 @@ const plans = [
     desc: "Built for power creators who publish daily.",
     features: ["500 minutes / month", "Up to 120 min uploads", "1080p exports", "AI viral scoring", "Custom branding", "Priority queue"],
     cta: "Get Creator",
+    planKey: "creator",
   },
 ];
 
 export function PricingCards() {
+  const checkout = useServerFn(createCheckoutSession);
+  const navigate = useNavigate();
+  const [loadingPlan, setLoadingPlan] = useState<PlanKey | null>(null);
+
+  const handleUpgrade = async (planKey: PlanKey) => {
+    setLoadingPlan(planKey);
+    try {
+      const { data: sess } = await supabase.auth.getSession();
+      if (!sess.session) {
+        navigate({ to: "/login" });
+        return;
+      }
+      const res = await checkout({ data: { plan: planKey, origin: window.location.origin } });
+      if (res?.url) {
+        window.location.href = res.url;
+      } else {
+        toast.error("Could not start checkout");
+      }
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Checkout failed");
+    } finally {
+      setLoadingPlan(null);
+    }
+  };
+
   return (
     <div className="grid md:grid-cols-3 gap-5 lg:gap-6">
       {plans.map((p) => (
         <div
           key={p.name}
           className={`relative rounded-3xl p-7 sm:p-8 border-gradient hover-lift ${
-            p.featured
-              ? "glass-strong glow md:-translate-y-2"
-              : "glass"
+            p.featured ? "glass-strong glow md:-translate-y-2" : "glass"
           }`}
         >
           {p.featured && (
@@ -53,16 +93,26 @@ export function PricingCards() {
             <span className="text-muted-foreground text-sm">/mo</span>
           </div>
           <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{p.desc}</p>
-          <Button
-            asChild
-            className={`w-full mt-6 rounded-xl h-11 ${
-              p.featured
-                ? "btn-premium"
-                : "glass hover:bg-white/10 border border-white/10 transition-all"
-            }`}
-          >
-            <Link to="/dashboard">{p.cta}</Link>
-          </Button>
+          {p.planKey ? (
+            <Button
+              onClick={() => handleUpgrade(p.planKey!)}
+              disabled={loadingPlan !== null}
+              className={`w-full mt-6 rounded-xl h-11 ${
+                p.featured ? "btn-premium" : "glass hover:bg-white/10 border border-white/10 transition-all"
+              }`}
+            >
+              {loadingPlan === p.planKey ? <Loader2 className="size-4 animate-spin" /> : p.cta}
+            </Button>
+          ) : (
+            <Button
+              asChild
+              className={`w-full mt-6 rounded-xl h-11 ${
+                p.featured ? "btn-premium" : "glass hover:bg-white/10 border border-white/10 transition-all"
+              }`}
+            >
+              <Link to="/dashboard">{p.cta}</Link>
+            </Button>
+          )}
           <div className="my-7 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
           <ul className="space-y-3 text-sm">
             {p.features.map((f) => (
