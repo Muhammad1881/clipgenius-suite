@@ -83,6 +83,7 @@ function UploadPage() {
 
     const form = new FormData();
     form.append("video", file);
+    form.append("plan", (profile?.plan as string) ?? "free");
 
     const xhr = new XMLHttpRequest();
     xhr.open("POST", API_URL);
