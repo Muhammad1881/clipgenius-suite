@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PricingCards } from "@/components/PricingCards";
-import { ExampleClips } from "@/components/ExampleClips";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import heroBg from "@/assets/hero-bg.jpg";
 
@@ -133,10 +132,6 @@ function Landing() {
         </div>
       </section>
 
-      {/* EXAMPLE CLIPS SHOWCASE */}
-      <section id="examples" className="py-20 sm:py-28">
-        <ExampleClips />
-      </section>
 
       {/* PRICING PREVIEW */}
 
