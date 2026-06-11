@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { Sparkles, Upload, ArrowRight, Play, Star } from "lucide-react";
+import { Sparkles, Upload, ArrowRight, Play, Star, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -11,14 +11,6 @@ import heroBg from "@/assets/hero-bg.jpg";
 
 export const Route = createFileRoute("/")({ component: Landing });
 
-const features = [
-  { icon: Wand2, title: "AI viral detection", desc: "Our model scores every moment of your video and surfaces clips with the highest viral potential." },
-  { icon: Scissors, title: "Auto-cut shorts", desc: "Perfect 9:16 reframing that tracks faces and action — no editing required." },
-  { icon: Captions, title: "Animated captions", desc: "Word-by-word captions in 30+ languages, styled to match your brand." },
-  { icon: Zap, title: "Lightning fast", desc: "A one-hour podcast becomes a stack of shorts in under 5 minutes." },
-  { icon: Trophy, title: "Hook generator", desc: "AI writes titles, hashtags and thumbnails optimized for each platform." },
-  { icon: Sparkles, title: "Smart B-roll", desc: "Auto-inserts relevant b-roll, emojis and zooms to maximize retention." },
-];
 
 const steps = [
   { n: "01", t: "Upload your video", d: "Drag a podcast, webinar, YouTube link or raw footage. Up to 4 hours." },
