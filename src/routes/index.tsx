@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { Sparkles, Wand2, Scissors, Captions, Upload, Zap, Trophy, ArrowRight, Play, Star } from "lucide-react";
+import { Sparkles, Upload, ArrowRight, Play, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -95,28 +95,6 @@ function Landing() {
               ))}
             </div>
           </motion.div>
-        </div>
-      </section>
-
-      {/* FEATURES */}
-      <section id="features" className="py-20 sm:py-28 mx-auto max-w-7xl px-5 sm:px-6">
-        <div className="text-center max-w-2xl mx-auto">
-          <div className="text-xs uppercase tracking-widest text-accent">Features</div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mt-3">Everything you need to win the algorithm.</h2>
-        </div>
-        <div className="mt-12 sm:mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-          {features.map((f, i) => (
-            <motion.div key={f.title}
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.05 }}
-              className="glass rounded-2xl p-6 hover-lift group border-gradient">
-              <div className="size-12 rounded-xl bg-gradient-vivid grid place-items-center mb-5 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 shadow-card">
-                <f.icon className="size-5 text-primary-foreground" />
-              </div>
-              <div className="font-semibold text-lg tracking-tight">{f.title}</div>
-              <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{f.desc}</p>
-            </motion.div>
-          ))}
         </div>
       </section>
 
