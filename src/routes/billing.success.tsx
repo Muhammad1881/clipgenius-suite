@@ -53,7 +53,7 @@ function SuccessPage() {
         {status === "ok" && (
           <>
             <CheckCircle2 className="size-12 mx-auto text-accent" />
-            <h1 className="text-2xl font-display mt-4">You're on the {plan} plan 🎉</h1>
+            <h1 className="text-2xl font-display mt-4">You are now on the {plan ? plan.charAt(0).toUpperCase() + plan.slice(1) : ""} plan 🎉</h1>
             <p className="text-muted-foreground mt-2">Your minutes have been updated.</p>
             <Button className="btn-premium mt-6 rounded-xl h-11 w-full" onClick={() => navigate({ to: "/dashboard" })}>
               Go to dashboard

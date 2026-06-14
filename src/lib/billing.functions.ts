@@ -79,3 +79,23 @@ export const confirmCheckoutSession = createServerFn({ method: "POST" })
 
     return { ok: true, plan: data.plan, monthly_minutes };
   });
+
+export const getSubscriptionInfo = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const Stripe = (await import("stripe")).default;
+    const key = process.env.STRIPE_SECRET_KEY;
+    if (!key) return { renewal_date: null as string | null };
+    const stripe = new Stripe(key);
+    const email = context.claims?.email as string | undefined;
+    if (!email) return { renewal_date: null };
+    const customers = await stripe.customers.list({ email, limit: 1 });
+    const customerId = customers.data[0]?.id;
+    if (!customerId) return { renewal_date: null };
+    const subs = await stripe.subscriptions.list({ customer: customerId, status: "active", limit: 1 });
+    const sub = subs.data[0];
+    if (!sub) return { renewal_date: null };
+    const periodEnd = (sub as unknown as { current_period_end?: number }).current_period_end
+      ?? sub.items.data[0]?.current_period_end;
+    return { renewal_date: periodEnd ? new Date(periodEnd * 1000).toISOString() : null };
+  });

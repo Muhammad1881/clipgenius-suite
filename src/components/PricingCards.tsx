@@ -5,6 +5,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useProfile } from "@/hooks/useProfile";
 import { createCheckoutSession, type PlanKey } from "@/lib/billing.functions";
 
 type Plan = {
@@ -74,6 +75,8 @@ const plans: Plan[] = [
 export function PricingCards() {
   const checkout = useServerFn(createCheckoutSession);
   const navigate = useNavigate();
+  const { profile } = useProfile();
+  const currentPlan = profile?.plan ?? "free";
   const [loadingPlan, setLoadingPlan] = useState<PlanKey | null>(null);
 
   const handleUpgrade = async (planKey: PlanKey) => {
@@ -120,7 +123,11 @@ export function PricingCards() {
             <span className="text-muted-foreground text-sm">/mo</span>
           </div>
           <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{p.desc}</p>
-          {p.planKey ? (
+          {p.planKey && currentPlan === p.planKey ? (
+            <Button disabled className="w-full mt-6 rounded-xl h-11 glass border border-white/10 opacity-80">
+              Current plan
+            </Button>
+          ) : p.planKey ? (
             <Button
               onClick={() => handleUpgrade(p.planKey!)}
               disabled={loadingPlan !== null}
@@ -129,6 +136,10 @@ export function PricingCards() {
               }`}
             >
               {loadingPlan === p.planKey ? <Loader2 className="size-4 animate-spin" /> : p.cta}
+            </Button>
+          ) : currentPlan !== "free" ? (
+            <Button disabled className="w-full mt-6 rounded-xl h-11 glass border border-white/10 opacity-60">
+              {p.cta}
             </Button>
           ) : (
             <Button

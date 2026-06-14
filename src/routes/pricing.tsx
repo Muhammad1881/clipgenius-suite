@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PricingCards } from "@/components/PricingCards";
+import { PlanSection } from "@/components/PlanSection";
 
 export const Route = createFileRoute("/pricing")({
   component: Pricing,
@@ -25,6 +26,7 @@ function Pricing() {
           <p className="text-muted-foreground mt-4">Start free. Upgrade when you're ready to dominate the algorithm.</p>
         </div>
         <div className="mt-14 sm:mt-16">
+          <PlanSection />
           <PricingCards />
         </div>
 
