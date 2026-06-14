@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PricingCards } from "@/components/PricingCards";
+import { PlanSection } from "@/components/PlanSection";
 
 export const Route = createFileRoute("/pricing")({
   component: Pricing,
