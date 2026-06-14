@@ -30,6 +30,8 @@ function AppLayout() {
 
   const remaining = profile ? profile.monthly_minutes - profile.minutes_used : 0;
   const total = profile?.monthly_minutes ?? 30;
+  const planLabel = profile?.plan ? profile.plan.charAt(0).toUpperCase() + profile.plan.slice(1) : "Free";
+  void remaining;
 
   const displayName = (user?.user_metadata?.display_name as string)
     || (user?.user_metadata?.username as string)
