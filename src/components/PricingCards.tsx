@@ -75,6 +75,8 @@ const plans: Plan[] = [
 export function PricingCards() {
   const checkout = useServerFn(createCheckoutSession);
   const navigate = useNavigate();
+  const { profile } = useProfile();
+  const currentPlan = profile?.plan ?? "free";
   const [loadingPlan, setLoadingPlan] = useState<PlanKey | null>(null);
 
   const handleUpgrade = async (planKey: PlanKey) => {
