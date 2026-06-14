@@ -26,6 +26,7 @@ function Pricing() {
           <p className="text-muted-foreground mt-4">Start free. Upgrade when you're ready to dominate the algorithm.</p>
         </div>
         <div className="mt-14 sm:mt-16">
+          <PlanSection />
           <PricingCards />
         </div>
 
