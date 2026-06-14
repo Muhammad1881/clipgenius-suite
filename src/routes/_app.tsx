@@ -69,15 +69,26 @@ function AppLayout() {
 
         <div className="mt-auto space-y-3">
           <div className="glass rounded-2xl p-4 border-gradient">
-            <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span>Remaining minutes</span><span className="text-foreground font-medium">{remaining} / {total}</span>
+            <div className="flex items-center justify-between mb-2">
+              <span className={`text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full font-medium ${
+                profile?.plan && profile.plan !== "free"
+                  ? "bg-gradient-vivid text-primary-foreground"
+                  : "bg-white/10 text-muted-foreground"
+              }`}>
+                {planLabel} Plan
+              </span>
+            </div>
+            <div className="text-xs text-muted-foreground">
+              <span className="text-foreground font-medium">{profile?.minutes_used ?? 0}</span> / {total} minutes used
             </div>
             <div className="mt-2 h-1.5 rounded-full bg-white/10 overflow-hidden">
-              <div className="h-full bg-gradient-vivid" style={{ width: `${total > 0 ? (remaining / total) * 100 : 0}%` }} />
+              <div className="h-full bg-gradient-vivid" style={{ width: `${total > 0 ? ((profile?.minutes_used ?? 0) / total) * 100 : 0}%` }} />
             </div>
-            <Link to="/pricing" className="btn-premium mt-3 block text-center text-xs rounded-lg py-2 font-medium">
-              Upgrade plan
-            </Link>
+            {(!profile?.plan || profile.plan === "free") && (
+              <Link to="/pricing" className="btn-premium mt-3 block text-center text-xs rounded-lg py-2 font-medium">
+                Upgrade plan
+              </Link>
+            )}
           </div>
           <div className="flex items-center gap-3 p-2">
             <div className="size-9 rounded-full bg-gradient-primary grid place-items-center text-sm font-semibold text-primary-foreground shrink-0">
