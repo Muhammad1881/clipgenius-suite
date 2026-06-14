@@ -123,7 +123,11 @@ export function PricingCards() {
             <span className="text-muted-foreground text-sm">/mo</span>
           </div>
           <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{p.desc}</p>
-          {p.planKey ? (
+          {p.planKey && currentPlan === p.planKey ? (
+            <Button disabled className="w-full mt-6 rounded-xl h-11 glass border border-white/10 opacity-80">
+              Current plan
+            </Button>
+          ) : p.planKey ? (
             <Button
               onClick={() => handleUpgrade(p.planKey!)}
               disabled={loadingPlan !== null}
@@ -132,6 +136,10 @@ export function PricingCards() {
               }`}
             >
               {loadingPlan === p.planKey ? <Loader2 className="size-4 animate-spin" /> : p.cta}
+            </Button>
+          ) : currentPlan !== "free" ? (
+            <Button disabled className="w-full mt-6 rounded-xl h-11 glass border border-white/10 opacity-60">
+              {p.cta}
             </Button>
           ) : (
             <Button
