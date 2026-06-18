@@ -1,0 +1,10 @@
+# Clipra
+
+> AI-powered video repurposing. Upload long videos and get viral-ready short clips with captions in minutes.
+
+Clipra turns long-form videos into short, viral-ready clips with AI captions and viral scoring. Built for creators, agencies, and marketers who want to dominate short-form algorithms without spending hours editing.
+
+## Pages
+
+- [Home](/): Product overview, features, and FAQ.
+- [Pricing](/pricing): Free, Starter, and Creator plans with monthly minute limits.

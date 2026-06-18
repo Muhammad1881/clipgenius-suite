@@ -15,6 +15,16 @@ export const Route = createFileRoute("/signup")({
     if (data.session) throw redirect({ to: "/dashboard" });
   },
   component: SignupPage,
+  head: () => ({
+    meta: [
+      { title: "Create Your Account — Clipra" },
+      { name: "description", content: "Create your free Clipra account and start turning long videos into viral short clips today." },
+      { property: "og:title", content: "Create Your Account — Clipra" },
+      { property: "og:description", content: "Sign up free for Clipra and ship viral-ready shorts from your long videos in minutes." },
+      { property: "og:url", content: "https://clipra.bond/signup" },
+    ],
+    links: [{ rel: "canonical", href: "https://clipra.bond/signup" }],
+  }),
 });
 
 const schema = z.object({

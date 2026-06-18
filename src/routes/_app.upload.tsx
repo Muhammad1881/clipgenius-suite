@@ -7,7 +7,18 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useProfile } from "@/hooks/useProfile";
 
-export const Route = createFileRoute("/_app/upload")({ component: UploadPage });
+export const Route = createFileRoute("/_app/upload")({
+  component: UploadPage,
+  head: () => ({
+    meta: [
+      { title: "Upload Video — Clipra" },
+      { name: "description", content: "Upload a long video to Clipra and let AI clip the most viral moments with captions." },
+      { property: "og:title", content: "Upload Video — Clipra" },
+      { property: "og:description", content: "Drop a video or paste a link — Clipra finds the most viral moments and clips them for you." },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
+});
 
 const API_URL = "https://api.clipra.bond/upload";
 const BACKEND_BASE = "https://api.clipra.bond";
