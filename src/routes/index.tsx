@@ -8,7 +8,28 @@ import { PricingCards } from "@/components/PricingCards";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import heroBg from "@/assets/hero-bg.jpg";
 
-export const Route = createFileRoute("/")({ component: Landing });
+export const Route = createFileRoute("/")({
+  component: Landing,
+  head: () => ({
+    links: [
+      { rel: "preload", as: "image", href: heroBg, fetchpriority: "high" } as any,
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqs.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }),
+      },
+    ],
+  }),
+});
 
 
 const steps = [
@@ -38,7 +59,7 @@ function Landing() {
 
       {/* HERO */}
       <section className="relative pt-32 sm:pt-40 pb-24 sm:pb-32">
-        <img src={heroBg} alt="" width={1920} height={1080} className="absolute inset-0 size-full object-cover opacity-40 -z-10" />
+        <img src={heroBg} alt="" width={1920} height={1080} fetchPriority="high" decoding="async" className="absolute inset-0 size-full object-cover opacity-40 -z-10" />
         <div className="absolute inset-0 -z-10 bg-mesh animate-aurora" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background/30 via-background/80 to-background" />
         <div className="absolute inset-0 -z-10 grid-bg" />

@@ -100,6 +100,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Clipra",
+          url: "https://clipra.bond",
+          description: "AI-powered video repurposing that turns long videos into viral short clips.",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Clipra",
+          url: "https://clipra.bond",
+        }),
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
