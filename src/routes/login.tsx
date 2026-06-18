@@ -18,6 +18,16 @@ export const Route = createFileRoute("/login")({
     if (data.session) throw redirect({ to: search.redirect });
   },
   component: LoginPage,
+  head: () => ({
+    meta: [
+      { title: "Sign In — Clipra" },
+      { name: "description", content: "Sign in to Clipra to turn your long videos into viral short clips with AI." },
+      { property: "og:title", content: "Sign In — Clipra" },
+      { property: "og:description", content: "Access your Clipra account and keep clipping viral shorts from your long videos." },
+      { property: "og:url", content: "https://clipra.bond/login" },
+    ],
+    links: [{ rel: "canonical", href: "https://clipra.bond/login" }],
+  }),
 });
 
 const schema = z.object({

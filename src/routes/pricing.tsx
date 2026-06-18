@@ -9,8 +9,12 @@ export const Route = createFileRoute("/pricing")({
   head: () => ({
     meta: [
       { title: "Pricing — Clipra" },
-      { name: "description", content: "Simple plans for every creator. Free, Pro and Business." },
+      { name: "description", content: "Simple plans for every creator. Start free, then unlock more monthly minutes on Starter or Creator." },
+      { property: "og:title", content: "Clipra Pricing — Plans for every creator" },
+      { property: "og:description", content: "Free, Starter, and Creator plans. Scale your monthly clipping minutes as you grow." },
+      { property: "og:url", content: "https://clipra.bond/pricing" },
     ],
+    links: [{ rel: "canonical", href: "https://clipra.bond/pricing" }],
   }),
 });
 
@@ -31,7 +35,7 @@ function Pricing() {
         </div>
 
         <div className="mt-16 sm:mt-20 glass rounded-3xl p-8 sm:p-10 text-center max-w-3xl mx-auto border-gradient">
-          <h3 className="text-2xl font-semibold tracking-tight">Need something custom?</h3>
+          <h2 className="text-2xl font-semibold tracking-tight">Need something custom?</h2>
           <p className="text-muted-foreground mt-2 leading-relaxed">Enterprise teams, education and large agencies get custom pricing and dedicated support.</p>
           <a href="mailto:sales@clipra.ai" className="btn-premium inline-block mt-5 rounded-xl px-6 py-2.5 text-sm font-medium">
             Talk to sales

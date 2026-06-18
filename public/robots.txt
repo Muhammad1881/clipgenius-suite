@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /upload
+Disallow: /processing
+Disallow: /results
+Disallow: /billing/
+
+Sitemap: https://clipra.bond/sitemap.xml
