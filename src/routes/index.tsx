@@ -7,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import { PricingCards } from "@/components/PricingCards";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import heroBg from "@/assets/hero-bg.jpg";
+import clip1Video from "@/assets/clip-9.mp4.asset.json";
 
 export const Route = createFileRoute("/")({
   component: Landing,
@@ -88,7 +89,6 @@ function Landing() {
             </div>
             <div className="mt-10 flex items-center justify-center gap-2 text-sm text-muted-foreground">
               <div className="flex">{Array.from({ length: 5 }).map((_, i) => <Star key={i} className="size-4 fill-accent text-accent" />)}</div>
-              Loved by 12,000+ creators
             </div>
           </motion.div>
 
@@ -97,10 +97,20 @@ function Landing() {
             className="mt-14 sm:mt-16 glass-strong rounded-3xl p-2 sm:p-3 max-w-4xl mx-auto glow border-gradient">
             <div className="rounded-2xl bg-card/60 aspect-video grid grid-cols-3 gap-2 sm:gap-3 p-3 sm:p-4">
               {[1,2,3].map((i) => (
-                <div key={i} className="rounded-xl bg-gradient-to-br from-primary/30 to-accent/20 border border-white/10 flex flex-col justify-between p-3 sm:p-4 animate-float shadow-card" style={{animationDelay: `${i*0.3}s`}}>
-                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Clip 0{i}</div>
-                  <div>
-                    <div className="text-[11px] sm:text-xs text-foreground font-medium leading-tight">"You won't believe what happened next…"</div>
+                <div key={i} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary/30 to-accent/20 border border-white/10 flex flex-col justify-between p-3 sm:p-4 animate-float shadow-card" style={{animationDelay: `${i*0.3}s`}}>
+                  {i === 1 && (
+                    <video
+                      src={clip1Video.url}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  )}
+                  <div className="relative text-[10px] uppercase tracking-wider text-muted-foreground">Clip 0{i}</div>
+                  <div className="relative">
+                    <div className="text-[11px] sm:text-xs text-foreground font-medium leading-tight">{i === 1 ? "Alternative Terms For Early Risers" : "\"You won't believe what happened next…\""}</div>
                     <div className="mt-2 flex items-center gap-1 text-[10px] text-accent"><Trophy className="size-3" /> 94% viral score</div>
                   </div>
                 </div>
