@@ -113,10 +113,16 @@ export const Route = createFileRoute("/api/public/stripe-webhook")({
                 logStep("No user found for customer", { customerId });
                 break;
               }
-              // Determine plan from the line item price id
-              const priceId = invoice.lines?.data?.[0]?.price?.id;
+              // Determine plan from the line item price id (cast — Stripe type shape varies by API version)
+              const line = invoice.lines?.data?.[0] as unknown as { price?: { id?: string } } | undefined;
+              const priceId = line?.price?.id;
               const planInfo = priceId ? PLAN_BY_PRICE_ID[priceId] : undefined;
-              const update: Record<string, unknown> = {
+              const update: {
+                minutes_used: number;
+                cycle_start: string;
+                plan?: string;
+                monthly_minutes?: number;
+              } = {
                 minutes_used: 0,
                 cycle_start: new Date().toISOString(),
               };
