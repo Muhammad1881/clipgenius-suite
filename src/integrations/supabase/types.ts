@@ -19,11 +19,13 @@ export type Database = {
           avatar_url: string | null
           created_at: string
           credits: number
+          cycle_start: string
           display_name: string | null
           id: string
           minutes_used: number
           monthly_minutes: number
           plan: string
+          stripe_customer_id: string | null
           updated_at: string
           user_id: string
           username: string | null
@@ -32,11 +34,13 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string
           credits?: number
+          cycle_start?: string
           display_name?: string | null
           id?: string
           minutes_used?: number
           monthly_minutes?: number
           plan?: string
+          stripe_customer_id?: string | null
           updated_at?: string
           user_id: string
           username?: string | null
@@ -45,11 +49,13 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string
           credits?: number
+          cycle_start?: string
           display_name?: string | null
           id?: string
           minutes_used?: number
           monthly_minutes?: number
           plan?: string
+          stripe_customer_id?: string | null
           updated_at?: string
           user_id?: string
           username?: string | null
@@ -94,7 +100,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      consume_minutes: {
+        Args: { _minutes: number }
+        Returns: {
+          minutes_used: number
+          monthly_minutes: number
+          ok: boolean
+        }[]
+      }
+      refund_minutes: { Args: { _minutes: number }; Returns: undefined }
+      reset_expired_free_cycles: { Args: never; Returns: number }
     }
     Enums: {
       [_ in never]: never

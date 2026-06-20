@@ -1,11 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useCallback } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { Upload as UploadIcon, FileVideo, Link2, X, Sparkles, Loader2, Download, TrendingUp, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useProfile } from "@/hooks/useProfile";
+import { consumeMinutes, refundMinutes } from "@/lib/billing.functions";
+
 
 export const Route = createFileRoute("/_app/upload")({
   component: UploadPage,
@@ -51,6 +54,8 @@ function UploadPage() {
   const [error, setError] = useState<string | null>(null);
   const [clips, setClips] = useState<Clip[]>([]);
   const { profile, refetch: refetchProfile } = useProfile();
+  const consume = useServerFn(consumeMinutes);
+  const refund = useServerFn(refundMinutes);
 
   const remainingMinutes = profile ? profile.monthly_minutes - profile.minutes_used : 0;
 
@@ -81,16 +86,47 @@ function UploadPage() {
     setFile(null); setProgress(0); setPhase("idle"); setError(null); setClips([]); setDurationMin(null);
   };
 
-  const upload = () => {
+  const upload = async () => {
     if (!file) return;
-    if (durationMin != null && Math.ceil(durationMin) > remainingMinutes) {
-      const msg = "You do not have enough minutes remaining.";
+    const minutesNeeded = durationMin != null ? Math.ceil(durationMin) : null;
+    if (minutesNeeded == null) {
+      setError("Could not read video duration.");
+      setPhase("error");
+      return;
+    }
+
+    // Server-side quota reservation (atomic) BEFORE upload starts.
+    setPhase("uploading"); setError(null); setClips([]); setProgress(0);
+    let reserved = false;
+    try {
+      const r = await consume({ data: { minutes: minutesNeeded } });
+      if (!r.ok) {
+        const msg = "You do not have enough minutes remaining.";
+        setError(msg);
+        setPhase("error");
+        toast.error(msg);
+        await refetchProfile();
+        return;
+      }
+      reserved = true;
+      await refetchProfile();
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Could not reserve minutes.";
       setError(msg);
       setPhase("error");
       toast.error(msg);
       return;
     }
-    setPhase("uploading"); setError(null); setClips([]); setProgress(0);
+
+    const releaseReservation = async () => {
+      if (!reserved) return;
+      try {
+        await refund({ data: { minutes: minutesNeeded } });
+        await refetchProfile();
+      } catch (e) {
+        console.error("Failed to refund minutes:", e);
+      }
+    };
 
     const form = new FormData();
     form.append("video", file);
@@ -116,7 +152,7 @@ function UploadPage() {
         setClips(arr);
         setPhase("done");
 
-        // Persist project history
+        // Persist project history (RLS-scoped to user)
         try {
           const { data: userData } = await supabase.auth.getUser();
           const uid = userData.user?.id;
@@ -134,24 +170,6 @@ function UploadPage() {
             } else {
               toast.success("Project saved to your history.");
             }
-
-            // Deduct minutes
-            if (durationMin != null && profile) {
-              const used = Math.min(
-                profile.monthly_minutes,
-                profile.minutes_used + Math.ceil(durationMin),
-              );
-              const { error: updateErr } = await supabase
-                .from("profiles")
-                .update({ minutes_used: used })
-                .eq("user_id", uid);
-              if (updateErr) {
-                console.error("Failed to update minutes:", updateErr);
-              } else {
-                await refetchProfile();
-                window.dispatchEvent(new Event("profile:refresh"));
-              }
-            }
           }
         } catch (e) {
           console.error(e);
@@ -165,15 +183,18 @@ function UploadPage() {
           `Upload failed (${xhr.status} ${xhr.statusText || ""})`.trim();
         setError(msg);
         setPhase("error");
+        await releaseReservation();
       }
     };
-    xhr.onerror = () => {
+    xhr.onerror = async () => {
       setError(`Could not reach ${API_URL}. Check that the backend is online and CORS allows this origin.`);
       setPhase("error");
+      await releaseReservation();
     };
 
     xhr.send(form);
   };
+
 
   return (
     <div className="p-6 sm:p-8 max-w-4xl mx-auto relative">
