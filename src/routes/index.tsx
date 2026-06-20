@@ -105,6 +105,7 @@ function Landing() {
                       loop
                       muted
                       playsInline
+                      preload="none"
                       className="absolute inset-0 w-full h-full object-cover"
                     />
                   )}
