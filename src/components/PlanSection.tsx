@@ -1,23 +1,30 @@
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Sparkles, Clock, Calendar, Gauge } from "lucide-react";
+import { Sparkles, Clock, Calendar, Gauge, ExternalLink, AlertTriangle } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
 import { useAuth } from "@/hooks/useAuth";
-import { getSubscriptionInfo } from "@/lib/billing.functions";
+import { getSubscriptionInfo, createCustomerPortalSession } from "@/lib/billing.functions";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export function PlanSection() {
   const { user } = useAuth();
   const { profile } = useProfile();
   const getInfo = useServerFn(getSubscriptionInfo);
+  const openPortal = useServerFn(createCustomerPortalSession);
   const [renewal, setRenewal] = useState<string | null>(null);
+  const [renewalLoading, setRenewalLoading] = useState(false);
+  const [portalLoading, setPortalLoading] = useState(false);
 
-  const isPaid = profile?.plan && profile.plan !== "free";
+  const isPaid = !!profile?.plan && profile.plan !== "free";
 
   useEffect(() => {
     if (!user || !isPaid) return;
+    setRenewalLoading(true);
     getInfo({})
       .then((r) => setRenewal(r?.renewal_date ?? null))
-      .catch(() => setRenewal(null));
+      .catch(() => setRenewal(null))
+      .finally(() => setRenewalLoading(false));
   }, [user, isPaid, getInfo]);
 
   if (!user || !profile) return null;
@@ -26,6 +33,25 @@ export function PlanSection() {
   const used = profile.minutes_used;
   const total = profile.monthly_minutes;
   const pct = total > 0 ? Math.min(100, Math.round((used / total) * 100)) : 0;
+  const overQuota = used >= total;
+  const nearQuota = !overQuota && pct >= 80;
+  const barColor = overQuota
+    ? "bg-destructive"
+    : nearQuota
+    ? "bg-amber-500"
+    : "bg-gradient-vivid";
+
+  const handlePortal = async () => {
+    try {
+      setPortalLoading(true);
+      const r = await openPortal({ data: { origin: window.location.origin } });
+      if (r?.url) window.location.href = r.url;
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not open billing portal");
+    } finally {
+      setPortalLoading(false);
+    }
+  };
 
   return (
     <div className="glass-strong rounded-3xl p-7 sm:p-8 border-gradient max-w-3xl mx-auto mb-12">
@@ -55,16 +81,43 @@ export function PlanSection() {
           <div className="flex items-center gap-2 text-xs text-muted-foreground"><Clock className="size-3.5" /> Used this cycle</div>
           <div className="mt-1.5 text-2xl font-display font-semibold">{used} <span className="text-sm text-muted-foreground font-normal">/ {total}</span></div>
           <div className="mt-2 h-1.5 rounded-full bg-white/10 overflow-hidden">
-            <div className="h-full bg-gradient-vivid" style={{ width: `${pct}%` }} />
+            <div className={`h-full transition-all ${barColor}`} style={{ width: `${pct}%` }} />
           </div>
+          {overQuota && (
+            <div className="mt-2 flex items-center gap-1.5 text-xs text-destructive">
+              <AlertTriangle className="size-3.5" /> Out of minutes
+            </div>
+          )}
         </div>
         <div className="glass rounded-2xl p-4">
           <div className="flex items-center gap-2 text-xs text-muted-foreground"><Calendar className="size-3.5" /> Renews</div>
           <div className="mt-1.5 text-2xl font-display font-semibold">
-            {renewal ? new Date(renewal).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : "—"}
+            {!isPaid ? (
+              "—"
+            ) : renewalLoading ? (
+              <span className="inline-block h-6 w-24 rounded-md bg-white/10 animate-pulse" />
+            ) : renewal ? (
+              new Date(renewal).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })
+            ) : (
+              "—"
+            )}
           </div>
         </div>
       </div>
+
+      {isPaid && (
+        <div className="mt-6 flex justify-end">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handlePortal}
+            disabled={portalLoading}
+            className="rounded-xl"
+          >
+            {portalLoading ? "Opening…" : <>Manage billing <ExternalLink className="size-3.5 ml-1.5" /></>}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

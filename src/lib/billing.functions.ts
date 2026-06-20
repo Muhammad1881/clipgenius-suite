@@ -99,3 +99,23 @@ export const getSubscriptionInfo = createServerFn({ method: "GET" })
       ?? sub.items.data[0]?.current_period_end;
     return { renewal_date: periodEnd ? new Date(periodEnd * 1000).toISOString() : null };
   });
+
+export const createCustomerPortalSession = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) => z.object({ origin: z.string().url() }).parse(input))
+  .handler(async ({ data, context }) => {
+    const Stripe = (await import("stripe")).default;
+    const key = process.env.STRIPE_SECRET_KEY;
+    if (!key) throw new Error("STRIPE_SECRET_KEY is not configured");
+    const stripe = new Stripe(key);
+    const email = context.claims?.email as string | undefined;
+    if (!email) throw new Error("No email on account");
+    const customers = await stripe.customers.list({ email, limit: 1 });
+    const customerId = customers.data[0]?.id;
+    if (!customerId) throw new Error("No Stripe customer found");
+    const portal = await stripe.billingPortal.sessions.create({
+      customer: customerId,
+      return_url: `${data.origin}/pricing`,
+    });
+    return { url: portal.url };
+  });
