@@ -13,12 +13,17 @@ function Dashboard() {
   const { profile, loading } = useProfile();
   const hasProjects = userProjects.length > 0;
 
-  const remaining = profile ? profile.monthly_minutes - profile.minutes_used : 0;
   const total = profile?.monthly_minutes ?? 30;
-  const pct = total > 0 ? Math.round((remaining / total) * 100) : 0;
+  const used = profile?.minutes_used ?? 0;
+  const remaining = Math.max(0, total - used);
+  const usedPct = total > 0 ? Math.min(100, Math.round((used / total) * 100)) : 0;
+  const overQuota = !loading && !!profile && used >= total;
+  const nearQuota = !overQuota && usedPct >= 80;
+  const barColor = overQuota ? "bg-destructive" : nearQuota ? "bg-amber-500" : "bg-gradient-vivid";
   const planLabel = profile?.plan
     ? profile.plan.charAt(0).toUpperCase() + profile.plan.slice(1)
     : "Free";
+  const isPaid = !!profile?.plan && profile.plan !== "free";
 
   const stats = [
     { label: "Remaining minutes", value: loading ? "—" : String(remaining), icon: Clock, change: "—" },
@@ -93,11 +98,15 @@ function Dashboard() {
               <span className="text-muted-foreground text-sm">/ {total}</span>
             </div>
             <div className="mt-4 h-2 rounded-full bg-white/10 overflow-hidden">
-              <div className="h-full bg-gradient-vivid transition-all" style={{ width: `${pct}%` }} />
+              <div className={`h-full transition-all ${barColor}`} style={{ width: `${usedPct}%` }} />
             </div>
-            <p className="text-xs text-muted-foreground mt-3 leading-relaxed">{planLabel} plan. 1 minute per minute of video processed.</p>
+            <p className="text-xs text-muted-foreground mt-3 leading-relaxed">
+              {overQuota
+                ? "You've used all your minutes this cycle."
+                : `${planLabel} plan. 1 minute per minute of video processed.`}
+            </p>
             <Button asChild className="mt-5 w-full btn-premium rounded-xl">
-              <Link to="/pricing">Upgrade plan</Link>
+              <Link to="/pricing">{isPaid ? "Manage plan" : "Upgrade plan"}</Link>
             </Button>
           </div>
           <div className="glass rounded-2xl p-6 border-gradient">

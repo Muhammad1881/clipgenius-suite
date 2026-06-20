@@ -4,7 +4,12 @@ import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/billing/cancel")({
   component: CancelPage,
-  head: () => ({ meta: [{ title: "Payment canceled — Clipra" }] }),
+  head: () => ({
+    meta: [
+      { title: "Payment canceled — Clipra" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
 });
 
 function CancelPage() {
