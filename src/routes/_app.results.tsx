@@ -204,7 +204,10 @@ function SocialMetaBlock({ clip, isPaid }: { clip: Clip; isPaid: boolean }) {
 
 
 function Results() {
+  const { profile } = useProfile();
+  const isPaid = (profile?.plan ?? "free") !== "free";
   const [projects, setProjects] = useState<Project[] | null>(null);
+
 
   const load = async () => {
     const { data, error } = await supabase
