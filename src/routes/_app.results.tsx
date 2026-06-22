@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Download, TrendingUp, FolderOpen, Loader2, Upload as UploadIcon, Trash2 } from "lucide-react";
+import { Download, TrendingUp, FolderOpen, Loader2, Upload as UploadIcon, Trash2, Copy, Check, Sparkles, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
+import { generateSocialMeta, type SocialMeta } from "@/lib/social-meta.functions";
 
 export const Route = createFileRoute("/_app/results")({ component: Results });
 
@@ -20,6 +22,8 @@ function resolveClipUrl(url: string | undefined): string | undefined {
 type Clip = {
   title?: string;
   score?: number;
+  reason?: string;
+  transcript?: string;
   url?: string;
   video_url?: string;
   preview_url?: string;
@@ -38,6 +42,122 @@ function avgScore(clips: Clip[]): number | null {
   const scores = clips.map((c) => (typeof c.score === "number" ? c.score : null)).filter((n): n is number => n !== null);
   if (!scores.length) return null;
   return Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+}
+
+function CopyButton({ value, label }: { value: string; label: string }) {
+  const [copied, setCopied] = useState(false);
+  const onCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      toast.success(`${label} copied`);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      toast.error("Copy failed");
+    }
+  };
+  return (
+    <Button
+      size="sm"
+      variant="ghost"
+      onClick={onCopy}
+      className="h-7 px-2 glass hover:bg-white/10 rounded-md text-[11px] gap-1.5"
+    >
+      {copied ? <Check className="size-3 text-accent" /> : <Copy className="size-3" />}
+      {label}
+    </Button>
+  );
+}
+
+function SocialMetaBlock({ clip }: { clip: Clip }) {
+  const generate = useServerFn(generateSocialMeta);
+  const [meta, setMeta] = useState<SocialMeta | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const title = (clip.title as string) || "Clip";
+
+  const run = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await generate({
+        data: {
+          title,
+          reason: (clip.reason as string) ?? null,
+          transcript: (clip.transcript as string) ?? null,
+        },
+      });
+      setMeta(result);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to generate");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    run();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <div className="mt-3 space-y-2.5">
+      {/* Caption */}
+      <div className="glass rounded-lg p-2.5 border border-white/5">
+        <div className="flex items-center justify-between gap-2 mb-1">
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+            <Sparkles className="size-2.5 text-accent" /> Caption
+          </span>
+          {meta && <CopyButton value={meta.caption} label="Copy" />}
+        </div>
+        {loading && !meta ? (
+          <div className="text-xs text-muted-foreground flex items-center gap-1.5">
+            <Loader2 className="size-3 animate-spin" /> Generating…
+          </div>
+        ) : meta ? (
+          <p className="text-xs leading-relaxed text-foreground/90">{meta.caption}</p>
+        ) : (
+          <p className="text-xs text-destructive">{error}</p>
+        )}
+      </div>
+
+      {/* Hashtags */}
+      <div className="glass rounded-lg p-2.5 border border-white/5">
+        <div className="flex items-center justify-between gap-2 mb-1.5">
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Hashtags</span>
+          {meta && <CopyButton value={meta.hashtags.join(" ")} label="Copy" />}
+        </div>
+        {loading && !meta ? (
+          <div className="text-xs text-muted-foreground flex items-center gap-1.5">
+            <Loader2 className="size-3 animate-spin" /> Generating…
+          </div>
+        ) : meta ? (
+          <div className="flex flex-wrap gap-1">
+            {meta.hashtags.map((h) => (
+              <span
+                key={h}
+                className="text-[10px] px-1.5 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20"
+              >
+                {h}
+              </span>
+            ))}
+          </div>
+        ) : null}
+      </div>
+
+      {error && !loading && (
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={run}
+          className="w-full h-7 glass hover:bg-white/10 rounded-md text-[11px] gap-1.5"
+        >
+          <RefreshCw className="size-3" /> Retry
+        </Button>
+      )}
+    </div>
+  );
 }
 
 function Results() {
@@ -159,7 +279,13 @@ function Results() {
                             )}
                           </div>
                           <div className="p-4">
-                            <div className="font-medium line-clamp-2 text-sm">{title}</div>
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="font-medium line-clamp-2 text-sm flex-1">{title}</div>
+                              <CopyButton value={title} label="Title" />
+                            </div>
+
+                            <SocialMetaBlock clip={c} />
+
                             <div className="mt-4">
                               <Button
                                 asChild={!!downloadHref}
