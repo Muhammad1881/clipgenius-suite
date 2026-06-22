@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Download, TrendingUp, FolderOpen, Loader2, Upload as UploadIcon, Trash2, Copy, Check, Sparkles, RefreshCw } from "lucide-react";
+import { Download, TrendingUp, FolderOpen, Loader2, Upload as UploadIcon, Trash2, Copy, Check, Sparkles, RefreshCw, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import { generateSocialMeta, type SocialMeta } from "@/lib/social-meta.functions";
+import { useProfile } from "@/hooks/useProfile";
 
 export const Route = createFileRoute("/_app/results")({ component: Results });
 
