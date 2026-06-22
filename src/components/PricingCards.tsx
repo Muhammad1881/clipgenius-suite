@@ -43,11 +43,13 @@ const plans: Plan[] = [
       "Upload videos up to 60 minutes",
       "Maximum 10 clips per video",
       "AI viral detection",
+      "AI captions & hashtags",
       "Auto subtitles",
       "HD exports",
       "No watermark",
       "30-day project history",
     ],
+
     cta: "Get Starter",
     planKey: "starter",
   },
@@ -60,6 +62,8 @@ const plans: Plan[] = [
       "Upload videos up to 120 minutes",
       "Maximum 10 clips per video",
       "AI viral detection",
+      "AI captions & hashtags",
+
       "Auto subtitles",
       "HD exports",
       "No watermark",

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Download, TrendingUp, FolderOpen, Loader2, Upload as UploadIcon, Trash2, Copy, Check, Sparkles, RefreshCw } from "lucide-react";
+import { Download, TrendingUp, FolderOpen, Loader2, Upload as UploadIcon, Trash2, Copy, Check, Sparkles, RefreshCw, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import { generateSocialMeta, type SocialMeta } from "@/lib/social-meta.functions";
+import { useProfile } from "@/hooks/useProfile";
 
 export const Route = createFileRoute("/_app/results")({ component: Results });
 
@@ -69,7 +70,46 @@ function CopyButton({ value, label }: { value: string; label: string }) {
   );
 }
 
-function SocialMetaBlock({ clip }: { clip: Clip }) {
+function UpgradeOverlay() {
+  return (
+    <div className="mt-3 relative rounded-xl overflow-hidden border border-primary/20">
+      {/* Blurred preview */}
+      <div className="space-y-2.5 p-3 blur-[3px] select-none pointer-events-none opacity-60">
+        <div className="glass rounded-lg p-2.5 border border-white/5">
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1 flex items-center gap-1">
+            <Sparkles className="size-2.5 text-accent" /> Caption
+          </div>
+          <p className="text-xs leading-relaxed">This clip is about to blow up — here's why creators can't stop watching it.</p>
+        </div>
+        <div className="glass rounded-lg p-2.5 border border-white/5">
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5">Hashtags</div>
+          <div className="flex flex-wrap gap-1">
+            {["#shorts", "#viral", "#fyp", "#reels", "#tiktok"].map((h) => (
+              <span key={h} className="text-[10px] px-1.5 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20">{h}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/70 to-background/90 grid place-items-center p-4">
+        <div className="text-center max-w-[220px]">
+          <div className="mx-auto size-9 rounded-xl bg-gradient-vivid grid place-items-center mb-2 shadow-card">
+            <Lock className="size-4 text-primary-foreground" />
+          </div>
+          <div className="text-xs font-semibold tracking-tight">AI captions & hashtags</div>
+          <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
+            Unlock viral-ready captions and smart hashtags on any paid plan.
+          </p>
+          <Button asChild size="sm" className="btn-premium rounded-lg h-7 px-3 mt-2.5 text-[11px]">
+            <Link to="/pricing"><Sparkles className="size-3 mr-1" /> Upgrade</Link>
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SocialMetaBlock({ clip, isPaid }: { clip: Clip; isPaid: boolean }) {
   const generate = useServerFn(generateSocialMeta);
   const [meta, setMeta] = useState<SocialMeta | null>(null);
   const [loading, setLoading] = useState(false);
@@ -97,9 +137,11 @@ function SocialMetaBlock({ clip }: { clip: Clip }) {
   };
 
   useEffect(() => {
-    run();
+    if (isPaid) run();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isPaid]);
+
+  if (!isPaid) return <UpgradeOverlay />;
 
   return (
     <div className="mt-3 space-y-2.5">
@@ -160,8 +202,12 @@ function SocialMetaBlock({ clip }: { clip: Clip }) {
   );
 }
 
+
 function Results() {
+  const { profile } = useProfile();
+  const isPaid = (profile?.plan ?? "free") !== "free";
   const [projects, setProjects] = useState<Project[] | null>(null);
+
 
   const load = async () => {
     const { data, error } = await supabase
@@ -284,7 +330,7 @@ function Results() {
                               <CopyButton value={title} label="Title" />
                             </div>
 
-                            <SocialMetaBlock clip={c} />
+                            <SocialMetaBlock clip={c} isPaid={isPaid} />
 
                             <div className="mt-4">
                               <Button
