@@ -6,7 +6,11 @@ export const consumeMinutes = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => z.object({ minutes: z.number().int().min(1).max(240) }).parse(input))
   .handler(async ({ data, context }) => {
-    const { data: rows, error } = await context.supabase.rpc("consume_minutes", { _minutes: data.minutes });
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: rows, error } = await supabaseAdmin.rpc("consume_minutes_for", {
+      _user_id: context.userId,
+      _minutes: data.minutes,
+    });
     if (error) throw new Error(error.message);
     const row = Array.isArray(rows) ? rows[0] : rows;
     return {
@@ -20,10 +24,15 @@ export const refundMinutes = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => z.object({ minutes: z.number().int().min(1).max(240) }).parse(input))
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase.rpc("refund_minutes", { _minutes: data.minutes });
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.rpc("refund_minutes_for", {
+      _user_id: context.userId,
+      _minutes: data.minutes,
+    });
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
 
 
 export const PLAN_PRICE_IDS = {

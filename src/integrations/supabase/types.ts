@@ -108,7 +108,19 @@ export type Database = {
           ok: boolean
         }[]
       }
+      consume_minutes_for: {
+        Args: { _minutes: number; _user_id: string }
+        Returns: {
+          minutes_used: number
+          monthly_minutes: number
+          ok: boolean
+        }[]
+      }
       refund_minutes: { Args: { _minutes: number }; Returns: undefined }
+      refund_minutes_for: {
+        Args: { _minutes: number; _user_id: string }
+        Returns: undefined
+      }
       reset_expired_free_cycles: { Args: never; Returns: number }
     }
     Enums: {
