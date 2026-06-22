@@ -357,7 +357,16 @@ function UploadPage() {
                       )}
                     </div>
                     <div className="p-4">
-                      <div className="font-medium line-clamp-2 text-sm">{title}</div>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="font-medium line-clamp-2 text-sm flex-1">{title}</div>
+                        <CopyButton value={title} label="Title" />
+                      </div>
+                      <SocialMetaBlock
+                        title={title}
+                        reason={(c.reason as string) ?? null}
+                        transcript={(c.transcript as string) ?? null}
+                        isPaid={isPaid}
+                      />
                       <div className="mt-4">
                         <Button
                           asChild={!!downloadHref}
