@@ -16,9 +16,21 @@ export type SocialMeta = {
 export const generateSocialMeta = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => InputSchema.parse(input))
-  .handler(async ({ data }): Promise<SocialMeta> => {
+  .handler(async ({ data, context }): Promise<SocialMeta> => {
     const key = process.env.LOVABLE_API_KEY;
     if (!key) throw new Error("Missing LOVABLE_API_KEY");
+
+    // Paywall: only paid plans can generate social meta
+    const { data: profile } = await context.supabase
+      .from("profiles")
+      .select("plan")
+      .eq("user_id", context.userId)
+      .single();
+    const plan = profile?.plan ?? "free";
+    if (plan === "free") {
+      throw new Error("UPGRADE_REQUIRED");
+    }
+
 
     const userPrompt = [
       `Clip title: ${data.title}`,
