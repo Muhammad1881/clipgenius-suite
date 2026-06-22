@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useProfile } from "@/hooks/useProfile";
 import { consumeMinutes, refundMinutes } from "@/lib/billing.functions";
+import { CopyButton, SocialMetaBlock } from "@/components/ClipSocialMeta";
 
 
 export const Route = createFileRoute("/_app/upload")({
