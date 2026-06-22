@@ -171,7 +171,12 @@ function Results() {
                               <CopyButton value={title} label="Title" />
                             </div>
 
-                            <SocialMetaBlock clip={c} isPaid={isPaid} />
+                            <SocialMetaBlock
+                              title={title}
+                              reason={(c.reason as string) ?? null}
+                              transcript={(c.transcript as string) ?? null}
+                              isPaid={isPaid}
+                            />
 
                             <div className="mt-4">
                               <Button
