@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useProfile } from "@/hooks/useProfile";
 import { consumeMinutes, refundMinutes } from "@/lib/billing.functions";
+import { CopyButton, SocialMetaBlock } from "@/components/ClipSocialMeta";
 
 
 export const Route = createFileRoute("/_app/upload")({
@@ -53,9 +54,13 @@ function UploadPage() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [error, setError] = useState<string | null>(null);
   const [clips, setClips] = useState<Clip[]>([]);
-  const { profile, refetch: refetchProfile } = useProfile();
+  const { profile } = useProfile();
   const consume = useServerFn(consumeMinutes);
   const refund = useServerFn(refundMinutes);
+  const isPaid = (profile?.plan ?? "free") !== "free";
+  const refetchProfile = async () => {
+    if (typeof window !== "undefined") window.dispatchEvent(new Event("profile:refresh"));
+  };
 
   const remainingMinutes = profile ? profile.monthly_minutes - profile.minutes_used : 0;
 
@@ -352,7 +357,16 @@ function UploadPage() {
                       )}
                     </div>
                     <div className="p-4">
-                      <div className="font-medium line-clamp-2 text-sm">{title}</div>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="font-medium line-clamp-2 text-sm flex-1">{title}</div>
+                        <CopyButton value={title} label="Title" />
+                      </div>
+                      <SocialMetaBlock
+                        title={title}
+                        reason={(c.reason as string) ?? null}
+                        transcript={(c.transcript as string) ?? null}
+                        isPaid={isPaid}
+                      />
                       <div className="mt-4">
                         <Button
                           asChild={!!downloadHref}
