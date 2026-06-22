@@ -54,9 +54,13 @@ function UploadPage() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [error, setError] = useState<string | null>(null);
   const [clips, setClips] = useState<Clip[]>([]);
-  const { profile, refetch: refetchProfile } = useProfile();
+  const { profile } = useProfile();
   const consume = useServerFn(consumeMinutes);
   const refund = useServerFn(refundMinutes);
+  const isPaid = (profile?.plan ?? "free") !== "free";
+  const refetchProfile = async () => {
+    if (typeof window !== "undefined") window.dispatchEvent(new Event("profile:refresh"));
+  };
 
   const remainingMinutes = profile ? profile.monthly_minutes - profile.minutes_used : 0;
 
