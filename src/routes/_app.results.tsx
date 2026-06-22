@@ -330,7 +330,7 @@ function Results() {
                               <CopyButton value={title} label="Title" />
                             </div>
 
-                            <SocialMetaBlock clip={c} />
+                            <SocialMetaBlock clip={c} isPaid={isPaid} />
 
                             <div className="mt-4">
                               <Button
