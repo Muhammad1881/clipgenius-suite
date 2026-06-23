@@ -81,7 +81,11 @@ function ResetPasswordPage() {
         Choose a strong password you haven't used before.
       </p>
 
-      {!ready ? (
+      {checking ? (
+        <div className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
+          <Loader2 className="size-4 animate-spin" /> Verifying your reset link…
+        </div>
+      ) : !ready ? (
         <div className="mt-6 rounded-xl border border-white/10 bg-white/[0.03] p-5 text-sm text-muted-foreground">
           This link is invalid or has expired. Request a new one from{" "}
           <Link to="/forgot-password" className="text-foreground hover:text-accent font-medium">
