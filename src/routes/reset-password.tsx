@@ -29,14 +29,24 @@ function ResetPasswordPage() {
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(false);
+  const [checking, setChecking] = useState(true);
 
   useEffect(() => {
     // Supabase puts the recovery session in URL hash; client picks it up automatically.
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") setReady(true);
+      if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") {
+        setReady(true);
+        setChecking(false);
+      }
     });
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) setReady(true);
+      if (data.session) {
+        setReady(true);
+        setChecking(false);
+      } else {
+        // Give Supabase a moment to process the URL hash token before giving up.
+        setTimeout(() => setChecking(false), 2000);
+      }
     });
     return () => subscription.unsubscribe();
   }, []);
@@ -71,7 +81,11 @@ function ResetPasswordPage() {
         Choose a strong password you haven't used before.
       </p>
 
-      {!ready ? (
+      {checking ? (
+        <div className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
+          <Loader2 className="size-4 animate-spin" /> Verifying your reset link…
+        </div>
+      ) : !ready ? (
         <div className="mt-6 rounded-xl border border-white/10 bg-white/[0.03] p-5 text-sm text-muted-foreground">
           This link is invalid or has expired. Request a new one from{" "}
           <Link to="/forgot-password" className="text-foreground hover:text-accent font-medium">
