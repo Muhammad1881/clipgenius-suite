@@ -82,6 +82,11 @@ function LoginPage() {
         <Field id="password" label="Password" icon={<Lock className="size-4" />}>
           <Input id="password" type="password" autoComplete="current-password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} maxLength={128} className="pl-9 h-11 bg-white/[0.03] border-white/10" />
         </Field>
+        <div className="flex justify-end -mt-2">
+          <Link to="/forgot-password" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+            Forgot password?
+          </Link>
+        </div>
         <Button type="submit" disabled={loading} className="btn-premium w-full rounded-xl h-11">
           {loading ? <Loader2 className="size-4 animate-spin" /> : "Sign in"}
         </Button>
