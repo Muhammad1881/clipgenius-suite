@@ -110,9 +110,20 @@ function Landing() {
                       className="absolute inset-0 w-full h-full object-cover"
                     />
                   )}
+                  {i === 2 && (
+                    <video
+                      src={clip2Video.url}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="none"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  )}
                   <div className="relative text-[10px] uppercase tracking-wider text-muted-foreground">Clip 0{i}</div>
                   <div className="relative">
-                    <div className="text-[11px] sm:text-xs text-foreground font-medium leading-tight">{i === 1 ? "Alternative Terms For Early Risers" : "\"You won't believe what happened next…\""}</div>
+                    <div className="text-[11px] sm:text-xs text-foreground font-medium leading-tight">{i === 1 ? "Alternative Terms For Early Risers" : i === 2 ? "Cristiano on adapting to life in Saudi Arabia" : "\"You won't believe what happened next…\""}</div>
                     <div className="mt-2 flex items-center gap-1 text-[10px] text-accent"><Trophy className="size-3" /> 94% viral score</div>
                   </div>
                 </div>
