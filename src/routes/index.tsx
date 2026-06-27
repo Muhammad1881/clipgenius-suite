@@ -8,6 +8,7 @@ import { PricingCards } from "@/components/PricingCards";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import heroBg from "@/assets/hero-bg.jpg";
 import clip1Video from "@/assets/clip-9.mp4.asset.json";
+import clip2Video from "@/assets/cristiano-saudi.mp4.asset.json";
 
 export const Route = createFileRoute("/")({
   component: Landing,
