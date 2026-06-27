@@ -54,6 +54,7 @@ function UploadPage() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [error, setError] = useState<string | null>(null);
   const [clips, setClips] = useState<Clip[]>([]);
+  const [subtitleLanguage, setSubtitleLanguage] = useState<"same" | "english">("same");
   const { profile } = useProfile();
   const consume = useServerFn(consumeMinutes);
   const refund = useServerFn(refundMinutes);
@@ -136,6 +137,7 @@ function UploadPage() {
     const form = new FormData();
     form.append("video", file);
     form.append("plan", (profile?.plan as string) ?? "free");
+    form.append("subtitleLanguage", subtitleLanguage);
 
     const xhr = new XMLHttpRequest();
     xhr.open("POST", API_URL);
@@ -256,6 +258,34 @@ function UploadPage() {
             <button onClick={reset} className="text-muted-foreground hover:text-foreground transition-colors">
               <X className="size-4" />
             </button>
+          </div>
+
+          <div className="mt-5">
+            <div className="text-sm font-medium mb-2">Subtitle language</div>
+            <div className="grid grid-cols-2 gap-2">
+              {([
+                { v: "same", label: "Same as video", desc: "Keep original language" },
+                { v: "english", label: "English", desc: "Translate to English" },
+              ] as const).map((opt) => {
+                const active = subtitleLanguage === opt.v;
+                return (
+                  <button
+                    key={opt.v}
+                    type="button"
+                    onClick={() => setSubtitleLanguage(opt.v)}
+                    disabled={phase === "uploading" || phase === "processing"}
+                    className={`text-left rounded-xl px-4 py-3 border transition-all ${
+                      active
+                        ? "border-primary bg-primary/10 shadow-card"
+                        : "border-white/10 hover:border-white/20 bg-white/[0.02]"
+                    }`}
+                  >
+                    <div className="text-sm font-medium">{opt.label}</div>
+                    <div className="text-xs text-muted-foreground mt-0.5">{opt.desc}</div>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {(phase === "uploading" || phase === "processing") && (
