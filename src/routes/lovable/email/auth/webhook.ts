@@ -31,7 +31,7 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 }
 
 // Configuration
-const SITE_NAME = "Clipra"
+const SITE_NAME = "clipgenius-suite"
 const SENDER_DOMAIN = "notify.clipra.bond"
 const ROOT_DOMAIN = "clipra.bond"
 const FROM_DOMAIN = "clipra.bond"
