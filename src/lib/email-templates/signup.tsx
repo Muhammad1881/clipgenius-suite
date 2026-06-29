@@ -30,7 +30,6 @@ export const SignupEmail = ({
     <Preview>Confirm your email for {siteName}</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Text style={brand}>Clipra</Text>
         <Heading style={h1}>Confirm your email</Heading>
         <Text style={text}>
           Thanks for signing up for{' '}
@@ -60,25 +59,11 @@ export const SignupEmail = ({
 export default SignupEmail
 
 const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
-const container = {
-  maxWidth: '560px',
-  margin: '0 auto',
-  padding: '32px 28px',
-  border: '1px solid #e5e7eb',
-  borderRadius: '16px',
-}
-const brand = {
-  color: '#14b8a6',
-  fontSize: '13px',
-  fontWeight: 'bold' as const,
-  letterSpacing: '0.08em',
-  margin: '0 0 18px',
-  textTransform: 'uppercase' as const,
-}
+const container = { padding: '20px 25px' }
 const h1 = {
-  fontSize: '24px',
+  fontSize: '22px',
   fontWeight: 'bold' as const,
-  color: '#0f172a',
+  color: '#000000',
   margin: '0 0 20px',
 }
 const text = {
@@ -89,7 +74,7 @@ const text = {
 }
 const link = { color: 'inherit', textDecoration: 'underline' }
 const button = {
-  backgroundColor: '#14b8a6',
+  backgroundColor: '#000000',
   color: '#ffffff',
   fontSize: '14px',
   borderRadius: '8px',
