@@ -7,13 +7,13 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { loadEnv } from "vite";
+import { loadEnv, type ConfigEnv } from "vite";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
 // @cloudflare/vite-plugin builds from this — wrangler.jsonc main alone is insufficient.
-export default async function config(env: { mode: string }) {
+export default async function config(env: ConfigEnv) {
   const { mode } = env;
   const serverEnv = loadEnv(mode, process.cwd(), "");
   Object.assign(process.env, serverEnv);
