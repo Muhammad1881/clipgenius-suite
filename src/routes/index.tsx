@@ -13,7 +13,11 @@ import clip2Video from "@/assets/cristiano-saudi.mp4.asset.json";
 export const Route = createFileRoute("/")({
   component: Landing,
   head: () => ({
+    meta: [
+      { property: "og:url", content: "https://clipra.bond/" },
+    ],
     links: [
+      { rel: "canonical", href: "https://clipra.bond/" },
       { rel: "preload", as: "image", href: heroBg, fetchpriority: "high" } as any,
     ],
     scripts: [
