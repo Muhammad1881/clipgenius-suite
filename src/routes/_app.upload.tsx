@@ -101,6 +101,15 @@ function UploadPage() {
       return;
     }
 
+    const FREE_MAX_UPLOAD_MIN = 30;
+    if (!isPaid && minutesNeeded > FREE_MAX_UPLOAD_MIN) {
+      const msg = `Free plan supports videos up to ${FREE_MAX_UPLOAD_MIN} minutes. Upgrade to upload longer videos.`;
+      setError(msg);
+      setPhase("error");
+      toast.error(msg);
+      return;
+    }
+
     // Server-side quota reservation (atomic) BEFORE upload starts.
     setPhase("uploading"); setError(null); setClips([]); setProgress(0);
     let reserved = false;
