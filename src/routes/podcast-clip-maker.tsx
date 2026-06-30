@@ -1,0 +1,43 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { ToolLanding, toolLandingHead } from "@/components/ToolLanding";
+
+const URL_ = "https://clipra.bond/podcast-clip-maker";
+const TITLE = "Podcast Clip Maker — AI Clips from Podcast Episodes | Clipra";
+const DESCRIPTION = "Repurpose podcast episodes into viral short clips. Clipra's AI finds the best soundbites, adds captions, and reframes for TikTok, Reels and Shorts.";
+
+const faqs = [
+  { q: "Can Clipra handle audio-only podcasts?", a: "Yes — upload an MP3 or pair it with a static image / video. Clipra generates captioned audiogram-style vertical clips automatically." },
+  { q: "How does it pick the best podcast moments?", a: "Clipra analyses transcript sentiment, story arcs, and hook strength to find the soundbites most likely to perform on short-form." },
+  { q: "Does it work with multi-speaker podcasts?", a: "Yes. Speakers are transcribed separately and captions label each one when needed." },
+  { q: "Can I edit clips before posting?", a: "Yes — trim, swap captions, change framing or language before exporting." },
+];
+
+export const Route = createFileRoute("/podcast-clip-maker")({
+  component: Page,
+  head: () => toolLandingHead({ title: TITLE, description: DESCRIPTION, url: URL_, faqs }),
+});
+
+function Page() {
+  return (
+    <ToolLanding
+      eyebrow="Podcast Clip Maker"
+      h1="The fastest way to clip podcast episodes."
+      highlight="clip podcast episodes"
+      intro="Turn 2-hour episodes into a week of vertical clips. Clipra's AI finds the best moments, captions them, and packages them for TikTok, Reels and YouTube Shorts."
+      bullets={[
+        "Built for long-form interview podcasts",
+        "Multi-speaker transcription and labels",
+        "Audiogram mode for audio-only shows",
+        "Captions in 30+ languages",
+        "Hook detection picks moments that stop the scroll",
+        "Export 10+ clips from a single episode",
+      ]}
+      steps={[
+        { t: "Drop in your episode", d: "Upload audio or video, up to 4 hours." },
+        { t: "AI finds soundbites", d: "Clipra ranks the most clip-worthy moments." },
+        { t: "Post everywhere", d: "Export vertical clips with captions." },
+      ]}
+      faqs={faqs}
+    />
+  );
+}

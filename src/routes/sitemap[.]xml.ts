@@ -16,6 +16,11 @@ export const Route = createFileRoute("/sitemap.xml")({
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/pricing", changefreq: "weekly", priority: "0.9" },
+          { path: "/ai-clip-generator", changefreq: "weekly", priority: "0.9" },
+          { path: "/youtube-shorts-generator", changefreq: "weekly", priority: "0.9" },
+          { path: "/podcast-clip-maker", changefreq: "weekly", priority: "0.9" },
+          { path: "/tiktok-clip-maker", changefreq: "weekly", priority: "0.9" },
+          { path: "/instagram-reels-maker", changefreq: "weekly", priority: "0.9" },
           { path: "/blog", changefreq: "weekly", priority: "0.8" },
           { path: "/blog/clipra-vs-opus-clip", changefreq: "monthly", priority: "0.8" },
           { path: "/blog/how-to-repurpose-podcasts-into-shorts", changefreq: "monthly", priority: "0.8" },
