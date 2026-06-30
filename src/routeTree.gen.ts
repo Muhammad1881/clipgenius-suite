@@ -18,7 +18,10 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogHowToRepurposePodcastsIntoShortsRouteImport } from './routes/blog.how-to-repurpose-podcasts-into-shorts'
 import { Route as BlogClipraVsOpusClipRouteImport } from './routes/blog.clipra-vs-opus-clip'
+import { Route as BlogBestAiClipGenerators2026RouteImport } from './routes/blog.best-ai-clip-generators-2026'
 import { Route as BillingSuccessRouteImport } from './routes/billing.success'
 import { Route as BillingCancelRouteImport } from './routes/billing.cancel'
 import { Route as AppUploadRouteImport } from './routes/_app.upload'
@@ -74,11 +77,28 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogHowToRepurposePodcastsIntoShortsRoute =
+  BlogHowToRepurposePodcastsIntoShortsRouteImport.update({
+    id: '/blog/how-to-repurpose-podcasts-into-shorts',
+    path: '/blog/how-to-repurpose-podcasts-into-shorts',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const BlogClipraVsOpusClipRoute = BlogClipraVsOpusClipRouteImport.update({
   id: '/blog/clipra-vs-opus-clip',
   path: '/blog/clipra-vs-opus-clip',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogBestAiClipGenerators2026Route =
+  BlogBestAiClipGenerators2026RouteImport.update({
+    id: '/blog/best-ai-clip-generators-2026',
+    path: '/blog/best-ai-clip-generators-2026',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const BillingSuccessRoute = BillingSuccessRouteImport.update({
   id: '/billing/success',
   path: '/billing/success',
@@ -146,7 +166,10 @@ export interface FileRoutesByFullPath {
   '/upload': typeof AppUploadRoute
   '/billing/cancel': typeof BillingCancelRoute
   '/billing/success': typeof BillingSuccessRoute
+  '/blog/best-ai-clip-generators-2026': typeof BlogBestAiClipGenerators2026Route
   '/blog/clipra-vs-opus-clip': typeof BlogClipraVsOpusClipRoute
+  '/blog/how-to-repurpose-podcasts-into-shorts': typeof BlogHowToRepurposePodcastsIntoShortsRoute
+  '/blog/': typeof BlogIndexRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -167,7 +190,10 @@ export interface FileRoutesByTo {
   '/upload': typeof AppUploadRoute
   '/billing/cancel': typeof BillingCancelRoute
   '/billing/success': typeof BillingSuccessRoute
+  '/blog/best-ai-clip-generators-2026': typeof BlogBestAiClipGenerators2026Route
   '/blog/clipra-vs-opus-clip': typeof BlogClipraVsOpusClipRoute
+  '/blog/how-to-repurpose-podcasts-into-shorts': typeof BlogHowToRepurposePodcastsIntoShortsRoute
+  '/blog': typeof BlogIndexRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -190,7 +216,10 @@ export interface FileRoutesById {
   '/_app/upload': typeof AppUploadRoute
   '/billing/cancel': typeof BillingCancelRoute
   '/billing/success': typeof BillingSuccessRoute
+  '/blog/best-ai-clip-generators-2026': typeof BlogBestAiClipGenerators2026Route
   '/blog/clipra-vs-opus-clip': typeof BlogClipraVsOpusClipRoute
+  '/blog/how-to-repurpose-podcasts-into-shorts': typeof BlogHowToRepurposePodcastsIntoShortsRoute
+  '/blog/': typeof BlogIndexRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -213,7 +242,10 @@ export interface FileRouteTypes {
     | '/upload'
     | '/billing/cancel'
     | '/billing/success'
+    | '/blog/best-ai-clip-generators-2026'
     | '/blog/clipra-vs-opus-clip'
+    | '/blog/how-to-repurpose-podcasts-into-shorts'
+    | '/blog/'
     | '/api/public/stripe-webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -234,7 +266,10 @@ export interface FileRouteTypes {
     | '/upload'
     | '/billing/cancel'
     | '/billing/success'
+    | '/blog/best-ai-clip-generators-2026'
     | '/blog/clipra-vs-opus-clip'
+    | '/blog/how-to-repurpose-podcasts-into-shorts'
+    | '/blog'
     | '/api/public/stripe-webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -256,7 +291,10 @@ export interface FileRouteTypes {
     | '/_app/upload'
     | '/billing/cancel'
     | '/billing/success'
+    | '/blog/best-ai-clip-generators-2026'
     | '/blog/clipra-vs-opus-clip'
+    | '/blog/how-to-repurpose-podcasts-into-shorts'
+    | '/blog/'
     | '/api/public/stripe-webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -275,7 +313,10 @@ export interface RootRouteChildren {
   TrustRoute: typeof TrustRoute
   BillingCancelRoute: typeof BillingCancelRoute
   BillingSuccessRoute: typeof BillingSuccessRoute
+  BlogBestAiClipGenerators2026Route: typeof BlogBestAiClipGenerators2026Route
   BlogClipraVsOpusClipRoute: typeof BlogClipraVsOpusClipRoute
+  BlogHowToRepurposePodcastsIntoShortsRoute: typeof BlogHowToRepurposePodcastsIntoShortsRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
@@ -347,11 +388,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/how-to-repurpose-podcasts-into-shorts': {
+      id: '/blog/how-to-repurpose-podcasts-into-shorts'
+      path: '/blog/how-to-repurpose-podcasts-into-shorts'
+      fullPath: '/blog/how-to-repurpose-podcasts-into-shorts'
+      preLoaderRoute: typeof BlogHowToRepurposePodcastsIntoShortsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/clipra-vs-opus-clip': {
       id: '/blog/clipra-vs-opus-clip'
       path: '/blog/clipra-vs-opus-clip'
       fullPath: '/blog/clipra-vs-opus-clip'
       preLoaderRoute: typeof BlogClipraVsOpusClipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/best-ai-clip-generators-2026': {
+      id: '/blog/best-ai-clip-generators-2026'
+      path: '/blog/best-ai-clip-generators-2026'
+      fullPath: '/blog/best-ai-clip-generators-2026'
+      preLoaderRoute: typeof BlogBestAiClipGenerators2026RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/billing/success': {
@@ -455,7 +517,11 @@ const rootRouteChildren: RootRouteChildren = {
   TrustRoute: TrustRoute,
   BillingCancelRoute: BillingCancelRoute,
   BillingSuccessRoute: BillingSuccessRoute,
+  BlogBestAiClipGenerators2026Route: BlogBestAiClipGenerators2026Route,
   BlogClipraVsOpusClipRoute: BlogClipraVsOpusClipRoute,
+  BlogHowToRepurposePodcastsIntoShortsRoute:
+    BlogHowToRepurposePodcastsIntoShortsRoute,
+  BlogIndexRoute: BlogIndexRoute,
   ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,

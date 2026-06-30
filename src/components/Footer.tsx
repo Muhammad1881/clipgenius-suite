@@ -18,7 +18,7 @@ export function Footer() {
         </div>
         {[
           { t: "Product", l: [["Pricing", "/pricing"], ["Sign up", "/signup"], ["Sign in", "/login"]] },
-          { t: "Compare", l: [["Clipra vs Opus Clip", "/blog/clipra-vs-opus-clip"]] },
+          { t: "Resources", l: [["Blog", "/blog"], ["Clipra vs Opus Clip", "/blog/clipra-vs-opus-clip"], ["Best AI clip tools", "/blog/best-ai-clip-generators-2026"], ["Podcast → Shorts guide", "/blog/how-to-repurpose-podcasts-into-shorts"]] },
           { t: "Company", l: [["Trust & Security", "/trust"], ["Contact", "mailto:muhammad.bhatti1616@gmail.com"]] },
         ].map((c) => (
           <div key={c.t}>
