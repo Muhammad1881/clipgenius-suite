@@ -18,6 +18,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogClipraVsOpusClipRouteImport } from './routes/blog.clipra-vs-opus-clip'
 import { Route as BillingSuccessRouteImport } from './routes/billing.success'
 import { Route as BillingCancelRouteImport } from './routes/billing.cancel'
 import { Route as AppUploadRouteImport } from './routes/_app.upload'
@@ -71,6 +72,11 @@ const AppRoute = AppRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogClipraVsOpusClipRoute = BlogClipraVsOpusClipRouteImport.update({
+  id: '/blog/clipra-vs-opus-clip',
+  path: '/blog/clipra-vs-opus-clip',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BillingSuccessRoute = BillingSuccessRouteImport.update({
@@ -140,6 +146,7 @@ export interface FileRoutesByFullPath {
   '/upload': typeof AppUploadRoute
   '/billing/cancel': typeof BillingCancelRoute
   '/billing/success': typeof BillingSuccessRoute
+  '/blog/clipra-vs-opus-clip': typeof BlogClipraVsOpusClipRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -160,6 +167,7 @@ export interface FileRoutesByTo {
   '/upload': typeof AppUploadRoute
   '/billing/cancel': typeof BillingCancelRoute
   '/billing/success': typeof BillingSuccessRoute
+  '/blog/clipra-vs-opus-clip': typeof BlogClipraVsOpusClipRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -182,6 +190,7 @@ export interface FileRoutesById {
   '/_app/upload': typeof AppUploadRoute
   '/billing/cancel': typeof BillingCancelRoute
   '/billing/success': typeof BillingSuccessRoute
+  '/blog/clipra-vs-opus-clip': typeof BlogClipraVsOpusClipRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -204,6 +213,7 @@ export interface FileRouteTypes {
     | '/upload'
     | '/billing/cancel'
     | '/billing/success'
+    | '/blog/clipra-vs-opus-clip'
     | '/api/public/stripe-webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -224,6 +234,7 @@ export interface FileRouteTypes {
     | '/upload'
     | '/billing/cancel'
     | '/billing/success'
+    | '/blog/clipra-vs-opus-clip'
     | '/api/public/stripe-webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -245,6 +256,7 @@ export interface FileRouteTypes {
     | '/_app/upload'
     | '/billing/cancel'
     | '/billing/success'
+    | '/blog/clipra-vs-opus-clip'
     | '/api/public/stripe-webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -263,6 +275,7 @@ export interface RootRouteChildren {
   TrustRoute: typeof TrustRoute
   BillingCancelRoute: typeof BillingCancelRoute
   BillingSuccessRoute: typeof BillingSuccessRoute
+  BlogClipraVsOpusClipRoute: typeof BlogClipraVsOpusClipRoute
   ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
@@ -332,6 +345,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/clipra-vs-opus-clip': {
+      id: '/blog/clipra-vs-opus-clip'
+      path: '/blog/clipra-vs-opus-clip'
+      fullPath: '/blog/clipra-vs-opus-clip'
+      preLoaderRoute: typeof BlogClipraVsOpusClipRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/billing/success': {
@@ -435,6 +455,7 @@ const rootRouteChildren: RootRouteChildren = {
   TrustRoute: TrustRoute,
   BillingCancelRoute: BillingCancelRoute,
   BillingSuccessRoute: BillingSuccessRoute,
+  BlogClipraVsOpusClipRoute: BlogClipraVsOpusClipRoute,
   ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
