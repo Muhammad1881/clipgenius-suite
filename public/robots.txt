@@ -5,5 +5,9 @@ Disallow: /upload
 Disallow: /processing
 Disallow: /results
 Disallow: /billing/
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /lovable/
 
 Sitemap: https://clipra.bond/sitemap.xml
+

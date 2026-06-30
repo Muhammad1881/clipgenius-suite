@@ -19,7 +19,10 @@ export const Route = createFileRoute("/trust")({
         content:
           "Clipra's approach to security, privacy, and data handling — written and maintained by the Clipra team.",
       },
+      { property: "og:url", content: "https://clipra.bond/trust" },
+      { property: "og:type", content: "article" },
     ],
+    links: [{ rel: "canonical", href: "https://clipra.bond/trust" }],
   }),
 });
 
