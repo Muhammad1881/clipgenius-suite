@@ -9,13 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as YoutubeShortsGeneratorRouteImport } from './routes/youtube-shorts-generator'
 import { Route as TrustRouteImport } from './routes/trust'
+import { Route as TiktokClipMakerRouteImport } from './routes/tiktok-clip-maker'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as PodcastClipMakerRouteImport } from './routes/podcast-clip-maker'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as InstagramReelsMakerRouteImport } from './routes/instagram-reels-maker'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as AiClipGeneratorRouteImport } from './routes/ai-clip-generator'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
@@ -33,9 +38,19 @@ import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/e
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 
+const YoutubeShortsGeneratorRoute = YoutubeShortsGeneratorRouteImport.update({
+  id: '/youtube-shorts-generator',
+  path: '/youtube-shorts-generator',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TrustRoute = TrustRouteImport.update({
   id: '/trust',
   path: '/trust',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TiktokClipMakerRoute = TiktokClipMakerRouteImport.update({
+  id: '/tiktok-clip-maker',
+  path: '/tiktok-clip-maker',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -58,14 +73,29 @@ const PricingRoute = PricingRouteImport.update({
   path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PodcastClipMakerRoute = PodcastClipMakerRouteImport.update({
+  id: '/podcast-clip-maker',
+  path: '/podcast-clip-maker',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InstagramReelsMakerRoute = InstagramReelsMakerRouteImport.update({
+  id: '/instagram-reels-maker',
+  path: '/instagram-reels-maker',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiClipGeneratorRoute = AiClipGeneratorRouteImport.update({
+  id: '/ai-clip-generator',
+  path: '/ai-clip-generator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppRoute = AppRouteImport.update({
@@ -153,13 +183,18 @@ const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ai-clip-generator': typeof AiClipGeneratorRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/instagram-reels-maker': typeof InstagramReelsMakerRoute
   '/login': typeof LoginRoute
+  '/podcast-clip-maker': typeof PodcastClipMakerRoute
   '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/tiktok-clip-maker': typeof TiktokClipMakerRoute
   '/trust': typeof TrustRoute
+  '/youtube-shorts-generator': typeof YoutubeShortsGeneratorRoute
   '/dashboard': typeof AppDashboardRoute
   '/processing': typeof AppProcessingRoute
   '/results': typeof AppResultsRoute
@@ -177,13 +212,18 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ai-clip-generator': typeof AiClipGeneratorRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/instagram-reels-maker': typeof InstagramReelsMakerRoute
   '/login': typeof LoginRoute
+  '/podcast-clip-maker': typeof PodcastClipMakerRoute
   '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/tiktok-clip-maker': typeof TiktokClipMakerRoute
   '/trust': typeof TrustRoute
+  '/youtube-shorts-generator': typeof YoutubeShortsGeneratorRoute
   '/dashboard': typeof AppDashboardRoute
   '/processing': typeof AppProcessingRoute
   '/results': typeof AppResultsRoute
@@ -203,13 +243,18 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
+  '/ai-clip-generator': typeof AiClipGeneratorRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/instagram-reels-maker': typeof InstagramReelsMakerRoute
   '/login': typeof LoginRoute
+  '/podcast-clip-maker': typeof PodcastClipMakerRoute
   '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/tiktok-clip-maker': typeof TiktokClipMakerRoute
   '/trust': typeof TrustRoute
+  '/youtube-shorts-generator': typeof YoutubeShortsGeneratorRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/processing': typeof AppProcessingRoute
   '/_app/results': typeof AppResultsRoute
@@ -229,13 +274,18 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/ai-clip-generator'
     | '/forgot-password'
+    | '/instagram-reels-maker'
     | '/login'
+    | '/podcast-clip-maker'
     | '/pricing'
     | '/reset-password'
     | '/signup'
     | '/sitemap.xml'
+    | '/tiktok-clip-maker'
     | '/trust'
+    | '/youtube-shorts-generator'
     | '/dashboard'
     | '/processing'
     | '/results'
@@ -253,13 +303,18 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/ai-clip-generator'
     | '/forgot-password'
+    | '/instagram-reels-maker'
     | '/login'
+    | '/podcast-clip-maker'
     | '/pricing'
     | '/reset-password'
     | '/signup'
     | '/sitemap.xml'
+    | '/tiktok-clip-maker'
     | '/trust'
+    | '/youtube-shorts-generator'
     | '/dashboard'
     | '/processing'
     | '/results'
@@ -278,13 +333,18 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_app'
+    | '/ai-clip-generator'
     | '/forgot-password'
+    | '/instagram-reels-maker'
     | '/login'
+    | '/podcast-clip-maker'
     | '/pricing'
     | '/reset-password'
     | '/signup'
     | '/sitemap.xml'
+    | '/tiktok-clip-maker'
     | '/trust'
+    | '/youtube-shorts-generator'
     | '/_app/dashboard'
     | '/_app/processing'
     | '/_app/results'
@@ -304,13 +364,18 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  AiClipGeneratorRoute: typeof AiClipGeneratorRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
+  InstagramReelsMakerRoute: typeof InstagramReelsMakerRoute
   LoginRoute: typeof LoginRoute
+  PodcastClipMakerRoute: typeof PodcastClipMakerRoute
   PricingRoute: typeof PricingRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SignupRoute: typeof SignupRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TiktokClipMakerRoute: typeof TiktokClipMakerRoute
   TrustRoute: typeof TrustRoute
+  YoutubeShortsGeneratorRoute: typeof YoutubeShortsGeneratorRoute
   BillingCancelRoute: typeof BillingCancelRoute
   BillingSuccessRoute: typeof BillingSuccessRoute
   BlogBestAiClipGenerators2026Route: typeof BlogBestAiClipGenerators2026Route
@@ -325,11 +390,25 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/youtube-shorts-generator': {
+      id: '/youtube-shorts-generator'
+      path: '/youtube-shorts-generator'
+      fullPath: '/youtube-shorts-generator'
+      preLoaderRoute: typeof YoutubeShortsGeneratorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/trust': {
       id: '/trust'
       path: '/trust'
       fullPath: '/trust'
       preLoaderRoute: typeof TrustRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tiktok-clip-maker': {
+      id: '/tiktok-clip-maker'
+      path: '/tiktok-clip-maker'
+      fullPath: '/tiktok-clip-maker'
+      preLoaderRoute: typeof TiktokClipMakerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -360,6 +439,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/podcast-clip-maker': {
+      id: '/podcast-clip-maker'
+      path: '/podcast-clip-maker'
+      fullPath: '/podcast-clip-maker'
+      preLoaderRoute: typeof PodcastClipMakerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -367,11 +453,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/instagram-reels-maker': {
+      id: '/instagram-reels-maker'
+      path: '/instagram-reels-maker'
+      fullPath: '/instagram-reels-maker'
+      preLoaderRoute: typeof InstagramReelsMakerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/forgot-password': {
       id: '/forgot-password'
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-clip-generator': {
+      id: '/ai-clip-generator'
+      path: '/ai-clip-generator'
+      fullPath: '/ai-clip-generator'
+      preLoaderRoute: typeof AiClipGeneratorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
@@ -508,13 +608,18 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  AiClipGeneratorRoute: AiClipGeneratorRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
+  InstagramReelsMakerRoute: InstagramReelsMakerRoute,
   LoginRoute: LoginRoute,
+  PodcastClipMakerRoute: PodcastClipMakerRoute,
   PricingRoute: PricingRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SignupRoute: SignupRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TiktokClipMakerRoute: TiktokClipMakerRoute,
   TrustRoute: TrustRoute,
+  YoutubeShortsGeneratorRoute: YoutubeShortsGeneratorRoute,
   BillingCancelRoute: BillingCancelRoute,
   BillingSuccessRoute: BillingSuccessRoute,
   BlogBestAiClipGenerators2026Route: BlogBestAiClipGenerators2026Route,
@@ -530,13 +635,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
