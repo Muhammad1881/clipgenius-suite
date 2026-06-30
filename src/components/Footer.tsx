@@ -17,14 +17,18 @@ export function Footer() {
           </p>
         </div>
         {[
-          { t: "Product", l: ["Features", "Pricing", "Changelog", "Roadmap"] },
-          { t: "Company", l: ["About", "Blog", "Careers", "Contact"] },
-          { t: "Legal", l: ["Privacy", "Terms", "Security", "DPA"] },
+          { t: "Product", l: [["Pricing", "/pricing"], ["Sign up", "/signup"], ["Sign in", "/login"]] },
+          { t: "Compare", l: [["Clipra vs Opus Clip", "/blog/clipra-vs-opus-clip"]] },
+          { t: "Company", l: [["Trust & Security", "/trust"], ["Contact", "mailto:muhammad.bhatti1616@gmail.com"]] },
         ].map((c) => (
           <div key={c.t}>
             <div className="text-sm font-semibold mb-3">{c.t}</div>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              {c.l.map((x) => <li key={x}><a href="#" className="hover:text-foreground">{x}</a></li>)}
+              {c.l.map(([label, href]) => (
+                <li key={label}>
+                  <a href={href} className="hover:text-foreground">{label}</a>
+                </li>
+              ))}
             </ul>
           </div>
         ))}
