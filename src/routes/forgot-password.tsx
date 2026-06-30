@@ -14,8 +14,8 @@ export const Route = createFileRoute("/forgot-password")({
     meta: [
       { title: "Reset Password — Clipra" },
       { name: "description", content: "Reset your Clipra account password." },
+      { name: "robots", content: "noindex, nofollow" },
     ],
-    links: [{ rel: "canonical", href: "https://clipra.bond/forgot-password" }],
   }),
 });
 
