@@ -111,7 +111,7 @@ function LoginPage() {
 
       <p className="text-sm text-muted-foreground mt-6 text-center">
         Don't have an account?{" "}
-        <Link to="/signup" className="text-foreground hover:text-accent transition-colors font-medium">Create one</Link>
+        <Link to="/signup" search={{ redirect: search.redirect }} className="text-foreground hover:text-accent transition-colors font-medium">Create one</Link>
       </p>
     </AuthShell>
   );
