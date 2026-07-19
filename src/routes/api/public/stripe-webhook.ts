@@ -135,6 +135,53 @@ export const Route = createFileRoute("/api/public/stripe-webhook")({
               break;
             }
 
+            case "customer.subscription.updated": {
+              const sub = event.data.object as import("stripe").Stripe.Subscription;
+              const customerId = typeof sub.customer === "string" ? sub.customer : sub.customer?.id;
+              if (!customerId) break;
+              // Terminal states → downgrade to free
+              const terminal = ["canceled", "unpaid", "incomplete_expired"];
+              if (terminal.includes(sub.status)) {
+                const userId = await getUserIdForCustomer(customerId, null);
+                if (!userId) break;
+                await admin
+                  .from("profiles")
+                  .update({
+                    plan: "free",
+                    monthly_minutes: 60,
+                    minutes_used: 0,
+                    cycle_start: new Date().toISOString(),
+                  })
+                  .eq("user_id", userId);
+                logStep("Downgraded via subscription.updated", { userId, status: sub.status });
+              }
+              break;
+            }
+
+            case "invoice.payment_failed": {
+              const invoice = event.data.object as import("stripe").Stripe.Invoice;
+              const customerId = typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id;
+              if (!customerId) break;
+              // Only downgrade if Stripe has exhausted retries (next_payment_attempt is null)
+              if (invoice.next_payment_attempt) {
+                logStep("Payment failed, will retry", { invoiceId: invoice.id });
+                break;
+              }
+              const userId = await getUserIdForCustomer(customerId, invoice.customer_email ?? null);
+              if (!userId) break;
+              await admin
+                .from("profiles")
+                .update({
+                  plan: "free",
+                  monthly_minutes: 60,
+                  minutes_used: 0,
+                  cycle_start: new Date().toISOString(),
+                })
+                .eq("user_id", userId);
+              logStep("Downgraded after final payment failure", { userId });
+              break;
+            }
+
             case "customer.subscription.deleted": {
               const sub = event.data.object as import("stripe").Stripe.Subscription;
               const customerId = typeof sub.customer === "string" ? sub.customer : sub.customer?.id;
@@ -145,7 +192,7 @@ export const Route = createFileRoute("/api/public/stripe-webhook")({
                 .from("profiles")
                 .update({
                   plan: "free",
-                  monthly_minutes: 30,
+                  monthly_minutes: 60,
                   minutes_used: 0,
                   cycle_start: new Date().toISOString(),
                 })

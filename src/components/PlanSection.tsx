@@ -1,20 +1,33 @@
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Sparkles, Clock, Calendar, Gauge, ExternalLink, AlertTriangle } from "lucide-react";
+import { Sparkles, Clock, Calendar, Gauge, ExternalLink, AlertTriangle, XCircle } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
 import { useAuth } from "@/hooks/useAuth";
-import { getSubscriptionInfo, createCustomerPortalSession } from "@/lib/billing.functions";
+import { getSubscriptionInfo, createCustomerPortalSession, cancelSubscriptionNow } from "@/lib/billing.functions";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 
 export function PlanSection() {
   const { user } = useAuth();
-  const { profile } = useProfile();
+  const { profile, refetch } = useProfile();
   const getInfo = useServerFn(getSubscriptionInfo);
   const openPortal = useServerFn(createCustomerPortalSession);
+  const cancelNow = useServerFn(cancelSubscriptionNow);
   const [renewal, setRenewal] = useState<string | null>(null);
   const [renewalLoading, setRenewalLoading] = useState(false);
   const [portalLoading, setPortalLoading] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
 
   const isPaid = !!profile?.plan && profile.plan !== "free";
 
@@ -50,6 +63,19 @@ export function PlanSection() {
       toast.error(e instanceof Error ? e.message : "Could not open billing portal");
     } finally {
       setPortalLoading(false);
+    }
+  };
+
+  const handleCancelNow = async () => {
+    try {
+      setCancelLoading(true);
+      await cancelNow({});
+      toast.success("Subscription cancelled. You're on the Free plan now.");
+      await refetch();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not cancel subscription");
+    } finally {
+      setCancelLoading(false);
     }
   };
 
@@ -106,7 +132,39 @@ export function PlanSection() {
       </div>
 
       {isPaid && (
-        <div className="mt-6 flex justify-end">
+        <div className="mt-6 flex justify-end gap-2 flex-wrap">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                disabled={cancelLoading}
+                className="rounded-xl text-destructive hover:text-destructive hover:bg-destructive/10"
+              >
+                <XCircle className="size-3.5 mr-1.5" />
+                {cancelLoading ? "Cancelling…" : "Cancel & downgrade now"}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="glass-strong border-gradient">
+              <AlertDialogHeader>
+                <AlertDialogTitle>Cancel subscription immediately?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This cancels your paid plan right now, stops any pending charges,
+                  and moves you to the Free plan (60 minutes/month). You won't be
+                  charged again. You can re-subscribe anytime.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="rounded-xl">Keep subscription</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleCancelNow}
+                  className="rounded-xl bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+                >
+                  Yes, cancel now
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           <Button
             variant="outline"
             size="sm"
