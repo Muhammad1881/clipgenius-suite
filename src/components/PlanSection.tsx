@@ -132,7 +132,39 @@ export function PlanSection() {
       </div>
 
       {isPaid && (
-        <div className="mt-6 flex justify-end">
+        <div className="mt-6 flex justify-end gap-2 flex-wrap">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                disabled={cancelLoading}
+                className="rounded-xl text-destructive hover:text-destructive hover:bg-destructive/10"
+              >
+                <XCircle className="size-3.5 mr-1.5" />
+                {cancelLoading ? "Cancelling…" : "Cancel & downgrade now"}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="glass-strong border-gradient">
+              <AlertDialogHeader>
+                <AlertDialogTitle>Cancel subscription immediately?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This cancels your paid plan right now, stops any pending charges,
+                  and moves you to the Free plan (60 minutes/month). You won't be
+                  charged again. You can re-subscribe anytime.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="rounded-xl">Keep subscription</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleCancelNow}
+                  className="rounded-xl bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+                >
+                  Yes, cancel now
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           <Button
             variant="outline"
             size="sm"
