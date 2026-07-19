@@ -20,7 +20,7 @@ import { toast } from "sonner";
 
 export function PlanSection() {
   const { user } = useAuth();
-  const { profile, refresh } = useProfile();
+  const { profile, refetch } = useProfile();
   const getInfo = useServerFn(getSubscriptionInfo);
   const openPortal = useServerFn(createCustomerPortalSession);
   const cancelNow = useServerFn(cancelSubscriptionNow);
