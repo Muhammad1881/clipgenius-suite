@@ -38,6 +38,7 @@ import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } fr
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
@@ -191,6 +192,11 @@ const Char91DotmcpChar93InvokeToolToolRoute =
     path: '/.mcp/invoke-tool/$tool',
     getParentRoute: () => rootRouteImport,
   } as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LovableEmailQueueProcessRoute =
   LovableEmailQueueProcessRouteImport.update({
     id: '/lovable/email/queue/process',
@@ -235,6 +241,7 @@ export interface FileRoutesByFullPath {
   '/blog/clipra-vs-opus-clip': typeof BlogClipraVsOpusClipRoute
   '/blog/how-to-repurpose-podcasts-into-shorts': typeof BlogHowToRepurposePodcastsIntoShortsRoute
   '/blog/': typeof BlogIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -268,6 +275,7 @@ export interface FileRoutesByTo {
   '/blog/clipra-vs-opus-clip': typeof BlogClipraVsOpusClipRoute
   '/blog/how-to-repurpose-podcasts-into-shorts': typeof BlogHowToRepurposePodcastsIntoShortsRoute
   '/blog': typeof BlogIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -303,6 +311,7 @@ export interface FileRoutesById {
   '/blog/clipra-vs-opus-clip': typeof BlogClipraVsOpusClipRoute
   '/blog/how-to-repurpose-podcasts-into-shorts': typeof BlogHowToRepurposePodcastsIntoShortsRoute
   '/blog/': typeof BlogIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -338,6 +347,7 @@ export interface FileRouteTypes {
     | '/blog/clipra-vs-opus-clip'
     | '/blog/how-to-repurpose-podcasts-into-shorts'
     | '/blog/'
+    | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/stripe-webhook'
     | '/lovable/email/auth/preview'
@@ -371,6 +381,7 @@ export interface FileRouteTypes {
     | '/blog/clipra-vs-opus-clip'
     | '/blog/how-to-repurpose-podcasts-into-shorts'
     | '/blog'
+    | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/stripe-webhook'
     | '/lovable/email/auth/preview'
@@ -405,6 +416,7 @@ export interface FileRouteTypes {
     | '/blog/clipra-vs-opus-clip'
     | '/blog/how-to-repurpose-podcasts-into-shorts'
     | '/blog/'
+    | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/stripe-webhook'
     | '/lovable/email/auth/preview'
@@ -436,6 +448,7 @@ export interface RootRouteChildren {
   BlogClipraVsOpusClipRoute: typeof BlogClipraVsOpusClipRoute
   BlogHowToRepurposePodcastsIntoShortsRoute: typeof BlogHowToRepurposePodcastsIntoShortsRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
@@ -648,6 +661,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lovable/email/queue/process': {
       id: '/lovable/email/queue/process'
       path: '/lovable/email/queue/process'
@@ -714,6 +734,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogHowToRepurposePodcastsIntoShortsRoute:
     BlogHowToRepurposePodcastsIntoShortsRoute,
   BlogIndexRoute: BlogIndexRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
