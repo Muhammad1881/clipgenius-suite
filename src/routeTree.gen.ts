@@ -17,6 +17,7 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PodcastClipMakerRouteImport } from './routes/podcast-clip-maker'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as InstagramReelsMakerRouteImport } from './routes/instagram-reels-maker'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
@@ -33,7 +34,10 @@ import { Route as AppUploadRouteImport } from './routes/_app.upload'
 import { Route as AppResultsRouteImport } from './routes/_app.results'
 import { Route as AppProcessingRouteImport } from './routes/_app.processing'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
+import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
@@ -76,6 +80,11 @@ const PricingRoute = PricingRouteImport.update({
 const PodcastClipMakerRoute = PodcastClipMakerRouteImport.update({
   id: '/podcast-clip-maker',
   path: '/podcast-clip-maker',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -159,11 +168,29 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char91DotmcpChar93ListToolsRoute =
+  Char91DotmcpChar93ListToolsRouteImport.update({
+    id: '/.mcp/list-tools',
+    path: '/.mcp/list-tools',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicStripeWebhookRoute = ApiPublicStripeWebhookRouteImport.update({
   id: '/api/public/stripe-webhook',
   path: '/api/public/stripe-webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char91DotmcpChar93InvokeToolToolRoute =
+  Char91DotmcpChar93InvokeToolToolRouteImport.update({
+    id: '/.mcp/invoke-tool/$tool',
+    path: '/.mcp/invoke-tool/$tool',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LovableEmailQueueProcessRoute =
   LovableEmailQueueProcessRouteImport.update({
     id: '/lovable/email/queue/process',
@@ -187,6 +214,7 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof ForgotPasswordRoute
   '/instagram-reels-maker': typeof InstagramReelsMakerRoute
   '/login': typeof LoginRoute
+  '/mcp': typeof McpRoute
   '/podcast-clip-maker': typeof PodcastClipMakerRoute
   '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -195,6 +223,8 @@ export interface FileRoutesByFullPath {
   '/tiktok-clip-maker': typeof TiktokClipMakerRoute
   '/trust': typeof TrustRoute
   '/youtube-shorts-generator': typeof YoutubeShortsGeneratorRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/dashboard': typeof AppDashboardRoute
   '/processing': typeof AppProcessingRoute
   '/results': typeof AppResultsRoute
@@ -205,6 +235,7 @@ export interface FileRoutesByFullPath {
   '/blog/clipra-vs-opus-clip': typeof BlogClipraVsOpusClipRoute
   '/blog/how-to-repurpose-podcasts-into-shorts': typeof BlogHowToRepurposePodcastsIntoShortsRoute
   '/blog/': typeof BlogIndexRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -216,6 +247,7 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordRoute
   '/instagram-reels-maker': typeof InstagramReelsMakerRoute
   '/login': typeof LoginRoute
+  '/mcp': typeof McpRoute
   '/podcast-clip-maker': typeof PodcastClipMakerRoute
   '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -224,6 +256,8 @@ export interface FileRoutesByTo {
   '/tiktok-clip-maker': typeof TiktokClipMakerRoute
   '/trust': typeof TrustRoute
   '/youtube-shorts-generator': typeof YoutubeShortsGeneratorRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/dashboard': typeof AppDashboardRoute
   '/processing': typeof AppProcessingRoute
   '/results': typeof AppResultsRoute
@@ -234,6 +268,7 @@ export interface FileRoutesByTo {
   '/blog/clipra-vs-opus-clip': typeof BlogClipraVsOpusClipRoute
   '/blog/how-to-repurpose-podcasts-into-shorts': typeof BlogHowToRepurposePodcastsIntoShortsRoute
   '/blog': typeof BlogIndexRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -247,6 +282,7 @@ export interface FileRoutesById {
   '/forgot-password': typeof ForgotPasswordRoute
   '/instagram-reels-maker': typeof InstagramReelsMakerRoute
   '/login': typeof LoginRoute
+  '/mcp': typeof McpRoute
   '/podcast-clip-maker': typeof PodcastClipMakerRoute
   '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -255,6 +291,8 @@ export interface FileRoutesById {
   '/tiktok-clip-maker': typeof TiktokClipMakerRoute
   '/trust': typeof TrustRoute
   '/youtube-shorts-generator': typeof YoutubeShortsGeneratorRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/processing': typeof AppProcessingRoute
   '/_app/results': typeof AppResultsRoute
@@ -265,6 +303,7 @@ export interface FileRoutesById {
   '/blog/clipra-vs-opus-clip': typeof BlogClipraVsOpusClipRoute
   '/blog/how-to-repurpose-podcasts-into-shorts': typeof BlogHowToRepurposePodcastsIntoShortsRoute
   '/blog/': typeof BlogIndexRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -278,6 +317,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/instagram-reels-maker'
     | '/login'
+    | '/mcp'
     | '/podcast-clip-maker'
     | '/pricing'
     | '/reset-password'
@@ -286,6 +326,8 @@ export interface FileRouteTypes {
     | '/tiktok-clip-maker'
     | '/trust'
     | '/youtube-shorts-generator'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/dashboard'
     | '/processing'
     | '/results'
@@ -296,6 +338,7 @@ export interface FileRouteTypes {
     | '/blog/clipra-vs-opus-clip'
     | '/blog/how-to-repurpose-podcasts-into-shorts'
     | '/blog/'
+    | '/.mcp/invoke-tool/$tool'
     | '/api/public/stripe-webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -307,6 +350,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/instagram-reels-maker'
     | '/login'
+    | '/mcp'
     | '/podcast-clip-maker'
     | '/pricing'
     | '/reset-password'
@@ -315,6 +359,8 @@ export interface FileRouteTypes {
     | '/tiktok-clip-maker'
     | '/trust'
     | '/youtube-shorts-generator'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/dashboard'
     | '/processing'
     | '/results'
@@ -325,6 +371,7 @@ export interface FileRouteTypes {
     | '/blog/clipra-vs-opus-clip'
     | '/blog/how-to-repurpose-podcasts-into-shorts'
     | '/blog'
+    | '/.mcp/invoke-tool/$tool'
     | '/api/public/stripe-webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -337,6 +384,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/instagram-reels-maker'
     | '/login'
+    | '/mcp'
     | '/podcast-clip-maker'
     | '/pricing'
     | '/reset-password'
@@ -345,6 +393,8 @@ export interface FileRouteTypes {
     | '/tiktok-clip-maker'
     | '/trust'
     | '/youtube-shorts-generator'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/_app/dashboard'
     | '/_app/processing'
     | '/_app/results'
@@ -355,6 +405,7 @@ export interface FileRouteTypes {
     | '/blog/clipra-vs-opus-clip'
     | '/blog/how-to-repurpose-podcasts-into-shorts'
     | '/blog/'
+    | '/.mcp/invoke-tool/$tool'
     | '/api/public/stripe-webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -368,6 +419,7 @@ export interface RootRouteChildren {
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   InstagramReelsMakerRoute: typeof InstagramReelsMakerRoute
   LoginRoute: typeof LoginRoute
+  McpRoute: typeof McpRoute
   PodcastClipMakerRoute: typeof PodcastClipMakerRoute
   PricingRoute: typeof PricingRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -376,12 +428,15 @@ export interface RootRouteChildren {
   TiktokClipMakerRoute: typeof TiktokClipMakerRoute
   TrustRoute: typeof TrustRoute
   YoutubeShortsGeneratorRoute: typeof YoutubeShortsGeneratorRoute
+  Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   BillingCancelRoute: typeof BillingCancelRoute
   BillingSuccessRoute: typeof BillingSuccessRoute
   BlogBestAiClipGenerators2026Route: typeof BlogBestAiClipGenerators2026Route
   BlogClipraVsOpusClipRoute: typeof BlogClipraVsOpusClipRoute
   BlogHowToRepurposePodcastsIntoShortsRoute: typeof BlogHowToRepurposePodcastsIntoShortsRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
@@ -444,6 +499,13 @@ declare module '@tanstack/react-router' {
       path: '/podcast-clip-maker'
       fullPath: '/podcast-clip-maker'
       preLoaderRoute: typeof PodcastClipMakerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -558,11 +620,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.mcp/list-tools': {
+      id: '/.mcp/list-tools'
+      path: '/.mcp/list-tools'
+      fullPath: '/.mcp/list-tools'
+      preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/stripe-webhook': {
       id: '/api/public/stripe-webhook'
       path: '/api/public/stripe-webhook'
       fullPath: '/api/public/stripe-webhook'
       preLoaderRoute: typeof ApiPublicStripeWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.mcp/invoke-tool/$tool': {
+      id: '/.mcp/invoke-tool/$tool'
+      path: '/.mcp/invoke-tool/$tool'
+      fullPath: '/.mcp/invoke-tool/$tool'
+      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lovable/email/queue/process': {
@@ -612,6 +695,7 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordRoute: ForgotPasswordRoute,
   InstagramReelsMakerRoute: InstagramReelsMakerRoute,
   LoginRoute: LoginRoute,
+  McpRoute: McpRoute,
   PodcastClipMakerRoute: PodcastClipMakerRoute,
   PricingRoute: PricingRoute,
   ResetPasswordRoute: ResetPasswordRoute,
@@ -620,6 +704,9 @@ const rootRouteChildren: RootRouteChildren = {
   TiktokClipMakerRoute: TiktokClipMakerRoute,
   TrustRoute: TrustRoute,
   YoutubeShortsGeneratorRoute: YoutubeShortsGeneratorRoute,
+  Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
   BillingCancelRoute: BillingCancelRoute,
   BillingSuccessRoute: BillingSuccessRoute,
   BlogBestAiClipGenerators2026Route: BlogBestAiClipGenerators2026Route,
@@ -627,6 +714,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogHowToRepurposePodcastsIntoShortsRoute:
     BlogHowToRepurposePodcastsIntoShortsRoute,
   BlogIndexRoute: BlogIndexRoute,
+  Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
