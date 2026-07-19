@@ -10,9 +10,12 @@ import { toast } from "sonner";
 import { AuthShell, Field, Divider, GoogleIcon } from "./login";
 
 export const Route = createFileRoute("/signup")({
-  beforeLoad: async () => {
+  validateSearch: (s: Record<string, unknown>) => ({
+    redirect: typeof s.redirect === "string" && s.redirect.startsWith("/") ? s.redirect : "/dashboard",
+  }),
+  beforeLoad: async ({ search }) => {
     const { data } = await supabase.auth.getSession();
-    if (data.session) throw redirect({ to: "/dashboard" });
+    if (data.session) throw redirect({ href: search.redirect });
   },
   component: SignupPage,
   head: () => ({
@@ -35,10 +38,20 @@ const schema = z.object({
 
 function SignupPage() {
   const navigate = useNavigate();
+  const search = Route.useSearch();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const goToRedirect = () => {
+    const target = search.redirect;
+    if (target.includes("?") || target.startsWith("/.lovable")) {
+      window.location.href = target;
+    } else {
+      navigate({ to: target });
+    }
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -52,7 +65,7 @@ function SignupPage() {
       email: parsed.data.email,
       password: parsed.data.password,
       options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`,
+        emailRedirectTo: `${window.location.origin}${search.redirect}`,
         data: { username: parsed.data.username, display_name: parsed.data.username },
       },
     });
@@ -63,10 +76,10 @@ function SignupPage() {
     }
     if (data.session) {
       toast.success("Account created!");
-      navigate({ to: "/dashboard" });
+      goToRedirect();
     } else {
       toast.success("Check your email to confirm your account.");
-      navigate({ to: "/login" });
+      navigate({ to: "/login", search: { redirect: search.redirect } });
     }
   };
 
