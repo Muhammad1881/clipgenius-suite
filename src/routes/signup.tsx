@@ -118,7 +118,7 @@ function SignupPage() {
       </p>
       <p className="text-sm text-muted-foreground mt-4 text-center">
         Already have an account?{" "}
-        <Link to="/login" className="text-foreground hover:text-accent transition-colors font-medium">Sign in</Link>
+        <Link to="/login" search={{ redirect: search.redirect }} className="text-foreground hover:text-accent transition-colors font-medium">Sign in</Link>
       </p>
     </AuthShell>
   );
