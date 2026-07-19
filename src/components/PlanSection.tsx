@@ -66,6 +66,19 @@ export function PlanSection() {
     }
   };
 
+  const handleCancelNow = async () => {
+    try {
+      setCancelLoading(true);
+      await cancelNow({});
+      toast.success("Subscription cancelled. You're on the Free plan now.");
+      await refetch();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not cancel subscription");
+    } finally {
+      setCancelLoading(false);
+    }
+  };
+
   return (
     <div className="glass-strong rounded-3xl p-7 sm:p-8 border-gradient max-w-3xl mx-auto mb-12">
       <div className="flex items-center justify-between flex-wrap gap-3">
