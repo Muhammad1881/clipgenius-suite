@@ -152,3 +152,61 @@ export const createCustomerPortalSession = createServerFn({ method: "POST" })
     });
     return { url: portal.url };
   });
+
+// Immediately cancels ALL of the user's subscriptions in Stripe and downgrades
+// their profile to the free plan. Used to stop payment retries on a failing card.
+export const cancelSubscriptionNow = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const Stripe = (await import("stripe")).default;
+    const key = process.env.STRIPE_SECRET_KEY;
+    if (!key) throw new Error("STRIPE_SECRET_KEY is not configured");
+    const stripe = new Stripe(key);
+
+    const email = context.claims?.email as string | undefined;
+    if (!email) throw new Error("No email on account");
+
+    const customers = await stripe.customers.list({ email, limit: 1 });
+    const customerId = customers.data[0]?.id;
+
+    if (customerId) {
+      // Cancel every subscription (active, past_due, unpaid, trialing) immediately
+      const subs = await stripe.subscriptions.list({ customer: customerId, status: "all", limit: 20 });
+      for (const s of subs.data) {
+        if (["canceled", "incomplete_expired"].includes(s.status)) continue;
+        try {
+          await stripe.subscriptions.cancel(s.id, { invoice_now: false, prorate: false });
+        } catch (err) {
+          console.error("[cancelSubscriptionNow] cancel failed", s.id, err);
+        }
+      }
+      // Void the open invoice so Stripe stops retrying the failed payment
+      try {
+        const invoices = await stripe.invoices.list({ customer: customerId, status: "open", limit: 10 });
+        for (const inv of invoices.data) {
+          if (!inv.id) continue;
+          try {
+            await stripe.invoices.voidInvoice(inv.id);
+          } catch (err) {
+            console.error("[cancelSubscriptionNow] void failed", inv.id, err);
+          }
+        }
+      } catch (err) {
+        console.error("[cancelSubscriptionNow] invoice list failed", err);
+      }
+    }
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("profiles")
+      .update({
+        plan: "free",
+        monthly_minutes: 60,
+        minutes_used: 0,
+        cycle_start: new Date().toISOString(),
+      })
+      .eq("user_id", context.userId);
+    if (error) throw new Error(error.message);
+
+    return { ok: true };
+  });
