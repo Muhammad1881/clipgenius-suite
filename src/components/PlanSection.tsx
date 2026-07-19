@@ -1,20 +1,33 @@
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Sparkles, Clock, Calendar, Gauge, ExternalLink, AlertTriangle } from "lucide-react";
+import { Sparkles, Clock, Calendar, Gauge, ExternalLink, AlertTriangle, XCircle } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
 import { useAuth } from "@/hooks/useAuth";
-import { getSubscriptionInfo, createCustomerPortalSession } from "@/lib/billing.functions";
+import { getSubscriptionInfo, createCustomerPortalSession, cancelSubscriptionNow } from "@/lib/billing.functions";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 
 export function PlanSection() {
   const { user } = useAuth();
-  const { profile } = useProfile();
+  const { profile, refresh } = useProfile();
   const getInfo = useServerFn(getSubscriptionInfo);
   const openPortal = useServerFn(createCustomerPortalSession);
+  const cancelNow = useServerFn(cancelSubscriptionNow);
   const [renewal, setRenewal] = useState<string | null>(null);
   const [renewalLoading, setRenewalLoading] = useState(false);
   const [portalLoading, setPortalLoading] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
 
   const isPaid = !!profile?.plan && profile.plan !== "free";
 
