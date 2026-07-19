@@ -9,13 +9,28 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
+function navigateToRedirect(nav: ReturnType<typeof useNavigate>, target: string) {
+  // Same-origin relative path only. Use full-page nav when it carries a query
+  // string (e.g. the OAuth consent URL /.lovable/oauth/consent?authorization_id=…);
+  // TanStack navigate({ to }) doesn't parse embedded query params.
+  if (!target.startsWith("/")) {
+    window.location.href = "/";
+    return;
+  }
+  if (target.includes("?") || target.startsWith("/.lovable")) {
+    window.location.href = target;
+    return;
+  }
+  nav({ to: target });
+}
+
 export const Route = createFileRoute("/login")({
   validateSearch: (s: Record<string, unknown>) => ({
-    redirect: typeof s.redirect === "string" ? s.redirect : "/dashboard",
+    redirect: typeof s.redirect === "string" && s.redirect.startsWith("/") ? s.redirect : "/dashboard",
   }),
   beforeLoad: async ({ search }) => {
     const { data } = await supabase.auth.getSession();
-    if (data.session) throw redirect({ to: search.redirect });
+    if (data.session) throw redirect({ href: search.redirect });
   },
   component: LoginPage,
   head: () => ({
@@ -57,10 +72,12 @@ function LoginPage() {
       return;
     }
     toast.success("Welcome back!");
-    navigate({ to: search.redirect });
+    navigateToRedirect(navigate, search.redirect);
   };
 
   const handleGoogle = async () => {
+    // Google lands on /dashboard, then the app can complete any pending consent
+    // from there (users doing MCP consent will typically already be signed in).
     await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin + "/dashboard" });
   };
 
@@ -94,7 +111,7 @@ function LoginPage() {
 
       <p className="text-sm text-muted-foreground mt-6 text-center">
         Don't have an account?{" "}
-        <Link to="/signup" className="text-foreground hover:text-accent transition-colors font-medium">Create one</Link>
+        <Link to="/signup" search={{ redirect: search.redirect }} className="text-foreground hover:text-accent transition-colors font-medium">Create one</Link>
       </p>
     </AuthShell>
   );
