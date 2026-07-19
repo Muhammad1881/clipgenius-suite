@@ -125,7 +125,7 @@ function ConsentPage() {
           <div className="text-xs text-muted-foreground">
             <div className="uppercase tracking-widest text-[10px] mb-1">Requested access</div>
             <div className="flex flex-wrap gap-1.5">
-              {scopes.map((s) => (
+              {scopes.map((s: string) => (
                 <span key={s} className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-foreground/80">
                   {s}
                 </span>
