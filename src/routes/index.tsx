@@ -1,10 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { useRef } from "react";
 import { Sparkles, Upload, ArrowRight, Play, Star, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PricingCards } from "@/components/PricingCards";
+import { Reveal, RevealGroup, RevealItem } from "@/components/Reveal";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import heroBg from "@/assets/hero-bg.jpg";
 import clip1Video from "@/assets/clip-9.mp4.asset.json";
@@ -64,23 +67,37 @@ const faqs = [
 ];
 
 function Landing() {
+  const heroRef = useRef<HTMLElement | null>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
+  const heroFade = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const blobY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+      <ScrollProgress />
       <Navbar />
 
       {/* HERO */}
-      <section className="relative pt-32 sm:pt-40 pb-24 sm:pb-32 overflow-hidden bg-aurora-hero">
+      <section ref={heroRef} className="relative pt-32 sm:pt-40 pb-24 sm:pb-32 overflow-hidden bg-aurora-hero">
         {/* Animated Aurora Background */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <motion.div
+          style={reduce ? undefined : { y: blobY }}
+          className="absolute inset-0 overflow-hidden pointer-events-none -z-10"
+        >
           <div className="aurora-blob aurora-blob-purple -top-[20%] -left-[10%] w-[60%] h-[60%] animate-aurora-breathe" />
           <div className="aurora-blob aurora-blob-cyan top-[10%] -right-[10%] w-[50%] h-[50%] animate-aurora-breathe" style={{ animationDelay: "2s" }} />
           <div className="aurora-blob aurora-blob-indigo -bottom-[20%] left-[20%] w-[70%] h-[60%] animate-aurora-breathe" style={{ animationDelay: "4s" }} />
-        </div>
+        </motion.div>
 
         <div className="absolute inset-0 -z-10 grid-bg opacity-40" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-background/20 to-background" />
 
-        <div className="mx-auto max-w-5xl px-5 sm:px-6 text-center">
+        <motion.div
+          style={reduce ? undefined : { y: heroY, opacity: heroFade }}
+          className="mx-auto max-w-5xl px-5 sm:px-6 text-center"
+        >
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             {/* Floating glow badge */}
             <div className="group relative inline-flex mb-8">
@@ -163,42 +180,35 @@ function Landing() {
               </div>
             </div>
           </motion.div>
-        </div>
+        </motion.div>
       </section>
 
       {/* HOW IT WORKS */}
       <section id="how" className="py-20 sm:py-28 mx-auto max-w-7xl px-5 sm:px-6">
-        <div className="text-center max-w-2xl mx-auto">
+        <Reveal direction="blur" className="text-center max-w-2xl mx-auto">
           <div className="text-xs uppercase tracking-widest text-accent">How it works</div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mt-3">From raw footage to viral, in 3 steps.</h2>
-        </div>
-        <div className="mt-12 sm:mt-14 grid md:grid-cols-3 gap-4 sm:gap-5 relative">
-          {steps.map((s, i) => (
-            <motion.div
-              key={s.n}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
-              className="glass rounded-2xl p-7 relative hover-lift border-gradient"
-            >
+        </Reveal>
+        <RevealGroup className="mt-12 sm:mt-14 grid md:grid-cols-3 gap-4 sm:gap-5 relative">
+          {steps.map((s) => (
+            <RevealItem key={s.n} className="glass rounded-2xl p-7 relative hover-lift border-gradient">
               <div className="text-5xl font-display text-gradient-aurora">{s.n}</div>
               <div className="mt-4 text-xl font-semibold tracking-tight">{s.t}</div>
               <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{s.d}</p>
-            </motion.div>
+            </RevealItem>
           ))}
-        </div>
+        </RevealGroup>
       </section>
 
       {/* TESTIMONIALS */}
       <section className="py-20 sm:py-28 mx-auto max-w-7xl px-5 sm:px-6">
-        <div className="text-center max-w-2xl mx-auto">
+        <Reveal direction="blur" className="text-center max-w-2xl mx-auto">
           <div className="text-xs uppercase tracking-widest text-accent">Loved by creators</div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mt-3">Built for the next billion views.</h2>
-        </div>
-        <div className="mt-12 sm:mt-14 grid md:grid-cols-3 gap-4 sm:gap-5">
+        </Reveal>
+        <RevealGroup className="mt-12 sm:mt-14 grid md:grid-cols-3 gap-4 sm:gap-5">
           {testimonials.map((t) => (
-            <div key={t.name} className="glass rounded-2xl p-7 hover-lift border-gradient">
+            <RevealItem key={t.name} className="glass rounded-2xl p-7 hover-lift border-gradient">
               <div className="flex gap-0.5">{Array.from({ length: 5 }).map((_, i) => <Star key={i} className="size-4 fill-accent text-accent" />)}</div>
               <p className="mt-4 text-foreground/90 leading-relaxed">"{t.quote}"</p>
               <div className="mt-6 flex items-center gap-3">
@@ -208,47 +218,53 @@ function Landing() {
                   <div className="text-xs text-muted-foreground">{t.role}</div>
                 </div>
               </div>
-            </div>
+            </RevealItem>
           ))}
-        </div>
+        </RevealGroup>
       </section>
 
       {/* PRICING PREVIEW */}
       <section className="py-20 sm:py-28 mx-auto max-w-7xl px-5 sm:px-6">
-        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-14">
+        <Reveal direction="blur" className="text-center max-w-2xl mx-auto mb-12 sm:mb-14">
           <div className="text-xs uppercase tracking-widest text-accent">Pricing</div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mt-3">Simple plans for every creator.</h2>
-        </div>
-        <PricingCards />
+        </Reveal>
+        <Reveal direction="scale" delay={0.1}>
+          <PricingCards />
+        </Reveal>
       </section>
 
       {/* FAQ */}
       <section id="faq" className="py-20 sm:py-28 mx-auto max-w-3xl px-5 sm:px-6">
-        <div className="text-center mb-10 sm:mb-12">
+        <Reveal direction="blur" className="text-center mb-10 sm:mb-12">
           <div className="text-xs uppercase tracking-widest text-accent">FAQ</div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mt-3">Questions, answered.</h2>
-        </div>
-        <Accordion type="single" collapsible className="glass rounded-2xl px-5 sm:px-6 border-gradient">
-          {faqs.map((f, i) => (
-            <AccordionItem key={i} value={`${i}`} className="border-white/10">
-              <AccordionTrigger className="text-left hover:no-underline">{f.q}</AccordionTrigger>
-              <AccordionContent className="text-muted-foreground leading-relaxed">{f.a}</AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+        </Reveal>
+        <Reveal delay={0.08}>
+          <Accordion type="single" collapsible className="glass rounded-2xl px-5 sm:px-6 border-gradient">
+            {faqs.map((f, i) => (
+              <AccordionItem key={i} value={`${i}`} className="border-white/10">
+                <AccordionTrigger className="text-left hover:no-underline">{f.q}</AccordionTrigger>
+                <AccordionContent className="text-muted-foreground leading-relaxed">{f.a}</AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </Reveal>
       </section>
 
       {/* CTA */}
       <section className="py-16 sm:py-20 mx-auto max-w-5xl px-5 sm:px-6">
-        <div className="relative glass-strong rounded-3xl p-10 sm:p-14 text-center overflow-hidden border-gradient">
-          <div className="absolute inset-0 -z-10 opacity-60 animate-aurora" style={{ background: "var(--gradient-mesh)" }} />
-          <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-background/60 to-background" />
-          <h3 className="text-3xl md:text-4xl font-semibold tracking-tight">Ready to go <span className="text-gradient-aurora">viral</span>?</h3>
-          <p className="text-muted-foreground mt-3 max-w-lg mx-auto">Upload your first video free. No credit card required.</p>
-          <Button asChild size="lg" className="mt-7 btn-premium rounded-2xl h-14 px-8 text-base font-bold">
-            <Link to="/upload"><Upload className="mr-1 size-4" /> Upload a video</Link>
-          </Button>
-        </div>
+        <Reveal direction="scale" amount={0.3}>
+          <div className="relative glass-strong rounded-3xl p-10 sm:p-14 text-center overflow-hidden border-gradient">
+            <div className="absolute inset-0 -z-10 opacity-60 animate-aurora" style={{ background: "var(--gradient-mesh)" }} />
+            <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-background/60 to-background" />
+            <h3 className="text-3xl md:text-4xl font-semibold tracking-tight">Ready to go <span className="text-gradient-aurora">viral</span>?</h3>
+            <p className="text-muted-foreground mt-3 max-w-lg mx-auto">Upload your first video free. No credit card required.</p>
+            <Button asChild size="lg" className="mt-7 btn-premium rounded-2xl h-14 px-8 text-base font-bold">
+              <Link to="/upload"><Upload className="mr-1 size-4" /> Upload a video</Link>
+            </Button>
+          </div>
+        </Reveal>
       </section>
 
       <Footer />
