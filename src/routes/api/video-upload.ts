@@ -18,10 +18,18 @@ export const Route = createFileRoute("/api/video-upload")({
         }
 
         try {
+          const formData = await request.formData();
+          const video = formData.get("video");
+          if (!(video instanceof File)) {
+            return Response.json({ error: "No video file was provided." }, { status: 400 });
+          }
+          if (video.size > MAX_UPLOAD_BYTES) {
+            return Response.json({ error: "Video uploads are limited to 100 MB." }, { status: 413 });
+          }
+
           const upstream = await fetch(VIDEO_PROCESSOR_URL, {
             method: "POST",
-            headers: { "content-type": contentType },
-            body: request.body,
+            body: formData,
           });
 
           const headers = new Headers();
