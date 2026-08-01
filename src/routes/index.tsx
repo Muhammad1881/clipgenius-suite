@@ -55,7 +55,7 @@ const faqs = [
   { q: "How long does processing take?", a: "Most one-hour videos finish in under 5 minutes on the Pro plan. Free users may wait a bit longer in the shared queue." },
   { q: "Can I edit the clips after?", a: "Yes — every clip opens in our editor where you can tweak captions, trim, and adjust framing before exporting." },
   { q: "Do you support other languages?", a: "We transcribe and caption in 30+ languages and can translate captions to English (and back)." },
-  { q: "Is there a free trial?", a: "Yes. The Free plan lets you process 3 videos every month, forever — no credit card required." },
+  { q: "Is there a free trial?", a: "Yes. The Free plan gives you 60 minutes of clipping every month, forever — no credit card required." },
 ];
 
 function Landing() {
