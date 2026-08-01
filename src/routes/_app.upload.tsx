@@ -24,7 +24,7 @@ export const Route = createFileRoute("/_app/upload")({
   }),
 });
 
-const API_URL = "https://api.clipra.bond/upload";
+const API_URL = "/api/video-upload";
 const BACKEND_BASE = "https://api.clipra.bond";
 
 function resolveClipUrl(url: string | undefined): string | undefined {
@@ -215,7 +215,7 @@ function UploadPage() {
     };
     xhr.onerror = async () => {
       setError(
-        `Upload connection dropped before the server responded. This usually means the file is too large for the network proxy (100 MB max) or the connection timed out. Try a smaller/shorter video.`
+        "The processing connection was interrupted. Your video size is not necessarily the problem—please try once more."
       );
       setPhase("error");
       await releaseReservation();
