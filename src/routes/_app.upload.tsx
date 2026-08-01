@@ -204,12 +204,14 @@ function UploadPage() {
           console.error(e);
         }
       } else {
-        const msg =
-          parsed?.error ||
-          parsed?.message ||
-          parsed?.detail ||
-          (raw && raw.length < 500 ? raw : "") ||
-          `Upload failed (${xhr.status} ${xhr.statusText || ""})`.trim();
+        const timedOut = xhr.status === 524 || xhr.status === 522 || xhr.status === 504;
+        const msg = timedOut
+          ? "Processing took longer than the 100-second network limit, so the connection was closed before your clips came back. Try a shorter video for now — long videos need the processing server to run in the background."
+          : parsed?.error ||
+            parsed?.message ||
+            parsed?.detail ||
+            (raw && raw.length < 500 ? raw : "") ||
+            `Upload failed (${xhr.status} ${xhr.statusText || ""})`.trim();
         setError(msg);
         setPhase("error");
         await releaseReservation();
