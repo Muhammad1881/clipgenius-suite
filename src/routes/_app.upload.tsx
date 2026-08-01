@@ -214,10 +214,13 @@ function UploadPage() {
       }
     };
     xhr.onerror = async () => {
-      setError(`Could not reach ${API_URL}. Check that the backend is online and CORS allows this origin.`);
+      setError(
+        `Upload connection dropped before the server responded. This usually means the file is too large for the network proxy (100 MB max) or the connection timed out. Try a smaller/shorter video.`
+      );
       setPhase("error");
       await releaseReservation();
     };
+
 
     xhr.send(form);
   };
