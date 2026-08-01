@@ -76,7 +76,7 @@ export function ToolLanding(p: ToolLandingProps) {
         <section className="mt-20 glass-strong rounded-3xl p-10 text-center border-gradient">
           <Sparkles className="size-6 mx-auto text-accent" />
           <h2 className="mt-3 text-2xl sm:text-3xl font-semibold tracking-tight">Try Clipra free</h2>
-          <p className="text-muted-foreground mt-2">30 free minutes. No credit card required.</p>
+          <p className="text-muted-foreground mt-2">60 free minutes. No credit card required.</p>
           <Button asChild className="mt-5 btn-premium rounded-xl">
             <Link to="/signup">Get started <ArrowRight className="size-4 ml-1" /></Link>
           </Button>
