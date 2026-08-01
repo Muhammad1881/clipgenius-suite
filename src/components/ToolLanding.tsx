@@ -2,6 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { Reveal, RevealGroup, RevealItem } from "@/components/Reveal";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import { ArrowRight, Check, Sparkles, Zap, Wand2, Globe } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
