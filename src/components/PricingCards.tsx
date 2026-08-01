@@ -193,16 +193,39 @@ export function PricingCards() {
             </Button>
           )}
           <div className="my-7 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-          <ul className="space-y-3 text-sm">
-            {p.features.map((f) => (
-              <li key={f} className="flex items-center gap-3">
-                <span className={`grid place-items-center size-5 rounded-full ${p.featured ? "bg-gradient-vivid" : "bg-white/5"}`}>
-                  <Check className={`size-3 ${p.featured ? "text-primary-foreground" : "text-accent"}`} />
-                </span>
-                {f}
-              </li>
-            ))}
-          </ul>
+          {p.features && (
+            <ul className="space-y-3 text-sm">
+              {p.features.map((f) => (
+                <li key={f} className="flex items-center gap-3">
+                  <span className={`grid place-items-center size-5 rounded-full ${p.featured ? "bg-gradient-vivid" : "bg-white/5"}`}>
+                    <Check className={`size-3 ${p.featured ? "text-primary-foreground" : "text-accent"}`} />
+                  </span>
+                  {f}
+                </li>
+              ))}
+            </ul>
+          )}
+          {p.groups && (
+            <div className="space-y-6">
+              {p.groups.map((g) => (
+                <div key={g.label}>
+                  <div className="text-[11px] uppercase tracking-widest text-muted-foreground mb-3">{g.label}</div>
+                  <ul className="space-y-3 text-sm">
+                    {g.items.map((f) => (
+                      <li key={f} className="flex items-center gap-3">
+                        <span className={`grid place-items-center size-5 rounded-full ${p.featured ? "bg-gradient-vivid" : "bg-white/5"}`}>
+                          <Check className={`size-3 ${p.featured ? "text-primary-foreground" : "text-accent"}`} />
+                        </span>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                  {g.note && <p className="text-xs text-muted-foreground mt-2.5 leading-relaxed">{g.note}</p>}
+                </div>
+              ))}
+            </div>
+          )}
+
         </div>
       ))}
     </div>
