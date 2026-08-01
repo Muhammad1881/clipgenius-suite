@@ -35,7 +35,7 @@ export function Navbar() {
     <header className="fixed top-0 inset-x-0 z-50">
       <div className={`mx-auto max-w-7xl px-3 sm:px-4 transition-all duration-500 ${scrolled ? "mt-2" : "mt-4"}`}>
         <nav className={`glass rounded-2xl flex items-center justify-between px-4 sm:px-5 py-3 transition-all duration-500 ${scrolled ? "shadow-elevated" : ""}`}>
-          <Link to="/" className="flex items-center gap-2 font-display font-semibold">
+          <Link to="/" className="flex items-center gap-2 font-display font-bold">
             <span className="grid place-items-center size-8 rounded-lg bg-gradient-vivid glow">
               <Sparkles className="size-4 text-primary-foreground" />
             </span>
