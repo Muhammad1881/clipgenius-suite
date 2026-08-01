@@ -1,6 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-const VIDEO_PROCESSOR_URL = "http://178.105.192.132:5000/upload";
+// Cloudflare Workers can only fetch a restricted set of outbound ports (80/443/8080/...),
+// so port 5000 is unreachable from the relay. Use the HTTPS hostname first and keep the
+// direct IP as a fallback for local/dev runtimes where the port is reachable.
+const UPSTREAM_URLS = [
+  "https://api.clipra.bond/upload",
+  "http://178.105.192.132:5000/upload",
+];
 const MAX_UPLOAD_BYTES = 100 * 1024 * 1024;
 
 export const Route = createFileRoute("/api/video-upload")({
@@ -27,10 +33,27 @@ export const Route = createFileRoute("/api/video-upload")({
             return Response.json({ error: "Video uploads are limited to 100 MB." }, { status: 413 });
           }
 
-          const upstream = await fetch(VIDEO_PROCESSOR_URL, {
-            method: "POST",
-            body: formData,
-          });
+          let upstream: Response | null = null;
+          let lastError: unknown = null;
+          for (const url of UPSTREAM_URLS) {
+            try {
+              upstream = await fetch(url, { method: "POST", body: formData });
+              break;
+            } catch (e) {
+              lastError = e;
+              console.error(`Video processor unreachable at ${url}`, e);
+            }
+          }
+
+          if (!upstream) {
+            return Response.json(
+              {
+                error: "Could not reach the video processor.",
+                detail: lastError instanceof Error ? lastError.message : String(lastError),
+              },
+              { status: 502 },
+            );
+          }
 
           const headers = new Headers();
           headers.set("content-type", upstream.headers.get("content-type") ?? "application/json");
@@ -44,7 +67,10 @@ export const Route = createFileRoute("/api/video-upload")({
         } catch (error) {
           console.error("Video processor request failed", error);
           return Response.json(
-            { error: "The video processor could not finish this request. Please try again." },
+            {
+              error: "The video processor could not finish this request. Please try again.",
+              detail: error instanceof Error ? error.message : String(error),
+            },
             { status: 502 },
           );
         }
