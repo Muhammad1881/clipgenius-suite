@@ -110,6 +110,17 @@ function UploadPage() {
       return;
     }
 
+    const MAX_UPLOAD_BYTES = 100 * 1024 * 1024; // Cloudflare proxy body limit
+    if (file.size > MAX_UPLOAD_BYTES) {
+      const msg = `This file is ${(file.size / 1024 / 1024).toFixed(0)} MB. Uploads are limited to 100 MB — please compress or trim the video and try again.`;
+      setError(msg);
+      setPhase("error");
+      toast.error(msg);
+      return;
+    }
+
+
+
     // Server-side quota reservation (atomic) BEFORE upload starts.
     setPhase("uploading"); setError(null); setClips([]); setProgress(0);
     let reserved = false;
@@ -203,10 +214,13 @@ function UploadPage() {
       }
     };
     xhr.onerror = async () => {
-      setError(`Could not reach ${API_URL}. Check that the backend is online and CORS allows this origin.`);
+      setError(
+        `Upload connection dropped before the server responded. This usually means the file is too large for the network proxy (100 MB max) or the connection timed out. Try a smaller/shorter video.`
+      );
       setPhase("error");
       await releaseReservation();
     };
+
 
     xhr.send(form);
   };
