@@ -30,6 +30,7 @@ import { Route as BlogClipraVsOpusClipRouteImport } from './routes/blog.clipra-v
 import { Route as BlogBestAiClipGenerators2026RouteImport } from './routes/blog.best-ai-clip-generators-2026'
 import { Route as BillingSuccessRouteImport } from './routes/billing.success'
 import { Route as BillingCancelRouteImport } from './routes/billing.cancel'
+import { Route as ApiVideoUploadRouteImport } from './routes/api/video-upload'
 import { Route as AppUploadRouteImport } from './routes/_app.upload'
 import { Route as AppResultsRouteImport } from './routes/_app.results'
 import { Route as AppProcessingRouteImport } from './routes/_app.processing'
@@ -149,6 +150,11 @@ const BillingCancelRoute = BillingCancelRouteImport.update({
   path: '/billing/cancel',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiVideoUploadRoute = ApiVideoUploadRouteImport.update({
+  id: '/api/video-upload',
+  path: '/api/video-upload',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppUploadRoute = AppUploadRouteImport.update({
   id: '/upload',
   path: '/upload',
@@ -235,6 +241,7 @@ export interface FileRoutesByFullPath {
   '/processing': typeof AppProcessingRoute
   '/results': typeof AppResultsRoute
   '/upload': typeof AppUploadRoute
+  '/api/video-upload': typeof ApiVideoUploadRoute
   '/billing/cancel': typeof BillingCancelRoute
   '/billing/success': typeof BillingSuccessRoute
   '/blog/best-ai-clip-generators-2026': typeof BlogBestAiClipGenerators2026Route
@@ -269,6 +276,7 @@ export interface FileRoutesByTo {
   '/processing': typeof AppProcessingRoute
   '/results': typeof AppResultsRoute
   '/upload': typeof AppUploadRoute
+  '/api/video-upload': typeof ApiVideoUploadRoute
   '/billing/cancel': typeof BillingCancelRoute
   '/billing/success': typeof BillingSuccessRoute
   '/blog/best-ai-clip-generators-2026': typeof BlogBestAiClipGenerators2026Route
@@ -305,6 +313,7 @@ export interface FileRoutesById {
   '/_app/processing': typeof AppProcessingRoute
   '/_app/results': typeof AppResultsRoute
   '/_app/upload': typeof AppUploadRoute
+  '/api/video-upload': typeof ApiVideoUploadRoute
   '/billing/cancel': typeof BillingCancelRoute
   '/billing/success': typeof BillingSuccessRoute
   '/blog/best-ai-clip-generators-2026': typeof BlogBestAiClipGenerators2026Route
@@ -341,6 +350,7 @@ export interface FileRouteTypes {
     | '/processing'
     | '/results'
     | '/upload'
+    | '/api/video-upload'
     | '/billing/cancel'
     | '/billing/success'
     | '/blog/best-ai-clip-generators-2026'
@@ -375,6 +385,7 @@ export interface FileRouteTypes {
     | '/processing'
     | '/results'
     | '/upload'
+    | '/api/video-upload'
     | '/billing/cancel'
     | '/billing/success'
     | '/blog/best-ai-clip-generators-2026'
@@ -410,6 +421,7 @@ export interface FileRouteTypes {
     | '/_app/processing'
     | '/_app/results'
     | '/_app/upload'
+    | '/api/video-upload'
     | '/billing/cancel'
     | '/billing/success'
     | '/blog/best-ai-clip-generators-2026'
@@ -442,6 +454,7 @@ export interface RootRouteChildren {
   YoutubeShortsGeneratorRoute: typeof YoutubeShortsGeneratorRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  ApiVideoUploadRoute: typeof ApiVideoUploadRoute
   BillingCancelRoute: typeof BillingCancelRoute
   BillingSuccessRoute: typeof BillingSuccessRoute
   BlogBestAiClipGenerators2026Route: typeof BlogBestAiClipGenerators2026Route
@@ -605,6 +618,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BillingCancelRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/video-upload': {
+      id: '/api/video-upload'
+      path: '/api/video-upload'
+      fullPath: '/api/video-upload'
+      preLoaderRoute: typeof ApiVideoUploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app/upload': {
       id: '/_app/upload'
       path: '/upload'
@@ -727,6 +747,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  ApiVideoUploadRoute: ApiVideoUploadRoute,
   BillingCancelRoute: BillingCancelRoute,
   BillingSuccessRoute: BillingSuccessRoute,
   BlogBestAiClipGenerators2026Route: BlogBestAiClipGenerators2026Route,
