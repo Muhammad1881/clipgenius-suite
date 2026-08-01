@@ -188,7 +188,7 @@ function BestTools() {
           <Sparkles className="size-6 mx-auto text-accent" />
           <h2 className="mt-3 text-2xl font-semibold tracking-tight">Try our #1 pick free</h2>
           <p className="text-muted-foreground mt-2 max-w-md mx-auto">
-            Clipra includes 30 free minutes — enough to clip a full podcast episode and see the difference.
+            Clipra includes 60 free minutes — enough to clip a full podcast episode and see the difference.
           </p>
           <Button asChild className="mt-5 btn-premium rounded-xl">
             <Link to="/signup">Start free <ArrowRight className="size-4 ml-1" /></Link>

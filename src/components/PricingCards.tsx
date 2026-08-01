@@ -8,15 +8,26 @@ import { supabase } from "@/integrations/supabase/client";
 import { useProfile } from "@/hooks/useProfile";
 import { createCheckoutSession, type PlanKey } from "@/lib/billing.functions";
 
+type FeatureGroup = { label: string; items: string[]; note?: string };
+
 type Plan = {
   name: string;
   price: string;
   desc: string;
-  features: string[];
+  features?: string[];
+  groups?: FeatureGroup[];
   cta: string;
   featured?: boolean;
   planKey?: PlanKey;
 };
+
+const AI_VIDEO_FEATURES = [
+  "AI Auto Reframing",
+  "Smart Subject Tracking",
+  "Head Framing",
+  "Camera Smoothing",
+  "Dead Zone Stabilization",
+];
 
 const plans: Plan[] = [
   {
@@ -38,18 +49,28 @@ const plans: Plan[] = [
     name: "Starter",
     price: "$13.99",
     desc: "For creators getting serious about shorts.",
-    features: [
-      "300 minutes / month",
-      "Upload videos up to 60 minutes",
-      "Maximum 10 clips per video",
-      "AI viral detection",
-      "AI captions & hashtags",
-      "Auto subtitles",
-      "HD exports",
-      "No watermark",
-      "30-day project history",
+    groups: [
+      {
+        label: "Essentials",
+        items: [
+          "300 minutes / month",
+          "Upload videos up to 60 minutes",
+          "Maximum 10 clips per video",
+          "Auto subtitles",
+          "HD exports",
+          "No watermark",
+          "30-day project history",
+        ],
+      },
+      {
+        label: "AI Content",
+        items: ["AI Viral Detection", "AI Captions", "AI Titles", "AI Hashtags"],
+      },
+      {
+        label: "AI Video",
+        items: AI_VIDEO_FEATURES,
+      },
     ],
-
     cta: "Get Starter",
     planKey: "starter",
   },
@@ -57,24 +78,40 @@ const plans: Plan[] = [
     name: "Creator",
     price: "$19",
     desc: "Built for power creators who publish daily.",
-    features: [
-      "500 minutes / month",
-      "Upload videos up to 120 minutes",
-      "Maximum 10 clips per video",
-      "AI viral detection",
-      "AI captions & hashtags",
-
-      "Auto subtitles",
-      "HD exports",
-      "No watermark",
-      "Unlimited project history",
-      "Priority processing",
+    groups: [
+      {
+        label: "Essentials",
+        items: [
+          "500 minutes / month",
+          "Upload videos up to 120 minutes",
+          "Maximum 10 clips per video",
+          "Auto subtitles",
+          "HD exports",
+          "No watermark",
+          "Unlimited project history",
+          "Priority processing",
+        ],
+      },
+      {
+        label: "AI Content",
+        items: ["AI Viral Detection", "AI Captions", "AI Titles", "AI Hashtags"],
+      },
+      {
+        label: "AI Video",
+        items: AI_VIDEO_FEATURES,
+      },
+      {
+        label: "Premium AI",
+        items: ["Future Premium AI Features"],
+        note: "Includes all upcoming premium AI upgrades at no additional cost.",
+      },
     ],
     cta: "Get Creator",
     featured: true,
     planKey: "creator",
   },
 ];
+
 
 export function PricingCards() {
   const checkout = useServerFn(createCheckoutSession);
@@ -156,16 +193,39 @@ export function PricingCards() {
             </Button>
           )}
           <div className="my-7 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-          <ul className="space-y-3 text-sm">
-            {p.features.map((f) => (
-              <li key={f} className="flex items-center gap-3">
-                <span className={`grid place-items-center size-5 rounded-full ${p.featured ? "bg-gradient-vivid" : "bg-white/5"}`}>
-                  <Check className={`size-3 ${p.featured ? "text-primary-foreground" : "text-accent"}`} />
-                </span>
-                {f}
-              </li>
-            ))}
-          </ul>
+          {p.features && (
+            <ul className="space-y-3 text-sm">
+              {p.features.map((f) => (
+                <li key={f} className="flex items-center gap-3">
+                  <span className={`grid place-items-center size-5 rounded-full ${p.featured ? "bg-gradient-vivid" : "bg-white/5"}`}>
+                    <Check className={`size-3 ${p.featured ? "text-primary-foreground" : "text-accent"}`} />
+                  </span>
+                  {f}
+                </li>
+              ))}
+            </ul>
+          )}
+          {p.groups && (
+            <div className="space-y-6">
+              {p.groups.map((g) => (
+                <div key={g.label}>
+                  <div className="text-[11px] uppercase tracking-widest text-muted-foreground mb-3">{g.label}</div>
+                  <ul className="space-y-3 text-sm">
+                    {g.items.map((f) => (
+                      <li key={f} className="flex items-center gap-3">
+                        <span className={`grid place-items-center size-5 rounded-full ${p.featured ? "bg-gradient-vivid" : "bg-white/5"}`}>
+                          <Check className={`size-3 ${p.featured ? "text-primary-foreground" : "text-accent"}`} />
+                        </span>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                  {g.note && <p className="text-xs text-muted-foreground mt-2.5 leading-relaxed">{g.note}</p>}
+                </div>
+              ))}
+            </div>
+          )}
+
         </div>
       ))}
     </div>

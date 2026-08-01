@@ -163,7 +163,7 @@ function PodcastGuide() {
           <Sparkles className="size-6 mx-auto text-accent" />
           <h2 className="mt-3 text-2xl font-semibold tracking-tight">Try it on your next episode</h2>
           <p className="text-muted-foreground mt-2 max-w-md mx-auto">
-            Upload a podcast and get viral-ready shorts in minutes — 30 free minutes included.
+            Upload a podcast and get viral-ready shorts in minutes — 60 free minutes included.
           </p>
           <Button asChild className="mt-5 btn-premium rounded-xl">
             <Link to="/signup">Start free <ArrowRight className="size-4 ml-1" /></Link>

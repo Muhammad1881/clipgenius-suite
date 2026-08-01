@@ -71,9 +71,13 @@ export const Route = createFileRoute("/blog/clipra-vs-opus-clip")({
 
 const rows: Array<{ feature: string; clipra: string | boolean; opus: string | boolean }> = [
   { feature: "Starting price (paid)", clipra: "$13.99 / mo", opus: "$19 / mo" },
-  { feature: "Free plan minutes", clipra: "30 min / mo", opus: "60 min (trial)" },
+  { feature: "Free plan minutes", clipra: "60 min / mo", opus: "60 min (trial)" },
   { feature: "AI viral-moment scoring", clipra: true, opus: true },
   { feature: "Auto reframe to 9:16", clipra: true, opus: true },
+  { feature: "Smart subject tracking", clipra: true, opus: true },
+  { feature: "Head framing", clipra: true, opus: false },
+  { feature: "Camera smoothing", clipra: true, opus: false },
+  { feature: "Dead zone stabilization", clipra: true, opus: false },
   { feature: "Animated captions", clipra: true, opus: true },
   { feature: "Multilingual subtitles (30+)", clipra: true, opus: true },
   { feature: "Translate captions to English", clipra: true, opus: true },
@@ -98,7 +102,7 @@ const faqs = [
   },
   {
     q: "Can I try Clipra free?",
-    a: "Yes — 30 minutes every month, no credit card required. That's enough to process roughly one full hour-long podcast every two months, or several short videos.",
+    a: "Yes — 60 minutes every month, no credit card required. That's enough to process roughly one full hour-long podcast every two months, or several short videos.",
   },
   {
     q: "Does Clipra support languages other than English?",
@@ -205,7 +209,7 @@ function ComparisonPage() {
         <section className="mt-14 glass-strong rounded-3xl p-8 sm:p-10 text-center border-gradient">
           <Sparkles className="size-6 mx-auto text-accent" />
           <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight mt-3">
-            Try Clipra free — 30 minutes every month
+            Try Clipra free — 60 minutes every month
           </h2>
           <p className="text-muted-foreground mt-3 max-w-md mx-auto">
             No credit card. Upload a video and ship your first viral short in minutes.
