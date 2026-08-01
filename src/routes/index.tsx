@@ -1,10 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { useRef } from "react";
 import { Sparkles, Upload, ArrowRight, Play, Star, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PricingCards } from "@/components/PricingCards";
+import { Reveal, RevealGroup, RevealItem } from "@/components/Reveal";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import heroBg from "@/assets/hero-bg.jpg";
 import clip1Video from "@/assets/clip-9.mp4.asset.json";
