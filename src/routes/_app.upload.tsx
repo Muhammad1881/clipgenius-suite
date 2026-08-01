@@ -29,10 +29,12 @@ const BACKEND_BASE = "https://api.clipra.bond";
 
 function resolveClipUrl(url: string | undefined): string | undefined {
   if (!url) return undefined;
+  if (url.startsWith("/clips/")) return `/api/clips/${url.slice("/clips/".length)}`;
   if (url.startsWith("http")) return url;
   if (url.startsWith("/")) return `${BACKEND_BASE}${url}`;
   return url;
 }
+
 
 type Clip = {
   title?: string;
