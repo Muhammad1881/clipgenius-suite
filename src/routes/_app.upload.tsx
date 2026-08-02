@@ -437,7 +437,8 @@ function UploadPage() {
             </div>
           </div>
           <h2 className="text-lg font-semibold mt-5">Finding viral moments…</h2>
-          <p className="text-sm text-muted-foreground mt-1">Our AI is analyzing your video. This may take a few minutes.</p>
+          <p className="text-sm text-muted-foreground mt-1">{stage ? `${stage}${progress ? ` · ${progress}%` : ""}` : "Our AI is analyzing your video. This may take a few minutes."}</p>
+
         </div>
       )}
 
