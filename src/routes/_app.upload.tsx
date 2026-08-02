@@ -175,11 +175,38 @@ function UploadPage() {
       try { parsed = JSON.parse(raw); } catch { /* not json */ }
 
       if (xhr.status >= 200 && xhr.status < 300) {
-        const arr: Clip[] = Array.isArray(parsed?.clips)
-          ? parsed.clips
-          : Array.isArray(parsed) ? parsed : [];
-        setClips(arr);
-        setPhase("done");
+        if (parsed?.jobId) {
+          setPhase("processing");
+
+          const poll = async () => {
+            const res = await fetch(`/jobs/${parsed.jobId}`);
+            const job = await res.json();
+
+            if (job.status === "completed") {
+              setClips((job.result?.clips || []) as Clip[]);
+              setPhase("done");
+              return;
+            }
+
+            if (job.status === "failed") {
+              setPhase("error");
+              return;
+            }
+
+            setTimeout(poll, 2000);
+          };
+
+          poll();
+        } else {
+          const arr: Clip[] = Array.isArray(parsed?.clips)
+            ? parsed.clips
+            : Array.isArray(parsed)
+              ? parsed
+              : [];
+
+          setClips(arr);
+          setPhase("done");
+        }
 
         // Persist project history (RLS-scoped to user)
         try {
