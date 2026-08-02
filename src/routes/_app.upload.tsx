@@ -383,15 +383,16 @@ function UploadPage() {
             <div className="mt-5">
               <div className="flex items-center justify-between text-xs mb-2">
                 <span className="text-muted-foreground">
-                  {phase === "uploading" ? "Uploading..." : "Processing on server..."}
+                  {phase === "uploading" ? "Uploading..." : (stage || "Processing on server...")}
                 </span>
-                <span className="text-foreground font-medium">{phase === "uploading" ? `${progress}%` : ""}</span>
+                <span className="text-foreground font-medium">{progress ? `${progress}%` : ""}</span>
               </div>
               <div className="h-2 rounded-full bg-white/10 overflow-hidden">
                 <div
-                  className={`h-full bg-gradient-vivid transition-all duration-300 ${phase === "processing" ? "animate-pulse w-full" : ""}`}
-                  style={phase === "uploading" ? { width: `${progress}%` } : undefined}
+                  className={`h-full bg-gradient-vivid transition-all duration-300 ${phase === "processing" && !progress ? "animate-pulse w-full" : ""}`}
+                  style={{ width: progress ? `${progress}%` : undefined }}
                 />
+
               </div>
             </div>
           )}
