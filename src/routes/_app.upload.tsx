@@ -169,6 +169,29 @@ function UploadPage() {
     };
     xhr.upload.onload = () => setPhase("processing");
 
+    const saveProject = async (payload: { clips: Clip[]; transcript?: any; viral_moments?: any }) => {
+      try {
+        const { data: userData } = await supabase.auth.getUser();
+        const uid = userData.user?.id;
+        if (!uid) return;
+        const { error: insertErr } = await supabase.from("projects").insert({
+          user_id: uid,
+          video_name: file.name,
+          transcript: (payload.transcript ?? null) as string | null,
+          viral_moments: payload.viral_moments ?? null,
+          clips: payload.clips as any,
+        });
+        if (insertErr) {
+          console.error("Failed to save project:", insertErr);
+          toast.error("Clips generated, but couldn't save project history.");
+        } else {
+          toast.success("Project saved to your history.");
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
     xhr.onload = async () => {
       const raw = xhr.responseText;
       let parsed: any = null;
@@ -177,23 +200,51 @@ function UploadPage() {
       if (xhr.status >= 200 && xhr.status < 300) {
         if (parsed?.jobId) {
           setPhase("processing");
+          setStage("Queued…");
+          const startedAt = Date.now();
+          const MAX_WAIT_MS = 30 * 60 * 1000;
 
           const poll = async () => {
-            const res = await fetch(`${BACKEND_BASE}/jobs/${parsed.jobId}`);
-            const job = await res.json();
+            try {
+              const res = await fetch(`${BACKEND_BASE}/jobs/${parsed.jobId}`);
+              const job = await res.json();
 
-            if (job.status === "completed") {
-              setClips((job.result?.clips || []) as Clip[]);
-              setPhase("done");
-              return;
+              if (job.status === "completed") {
+                const jobClips = (job.result?.clips || []) as Clip[];
+                setClips(jobClips);
+                setStage(null);
+                setPhase("done");
+                await saveProject({
+                  clips: jobClips,
+                  transcript: job.result?.transcript,
+                  viral_moments: job.result?.viral_moments ?? job.result?.moments,
+                });
+                return;
+              }
+
+              if (job.status === "failed") {
+                setError(job.error || "The processing server could not finish this video.");
+                setStage(null);
+                setPhase("error");
+                await releaseReservation();
+                return;
+              }
+
+              if (typeof job.progress === "number") setProgress(job.progress);
+              setStage(job.stage || "Processing…");
+
+              if (Date.now() - startedAt > MAX_WAIT_MS) {
+                setError("Processing is taking unusually long. Please try again or use a shorter video.");
+                setStage(null);
+                setPhase("error");
+                await releaseReservation();
+                return;
+              }
+
+              setTimeout(poll, 2500);
+            } catch {
+              setTimeout(poll, 4000);
             }
-
-            if (job.status === "failed") {
-              setPhase("error");
-              return;
-            }
-
-            setTimeout(poll, 2000);
           };
 
           poll();
@@ -205,32 +256,16 @@ function UploadPage() {
               : [];
 
           setClips(arr);
+          setStage(null);
           setPhase("done");
-        }
-
-        // Persist project history (RLS-scoped to user)
-        try {
-          const { data: userData } = await supabase.auth.getUser();
-          const uid = userData.user?.id;
-          if (uid) {
-            const { error: insertErr } = await supabase.from("projects").insert({
-              user_id: uid,
-              video_name: file.name,
-              transcript: (parsed?.transcript ?? null) as string | null,
-              viral_moments: parsed?.viral_moments ?? parsed?.moments ?? null,
-              clips: (Array.isArray(parsed?.clips) ? parsed.clips : Array.isArray(parsed) ? parsed : []) as any,
-            });
-            if (insertErr) {
-              console.error("Failed to save project:", insertErr);
-              toast.error("Clips generated, but couldn't save project history.");
-            } else {
-              toast.success("Project saved to your history.");
-            }
-          }
-        } catch (e) {
-          console.error(e);
+          await saveProject({
+            clips: arr,
+            transcript: parsed?.transcript,
+            viral_moments: parsed?.viral_moments ?? parsed?.moments,
+          });
         }
       } else {
+
         const timedOut = xhr.status === 524 || xhr.status === 522 || xhr.status === 504;
         const msg = timedOut
           ? "Processing took longer than the 100-second network limit, so the connection was closed before your clips came back. Try a shorter video for now — long videos need the processing server to run in the background."
