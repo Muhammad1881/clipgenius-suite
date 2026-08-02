@@ -179,7 +179,7 @@ function UploadPage() {
           setPhase("processing");
 
           const poll = async () => {
-            const res = await fetch(`/jobs/${parsed.jobId}`);
+            const res = await fetch(`${BACKEND_BASE}/jobs/${parsed.jobId}`);
             const job = await res.json();
 
             if (job.status === "completed") {
