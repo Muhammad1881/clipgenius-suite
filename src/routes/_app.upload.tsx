@@ -54,6 +54,8 @@ function UploadPage() {
   const [durationMin, setDurationMin] = useState<number | null>(null);
   const [progress, setProgress] = useState(0);
   const [phase, setPhase] = useState<Phase>("idle");
+  const [stage, setStage] = useState<string | null>(null);
+
   const [error, setError] = useState<string | null>(null);
   const [clips, setClips] = useState<Clip[]>([]);
   const [subtitleLanguage, setSubtitleLanguage] = useState<"same" | "english">("same");
