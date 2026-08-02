@@ -218,7 +218,7 @@ function UploadPage() {
               video_name: file.name,
               transcript: (parsed?.transcript ?? null) as string | null,
               viral_moments: parsed?.viral_moments ?? parsed?.moments ?? null,
-              clips: arr as any,
+              clips: (Array.isArray(parsed?.clips) ? parsed.clips : Array.isArray(parsed) ? parsed : []) as any,
             });
             if (insertErr) {
               console.error("Failed to save project:", insertErr);
