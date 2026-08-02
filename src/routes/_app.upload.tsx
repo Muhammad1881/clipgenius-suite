@@ -54,6 +54,8 @@ function UploadPage() {
   const [durationMin, setDurationMin] = useState<number | null>(null);
   const [progress, setProgress] = useState(0);
   const [phase, setPhase] = useState<Phase>("idle");
+  const [stage, setStage] = useState<string | null>(null);
+
   const [error, setError] = useState<string | null>(null);
   const [clips, setClips] = useState<Clip[]>([]);
   const [subtitleLanguage, setSubtitleLanguage] = useState<"same" | "english">("same");
@@ -91,7 +93,7 @@ function UploadPage() {
   }, []);
 
   const reset = () => {
-    setFile(null); setProgress(0); setPhase("idle"); setError(null); setClips([]); setDurationMin(null);
+    setFile(null); setProgress(0); setPhase("idle"); setError(null); setClips([]); setDurationMin(null); setStage(null);
   };
 
   const upload = async () => {
@@ -124,7 +126,7 @@ function UploadPage() {
 
 
     // Server-side quota reservation (atomic) BEFORE upload starts.
-    setPhase("uploading"); setError(null); setClips([]); setProgress(0);
+    setPhase("uploading"); setError(null); setClips([]); setProgress(0); setStage(null);
     let reserved = false;
     try {
       const r = await consume({ data: { minutes: minutesNeeded } });
@@ -169,6 +171,29 @@ function UploadPage() {
     };
     xhr.upload.onload = () => setPhase("processing");
 
+    const saveProject = async (payload: { clips: Clip[]; transcript?: any; viral_moments?: any }) => {
+      try {
+        const { data: userData } = await supabase.auth.getUser();
+        const uid = userData.user?.id;
+        if (!uid) return;
+        const { error: insertErr } = await supabase.from("projects").insert({
+          user_id: uid,
+          video_name: file.name,
+          transcript: (payload.transcript ?? null) as string | null,
+          viral_moments: payload.viral_moments ?? null,
+          clips: payload.clips as any,
+        });
+        if (insertErr) {
+          console.error("Failed to save project:", insertErr);
+          toast.error("Clips generated, but couldn't save project history.");
+        } else {
+          toast.success("Project saved to your history.");
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
     xhr.onload = async () => {
       const raw = xhr.responseText;
       let parsed: any = null;
@@ -177,23 +202,51 @@ function UploadPage() {
       if (xhr.status >= 200 && xhr.status < 300) {
         if (parsed?.jobId) {
           setPhase("processing");
+          setStage("Queued…");
+          const startedAt = Date.now();
+          const MAX_WAIT_MS = 30 * 60 * 1000;
 
           const poll = async () => {
-            const res = await fetch(`${BACKEND_BASE}/jobs/${parsed.jobId}`);
-            const job = await res.json();
+            try {
+              const res = await fetch(`${BACKEND_BASE}/jobs/${parsed.jobId}`);
+              const job = await res.json();
 
-            if (job.status === "completed") {
-              setClips((job.result?.clips || []) as Clip[]);
-              setPhase("done");
-              return;
+              if (job.status === "completed") {
+                const jobClips = (job.result?.clips || []) as Clip[];
+                setClips(jobClips);
+                setStage(null);
+                setPhase("done");
+                await saveProject({
+                  clips: jobClips,
+                  transcript: job.result?.transcript,
+                  viral_moments: job.result?.viral_moments ?? job.result?.moments,
+                });
+                return;
+              }
+
+              if (job.status === "failed") {
+                setError(job.error || "The processing server could not finish this video.");
+                setStage(null);
+                setPhase("error");
+                await releaseReservation();
+                return;
+              }
+
+              if (typeof job.progress === "number") setProgress(job.progress);
+              setStage(job.stage || "Processing…");
+
+              if (Date.now() - startedAt > MAX_WAIT_MS) {
+                setError("Processing is taking unusually long. Please try again or use a shorter video.");
+                setStage(null);
+                setPhase("error");
+                await releaseReservation();
+                return;
+              }
+
+              setTimeout(poll, 2500);
+            } catch {
+              setTimeout(poll, 4000);
             }
-
-            if (job.status === "failed") {
-              setPhase("error");
-              return;
-            }
-
-            setTimeout(poll, 2000);
           };
 
           poll();
@@ -205,32 +258,16 @@ function UploadPage() {
               : [];
 
           setClips(arr);
+          setStage(null);
           setPhase("done");
-        }
-
-        // Persist project history (RLS-scoped to user)
-        try {
-          const { data: userData } = await supabase.auth.getUser();
-          const uid = userData.user?.id;
-          if (uid) {
-            const { error: insertErr } = await supabase.from("projects").insert({
-              user_id: uid,
-              video_name: file.name,
-              transcript: (parsed?.transcript ?? null) as string | null,
-              viral_moments: parsed?.viral_moments ?? parsed?.moments ?? null,
-              clips: (Array.isArray(parsed?.clips) ? parsed.clips : Array.isArray(parsed) ? parsed : []) as any,
-            });
-            if (insertErr) {
-              console.error("Failed to save project:", insertErr);
-              toast.error("Clips generated, but couldn't save project history.");
-            } else {
-              toast.success("Project saved to your history.");
-            }
-          }
-        } catch (e) {
-          console.error(e);
+          await saveProject({
+            clips: arr,
+            transcript: parsed?.transcript,
+            viral_moments: parsed?.viral_moments ?? parsed?.moments,
+          });
         }
       } else {
+
         const timedOut = xhr.status === 524 || xhr.status === 522 || xhr.status === 504;
         const msg = timedOut
           ? "Processing took longer than the 100-second network limit, so the connection was closed before your clips came back. Try a shorter video for now — long videos need the processing server to run in the background."
@@ -346,15 +383,16 @@ function UploadPage() {
             <div className="mt-5">
               <div className="flex items-center justify-between text-xs mb-2">
                 <span className="text-muted-foreground">
-                  {phase === "uploading" ? "Uploading..." : "Processing on server..."}
+                  {phase === "uploading" ? "Uploading..." : (stage || "Processing on server...")}
                 </span>
-                <span className="text-foreground font-medium">{phase === "uploading" ? `${progress}%` : ""}</span>
+                <span className="text-foreground font-medium">{progress ? `${progress}%` : ""}</span>
               </div>
               <div className="h-2 rounded-full bg-white/10 overflow-hidden">
                 <div
-                  className={`h-full bg-gradient-vivid transition-all duration-300 ${phase === "processing" ? "animate-pulse w-full" : ""}`}
-                  style={phase === "uploading" ? { width: `${progress}%` } : undefined}
+                  className={`h-full bg-gradient-vivid transition-all duration-300 ${phase === "processing" && !progress ? "animate-pulse w-full" : ""}`}
+                  style={{ width: progress ? `${progress}%` : undefined }}
                 />
+
               </div>
             </div>
           )}
@@ -399,7 +437,8 @@ function UploadPage() {
             </div>
           </div>
           <h2 className="text-lg font-semibold mt-5">Finding viral moments…</h2>
-          <p className="text-sm text-muted-foreground mt-1">Our AI is analyzing your video. This may take a few minutes.</p>
+          <p className="text-sm text-muted-foreground mt-1">{stage ? `${stage}${progress ? ` · ${progress}%` : ""}` : "Our AI is analyzing your video. This may take a few minutes."}</p>
+
         </div>
       )}
 
