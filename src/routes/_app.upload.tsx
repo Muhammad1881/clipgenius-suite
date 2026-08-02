@@ -93,7 +93,7 @@ function UploadPage() {
   }, []);
 
   const reset = () => {
-    setFile(null); setProgress(0); setPhase("idle"); setError(null); setClips([]); setDurationMin(null);
+    setFile(null); setProgress(0); setPhase("idle"); setError(null); setClips([]); setDurationMin(null); setStage(null);
   };
 
   const upload = async () => {
