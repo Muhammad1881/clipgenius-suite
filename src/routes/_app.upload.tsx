@@ -298,7 +298,7 @@ function UploadPage() {
     <div className="p-6 sm:p-8 max-w-4xl mx-auto relative">
       <div className="absolute inset-x-0 top-0 h-80 bg-mesh opacity-40 -z-10 pointer-events-none" />
       <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Upload a video</h1>
-      <p className="text-muted-foreground mt-1.5">Drop a file or paste a link. We support MP4, MOV, WEBM up to 4 hours.</p>
+      <p className="text-muted-foreground mt-1.5">Drop a file or paste a link.</p>
 
       <div
         onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
