@@ -209,7 +209,7 @@ function Results() {
                                 className="w-full btn-premium rounded-lg"
                               >
                                 {downloadHref ? (
-                                  <a href={downloadHref} download target="_blank" rel="noreferrer">
+                                  <a href={downloadHref} download={`${title.replace(/[^a-zA-Z0-9._-]+/g, "-").slice(0, 60) || "clip"}.mp4`} rel="noreferrer">
                                     <Download className="size-3.5 mr-1.5" /> Download
                                   </a>
                                 ) : (
