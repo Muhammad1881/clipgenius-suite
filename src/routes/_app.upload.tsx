@@ -473,8 +473,8 @@ function UploadPage() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {clips.map((c, i) => {
                 const videoSrc = resolveClipUrl((c.video_url || c.url || c.preview_url) as string | undefined);
-                const downloadHref = resolveClipUrl((c.download_url || c.url || c.video_url) as string | undefined);
                 const title = (c.title as string) || `Clip ${i + 1}`;
+                const downloadHref = toDownloadUrl((c.download_url || c.url || c.video_url) as string | undefined, title);
                 const score = typeof c.score === "number" ? Math.round(c.score) : undefined;
                 return (
                   <div key={i} className="glass rounded-2xl overflow-hidden group hover-lift border-gradient flex flex-col">
