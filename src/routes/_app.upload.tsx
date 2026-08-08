@@ -35,6 +35,18 @@ function resolveClipUrl(url: string | undefined): string | undefined {
   return url;
 }
 
+function safeFileName(title: string): string {
+  return `${title.replace(/[^a-zA-Z0-9._-]+/g, "-").slice(0, 60) || "clip"}.mp4`;
+}
+
+function toDownloadUrl(url: string | undefined, title: string): string | undefined {
+  const resolved = resolveClipUrl(url);
+  if (!resolved) return undefined;
+  if (!resolved.startsWith("/api/clips/")) return resolved;
+  return `${resolved}?download=1&filename=${encodeURIComponent(safeFileName(title))}`;
+}
+
+
 
 type Clip = {
   title?: string;
