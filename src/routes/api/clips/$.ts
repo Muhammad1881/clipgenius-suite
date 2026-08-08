@@ -25,7 +25,16 @@ export const Route = createFileRoute("/api/clips/$")({
         headers.set("accept-ranges", "bytes");
         headers.set("cache-control", "public, max-age=3600");
 
+        const url = new URL(request.url);
+        if (url.searchParams.get("download") === "1") {
+          const raw = url.searchParams.get("filename") || splat.split("/").pop() || "clip.mp4";
+          const safe = raw.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 80) || "clip.mp4";
+          headers.set("content-disposition", `attachment; filename="${safe}"`);
+          headers.set("cache-control", "no-store");
+        }
+
         return new Response(upstream.body, { status: upstream.status, headers });
+
       },
     },
   },

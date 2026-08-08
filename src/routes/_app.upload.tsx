@@ -35,6 +35,18 @@ function resolveClipUrl(url: string | undefined): string | undefined {
   return url;
 }
 
+function safeFileName(title: string): string {
+  return `${title.replace(/[^a-zA-Z0-9._-]+/g, "-").slice(0, 60) || "clip"}.mp4`;
+}
+
+function toDownloadUrl(url: string | undefined, title: string): string | undefined {
+  const resolved = resolveClipUrl(url);
+  if (!resolved) return undefined;
+  if (!resolved.startsWith("/api/clips/")) return resolved;
+  return `${resolved}?download=1&filename=${encodeURIComponent(safeFileName(title))}`;
+}
+
+
 
 type Clip = {
   title?: string;
@@ -461,8 +473,8 @@ function UploadPage() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {clips.map((c, i) => {
                 const videoSrc = resolveClipUrl((c.video_url || c.url || c.preview_url) as string | undefined);
-                const downloadHref = resolveClipUrl((c.download_url || c.url || c.video_url) as string | undefined);
                 const title = (c.title as string) || `Clip ${i + 1}`;
+                const downloadHref = toDownloadUrl((c.download_url || c.url || c.video_url) as string | undefined, title);
                 const score = typeof c.score === "number" ? Math.round(c.score) : undefined;
                 return (
                   <div key={i} className="glass rounded-2xl overflow-hidden group hover-lift border-gradient flex flex-col">
@@ -498,7 +510,7 @@ function UploadPage() {
                           className="w-full btn-premium rounded-lg"
                         >
                           {downloadHref ? (
-                            <a href={downloadHref} download target="_blank" rel="noreferrer">
+                            <a href={downloadHref} download={safeFileName(title)} rel="noreferrer">
                               <Download className="size-3.5 mr-1.5" /> Download
                             </a>
                           ) : (
