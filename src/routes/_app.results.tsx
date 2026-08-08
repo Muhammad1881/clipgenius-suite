@@ -20,6 +20,15 @@ function resolveClipUrl(url: string | undefined): string | undefined {
   return url;
 }
 
+function toDownloadUrl(url: string | undefined, title: string): string | undefined {
+  const resolved = resolveClipUrl(url);
+  if (!resolved) return undefined;
+  if (!resolved.startsWith("/api/clips/")) return resolved;
+  const name = `${title.replace(/[^a-zA-Z0-9._-]+/g, "-").slice(0, 60) || "clip"}.mp4`;
+  return `${resolved}?download=1&filename=${encodeURIComponent(name)}`;
+}
+
+
 
 type Clip = {
   title?: string;
