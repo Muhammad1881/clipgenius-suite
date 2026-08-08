@@ -26,17 +26,19 @@ export const Route = createFileRoute("/api/clips/$")({
 
         const headers = new Headers();
         headers.set("content-type", upstream.headers.get("content-type") ?? "video/mp4");
+        headers.set("access-control-allow-origin", "*");
 
         if (isDownload) {
-          // Buffer so the browser gets an exact, consistent length (avoids
-          // "network error" from a truncated/mismatched stream).
-          const buf = await upstream.arrayBuffer();
+          // Stream the full body through with the upstream's exact length so
+          // Chrome never sees a truncated/mismatched download.
           const raw = url.searchParams.get("filename") || splat.split("/").pop() || "clip.mp4";
           const safe = raw.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 80) || "clip.mp4";
+          const total = upstream.headers.get("content-length");
           headers.set("content-disposition", `attachment; filename="${safe}"`);
-          headers.set("content-length", String(buf.byteLength));
+          if (total) headers.set("content-length", total);
+          headers.set("accept-ranges", "none");
           headers.set("cache-control", "no-store");
-          return new Response(buf, { status: 200, headers });
+          return new Response(upstream.body, { status: 200, headers });
         }
 
         const len = upstream.headers.get("content-length");
@@ -47,6 +49,7 @@ export const Route = createFileRoute("/api/clips/$")({
         headers.set("cache-control", "public, max-age=3600");
 
         return new Response(upstream.body, { status: upstream.status, headers });
+
 
 
       },
