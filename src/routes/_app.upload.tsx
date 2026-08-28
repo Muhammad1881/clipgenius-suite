@@ -162,6 +162,10 @@ function UploadPage() {
   }, []);
 
   const reset = () => {
+    if (phase === "uploading" || phase === "processing") {
+      void cancelJob();
+      return;
+    }
     setFile(null); setProgress(0); setPhase("idle"); setError(null); setClips([]); setDurationMin(null); setStage(null);
   };
 
