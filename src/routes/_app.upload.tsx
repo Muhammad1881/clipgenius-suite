@@ -81,6 +81,63 @@ function UploadPage() {
 
   const remainingMinutes = profile ? profile.monthly_minutes - profile.minutes_used : 0;
 
+  // Cancellation / refund bookkeeping
+  const xhrRef = useRef<XMLHttpRequest | null>(null);
+  const jobIdRef = useRef<string | null>(null);
+  const cancelledRef = useRef(false);
+  const pollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const reservationRef = useRef<{ minutes: number; active: boolean }>({ minutes: 0, active: false });
+  const [cancelling, setCancelling] = useState(false);
+
+  const releaseReservation = useCallback(async () => {
+    const res = reservationRef.current;
+    if (!res.active || res.minutes <= 0) return;
+    reservationRef.current = { minutes: 0, active: false };
+    try {
+      await refund({ data: { minutes: res.minutes } });
+      if (typeof window !== "undefined") window.dispatchEvent(new Event("profile:refresh"));
+    } catch (e) {
+      console.error("Failed to refund minutes:", e);
+    }
+  }, [refund]);
+
+  const cancelJob = useCallback(async () => {
+    cancelledRef.current = true;
+    setCancelling(true);
+    if (pollTimerRef.current) { clearTimeout(pollTimerRef.current); pollTimerRef.current = null; }
+    try { xhrRef.current?.abort(); } catch { /* noop */ }
+    xhrRef.current = null;
+
+    const jobId = jobIdRef.current;
+    jobIdRef.current = null;
+    if (jobId) {
+      try {
+        await fetch(`${BACKEND_BASE}/jobs/${jobId}/cancel`, { method: "POST", keepalive: true });
+      } catch { /* backend may not support cancel; ignore */ }
+    }
+
+    await releaseReservation();
+    setPhase("idle");
+    setStage(null);
+    setProgress(0);
+    setClips([]);
+    setError(null);
+    setCancelling(false);
+    toast.success("Processing cancelled — your minutes were not used.");
+  }, [releaseReservation]);
+
+  // Abandon safely if the user leaves mid-processing: refund reserved minutes.
+  useEffect(() => {
+    return () => {
+      if (pollTimerRef.current) clearTimeout(pollTimerRef.current);
+      if (reservationRef.current.active) {
+        cancelledRef.current = true;
+        try { xhrRef.current?.abort(); } catch { /* noop */ }
+        void releaseReservation();
+      }
+    };
+  }, [releaseReservation]);
+
   const readDurationMinutes = (f: File): Promise<number> =>
     new Promise((resolve, reject) => {
       const url = URL.createObjectURL(f);
