@@ -212,8 +212,9 @@ function UploadPage() {
         await refetchProfile();
         return;
       }
-      reserved = true;
+      reservationRef.current = { minutes: minutesNeeded, active: true };
       await refetchProfile();
+      if (cancelledRef.current) { await releaseReservation(); return; }
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Could not reserve minutes.";
       setError(msg);
