@@ -45,7 +45,7 @@ function SignupPage() {
   const [loading, setLoading] = useState(false);
 
   const goToRedirect = () => {
-    const target = search.redirect;
+    const target = search.redirect ?? "/dashboard";
     if (target.includes("?") || target.startsWith("/.lovable")) {
       window.location.href = target;
     } else {

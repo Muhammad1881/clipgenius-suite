@@ -72,7 +72,7 @@ function LoginPage() {
       return;
     }
     toast.success("Welcome back!");
-    navigateToRedirect(navigate, search.redirect);
+    navigateToRedirect(navigate, search.redirect ?? "/dashboard");
   };
 
   const handleGoogle = async () => {
