@@ -25,12 +25,12 @@ function navigateToRedirect(nav: ReturnType<typeof useNavigate>, target: string)
 }
 
 export const Route = createFileRoute("/login")({
-  validateSearch: (s: Record<string, unknown>) => ({
+  validateSearch: (s: Record<string, unknown>): { redirect?: string } => ({
     redirect: typeof s.redirect === "string" && s.redirect.startsWith("/") ? s.redirect : "/dashboard",
   }),
   beforeLoad: async ({ search }) => {
     const { data } = await supabase.auth.getSession();
-    if (data.session) throw redirect({ href: search.redirect });
+    if (data.session) throw redirect({ href: search.redirect ?? "/dashboard" });
   },
   component: LoginPage,
   head: () => ({
@@ -72,7 +72,7 @@ function LoginPage() {
       return;
     }
     toast.success("Welcome back!");
-    navigateToRedirect(navigate, search.redirect);
+    navigateToRedirect(navigate, search.redirect ?? "/dashboard");
   };
 
   const handleGoogle = async () => {

@@ -10,12 +10,12 @@ import { toast } from "sonner";
 import { AuthShell, Field, Divider, GoogleIcon } from "./login";
 
 export const Route = createFileRoute("/signup")({
-  validateSearch: (s: Record<string, unknown>) => ({
+  validateSearch: (s: Record<string, unknown>): { redirect?: string } => ({
     redirect: typeof s.redirect === "string" && s.redirect.startsWith("/") ? s.redirect : "/dashboard",
   }),
   beforeLoad: async ({ search }) => {
     const { data } = await supabase.auth.getSession();
-    if (data.session) throw redirect({ href: search.redirect });
+    if (data.session) throw redirect({ href: search.redirect ?? "/dashboard" });
   },
   component: SignupPage,
   head: () => ({
@@ -45,7 +45,7 @@ function SignupPage() {
   const [loading, setLoading] = useState(false);
 
   const goToRedirect = () => {
-    const target = search.redirect;
+    const target = search.redirect ?? "/dashboard";
     if (target.includes("?") || target.startsWith("/.lovable")) {
       window.location.href = target;
     } else {
