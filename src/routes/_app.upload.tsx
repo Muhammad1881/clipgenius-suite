@@ -537,7 +537,16 @@ function UploadPage() {
           </div>
           <h2 className="text-lg font-semibold mt-5">Finding viral moments…</h2>
           <p className="text-sm text-muted-foreground mt-1">{stage ? `${stage}${progress ? ` · ${progress}%` : ""}` : "Our AI is analyzing your video. This may take a few minutes."}</p>
-
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={cancelling}
+            onClick={() => void cancelJob()}
+            className="mt-5 rounded-xl border-white/15"
+          >
+            {cancelling ? <><Loader2 className="size-3.5 mr-1.5 animate-spin" /> Cancelling</> : <><X className="size-3.5 mr-1.5" /> Cancel and refund minutes</>}
+          </Button>
         </div>
       )}
 
