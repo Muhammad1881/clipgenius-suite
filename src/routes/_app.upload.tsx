@@ -424,7 +424,13 @@ function UploadPage() {
                 {durationMin != null && <> · {Math.ceil(durationMin)} min · {remainingMinutes} min remaining</>}
               </div>
             </div>
-            <button onClick={reset} className="text-muted-foreground hover:text-foreground transition-colors">
+            <button
+              onClick={reset}
+              disabled={cancelling}
+              title={phase === "uploading" || phase === "processing" ? "Cancel processing" : "Remove file"}
+              aria-label={phase === "uploading" || phase === "processing" ? "Cancel processing" : "Remove file"}
+              className="text-muted-foreground hover:text-foreground transition-colors disabled:opacity-40"
+            >
               <X className="size-4" />
             </button>
           </div>
