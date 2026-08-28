@@ -229,12 +229,14 @@ function UploadPage() {
     form.append("subtitleLanguage", subtitleLanguage);
 
     const xhr = new XMLHttpRequest();
+    xhrRef.current = xhr;
     xhr.open("POST", API_URL);
 
     xhr.upload.onprogress = (e) => {
       if (e.lengthComputable) setProgress(Math.round((e.loaded / e.total) * 100));
     };
-    xhr.upload.onload = () => setPhase("processing");
+    xhr.upload.onload = () => { if (!cancelledRef.current) setPhase("processing"); };
+    xhr.onabort = () => { /* handled by cancelJob */ };
 
     const saveProject = async (payload: { clips: Clip[]; transcript?: any; viral_moments?: any }) => {
       try {
