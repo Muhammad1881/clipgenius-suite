@@ -478,6 +478,21 @@ function UploadPage() {
                 />
 
               </div>
+              <div className="mt-3 flex items-center justify-between gap-3">
+                <span className="text-xs text-muted-foreground">
+                  Cancelling returns your reserved minutes.
+                </span>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  disabled={cancelling}
+                  onClick={() => void cancelJob()}
+                  className="rounded-lg text-destructive hover:text-destructive hover:bg-destructive/10"
+                >
+                  {cancelling ? <><Loader2 className="size-3.5 mr-1.5 animate-spin" /> Cancelling</> : <><X className="size-3.5 mr-1.5" /> Cancel</>}
+                </Button>
+              </div>
             </div>
           )}
 
