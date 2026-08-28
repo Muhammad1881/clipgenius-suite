@@ -223,16 +223,6 @@ function UploadPage() {
       return;
     }
 
-    const releaseReservation = async () => {
-      if (!reserved) return;
-      try {
-        await refund({ data: { minutes: minutesNeeded } });
-        await refetchProfile();
-      } catch (e) {
-        console.error("Failed to refund minutes:", e);
-      }
-    };
-
     const form = new FormData();
     form.append("video", file);
     form.append("plan", (profile?.plan as string) ?? "free");
