@@ -199,8 +199,9 @@ function UploadPage() {
 
 
     // Server-side quota reservation (atomic) BEFORE upload starts.
+    cancelledRef.current = false;
+    jobIdRef.current = null;
     setPhase("uploading"); setError(null); setClips([]); setProgress(0); setStage(null);
-    let reserved = false;
     try {
       const r = await consume({ data: { minutes: minutesNeeded } });
       if (!r.ok) {
