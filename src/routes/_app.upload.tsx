@@ -353,14 +353,15 @@ function UploadPage() {
             parsed?.detail ||
             (raw && raw.length < 500 ? raw : "") ||
             `Upload failed (${xhr.status} ${xhr.statusText || ""})`.trim();
-        setError(msg);
+        setError(`${msg} Your minutes were not deducted.`);
         setPhase("error");
         await releaseReservation();
       }
     };
     xhr.onerror = async () => {
+      if (cancelledRef.current) return;
       setError(
-        "The processing connection was interrupted. Your video size is not necessarily the problem—please try once more."
+        "The processing connection was interrupted, so your minutes were returned. Your video size is not necessarily the problem—please try once more."
       );
       setPhase("error");
       await releaseReservation();
