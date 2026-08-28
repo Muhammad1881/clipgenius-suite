@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Upload as UploadIcon, FileVideo, Link2, X, Sparkles, Loader2, Download, TrendingUp, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -81,6 +81,63 @@ function UploadPage() {
 
   const remainingMinutes = profile ? profile.monthly_minutes - profile.minutes_used : 0;
 
+  // Cancellation / refund bookkeeping
+  const xhrRef = useRef<XMLHttpRequest | null>(null);
+  const jobIdRef = useRef<string | null>(null);
+  const cancelledRef = useRef(false);
+  const pollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const reservationRef = useRef<{ minutes: number; active: boolean }>({ minutes: 0, active: false });
+  const [cancelling, setCancelling] = useState(false);
+
+  const releaseReservation = useCallback(async () => {
+    const res = reservationRef.current;
+    if (!res.active || res.minutes <= 0) return;
+    reservationRef.current = { minutes: 0, active: false };
+    try {
+      await refund({ data: { minutes: res.minutes } });
+      if (typeof window !== "undefined") window.dispatchEvent(new Event("profile:refresh"));
+    } catch (e) {
+      console.error("Failed to refund minutes:", e);
+    }
+  }, [refund]);
+
+  const cancelJob = useCallback(async () => {
+    cancelledRef.current = true;
+    setCancelling(true);
+    if (pollTimerRef.current) { clearTimeout(pollTimerRef.current); pollTimerRef.current = null; }
+    try { xhrRef.current?.abort(); } catch { /* noop */ }
+    xhrRef.current = null;
+
+    const jobId = jobIdRef.current;
+    jobIdRef.current = null;
+    if (jobId) {
+      try {
+        await fetch(`${BACKEND_BASE}/jobs/${jobId}/cancel`, { method: "POST", keepalive: true });
+      } catch { /* backend may not support cancel; ignore */ }
+    }
+
+    await releaseReservation();
+    setPhase("idle");
+    setStage(null);
+    setProgress(0);
+    setClips([]);
+    setError(null);
+    setCancelling(false);
+    toast.success("Processing cancelled — your minutes were not used.");
+  }, [releaseReservation]);
+
+  // Abandon safely if the user leaves mid-processing: refund reserved minutes.
+  useEffect(() => {
+    return () => {
+      if (pollTimerRef.current) clearTimeout(pollTimerRef.current);
+      if (reservationRef.current.active) {
+        cancelledRef.current = true;
+        try { xhrRef.current?.abort(); } catch { /* noop */ }
+        void releaseReservation();
+      }
+    };
+  }, [releaseReservation]);
+
   const readDurationMinutes = (f: File): Promise<number> =>
     new Promise((resolve, reject) => {
       const url = URL.createObjectURL(f);
@@ -105,6 +162,10 @@ function UploadPage() {
   }, []);
 
   const reset = () => {
+    if (phase === "uploading" || phase === "processing") {
+      void cancelJob();
+      return;
+    }
     setFile(null); setProgress(0); setPhase("idle"); setError(null); setClips([]); setDurationMin(null); setStage(null);
   };
 
@@ -138,8 +199,9 @@ function UploadPage() {
 
 
     // Server-side quota reservation (atomic) BEFORE upload starts.
+    cancelledRef.current = false;
+    jobIdRef.current = null;
     setPhase("uploading"); setError(null); setClips([]); setProgress(0); setStage(null);
-    let reserved = false;
     try {
       const r = await consume({ data: { minutes: minutesNeeded } });
       if (!r.ok) {
@@ -150,8 +212,9 @@ function UploadPage() {
         await refetchProfile();
         return;
       }
-      reserved = true;
+      reservationRef.current = { minutes: minutesNeeded, active: true };
       await refetchProfile();
+      if (cancelledRef.current) { await releaseReservation(); return; }
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Could not reserve minutes.";
       setError(msg);
@@ -160,28 +223,20 @@ function UploadPage() {
       return;
     }
 
-    const releaseReservation = async () => {
-      if (!reserved) return;
-      try {
-        await refund({ data: { minutes: minutesNeeded } });
-        await refetchProfile();
-      } catch (e) {
-        console.error("Failed to refund minutes:", e);
-      }
-    };
-
     const form = new FormData();
     form.append("video", file);
     form.append("plan", (profile?.plan as string) ?? "free");
     form.append("subtitleLanguage", subtitleLanguage);
 
     const xhr = new XMLHttpRequest();
+    xhrRef.current = xhr;
     xhr.open("POST", API_URL);
 
     xhr.upload.onprogress = (e) => {
       if (e.lengthComputable) setProgress(Math.round((e.loaded / e.total) * 100));
     };
-    xhr.upload.onload = () => setPhase("processing");
+    xhr.upload.onload = () => { if (!cancelledRef.current) setPhase("processing"); };
+    xhr.onabort = () => { /* handled by cancelJob */ };
 
     const saveProject = async (payload: { clips: Clip[]; transcript?: any; viral_moments?: any }) => {
       try {
@@ -206,38 +261,52 @@ function UploadPage() {
       }
     };
 
+    const finish = async (arr: Clip[], extra: { transcript?: any; viral_moments?: any }) => {
+      if (cancelledRef.current) return;
+      setClips(arr);
+      setStage(null);
+      setPhase("done");
+      if (arr.length === 0) {
+        // Nothing was generated — never charge for that.
+        await releaseReservation();
+        toast.error("No clips could be generated from this video — your minutes were not deducted.");
+        return;
+      }
+      reservationRef.current = { minutes: 0, active: false };
+      await saveProject({ clips: arr, transcript: extra.transcript, viral_moments: extra.viral_moments });
+    };
+
     xhr.onload = async () => {
+      if (cancelledRef.current) return;
       const raw = xhr.responseText;
       let parsed: any = null;
       try { parsed = JSON.parse(raw); } catch { /* not json */ }
 
       if (xhr.status >= 200 && xhr.status < 300) {
         if (parsed?.jobId) {
+          jobIdRef.current = String(parsed.jobId);
           setPhase("processing");
           setStage("Queued…");
           const startedAt = Date.now();
           const MAX_WAIT_MS = 30 * 60 * 1000;
 
           const poll = async () => {
+            if (cancelledRef.current) return;
             try {
               const res = await fetch(`${BACKEND_BASE}/jobs/${parsed.jobId}`);
               const job = await res.json();
+              if (cancelledRef.current) return;
 
               if (job.status === "completed") {
-                const jobClips = (job.result?.clips || []) as Clip[];
-                setClips(jobClips);
-                setStage(null);
-                setPhase("done");
-                await saveProject({
-                  clips: jobClips,
+                await finish((job.result?.clips || []) as Clip[], {
                   transcript: job.result?.transcript,
                   viral_moments: job.result?.viral_moments ?? job.result?.moments,
                 });
                 return;
               }
 
-              if (job.status === "failed") {
-                setError(job.error || "The processing server could not finish this video.");
+              if (job.status === "failed" || job.status === "cancelled") {
+                setError(job.error || "The processing server could not finish this video. Your minutes were not deducted.");
                 setStage(null);
                 setPhase("error");
                 await releaseReservation();
@@ -248,16 +317,16 @@ function UploadPage() {
               setStage(job.stage || "Processing…");
 
               if (Date.now() - startedAt > MAX_WAIT_MS) {
-                setError("Processing is taking unusually long. Please try again or use a shorter video.");
+                setError("Processing is taking unusually long, so we stopped it and returned your minutes. Please try again or use a shorter video.");
                 setStage(null);
                 setPhase("error");
                 await releaseReservation();
                 return;
               }
 
-              setTimeout(poll, 2500);
+              pollTimerRef.current = setTimeout(poll, 2500);
             } catch {
-              setTimeout(poll, 4000);
+              if (!cancelledRef.current) pollTimerRef.current = setTimeout(poll, 4000);
             }
           };
 
@@ -269,11 +338,7 @@ function UploadPage() {
               ? parsed
               : [];
 
-          setClips(arr);
-          setStage(null);
-          setPhase("done");
-          await saveProject({
-            clips: arr,
+          await finish(arr, {
             transcript: parsed?.transcript,
             viral_moments: parsed?.viral_moments ?? parsed?.moments,
           });
@@ -288,14 +353,15 @@ function UploadPage() {
             parsed?.detail ||
             (raw && raw.length < 500 ? raw : "") ||
             `Upload failed (${xhr.status} ${xhr.statusText || ""})`.trim();
-        setError(msg);
+        setError(`${msg} Your minutes were not deducted.`);
         setPhase("error");
         await releaseReservation();
       }
     };
     xhr.onerror = async () => {
+      if (cancelledRef.current) return;
       setError(
-        "The processing connection was interrupted. Your video size is not necessarily the problem—please try once more."
+        "The processing connection was interrupted, so your minutes were returned. Your video size is not necessarily the problem—please try once more."
       );
       setPhase("error");
       await releaseReservation();
@@ -358,7 +424,13 @@ function UploadPage() {
                 {durationMin != null && <> · {Math.ceil(durationMin)} min · {remainingMinutes} min remaining</>}
               </div>
             </div>
-            <button onClick={reset} className="text-muted-foreground hover:text-foreground transition-colors">
+            <button
+              onClick={reset}
+              disabled={cancelling}
+              title={phase === "uploading" || phase === "processing" ? "Cancel processing" : "Remove file"}
+              aria-label={phase === "uploading" || phase === "processing" ? "Cancel processing" : "Remove file"}
+              className="text-muted-foreground hover:text-foreground transition-colors disabled:opacity-40"
+            >
               <X className="size-4" />
             </button>
           </div>
@@ -406,6 +478,21 @@ function UploadPage() {
                 />
 
               </div>
+              <div className="mt-3 flex items-center justify-between gap-3">
+                <span className="text-xs text-muted-foreground">
+                  Cancelling returns your reserved minutes.
+                </span>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  disabled={cancelling}
+                  onClick={() => void cancelJob()}
+                  className="rounded-lg text-destructive hover:text-destructive hover:bg-destructive/10"
+                >
+                  {cancelling ? <><Loader2 className="size-3.5 mr-1.5 animate-spin" /> Cancelling</> : <><X className="size-3.5 mr-1.5" /> Cancel</>}
+                </Button>
+              </div>
             </div>
           )}
 
@@ -450,7 +537,16 @@ function UploadPage() {
           </div>
           <h2 className="text-lg font-semibold mt-5">Finding viral moments…</h2>
           <p className="text-sm text-muted-foreground mt-1">{stage ? `${stage}${progress ? ` · ${progress}%` : ""}` : "Our AI is analyzing your video. This may take a few minutes."}</p>
-
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={cancelling}
+            onClick={() => void cancelJob()}
+            className="mt-5 rounded-xl border-white/15"
+          >
+            {cancelling ? <><Loader2 className="size-3.5 mr-1.5 animate-spin" /> Cancelling</> : <><X className="size-3.5 mr-1.5" /> Cancel and refund minutes</>}
+          </Button>
         </div>
       )}
 
