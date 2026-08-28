@@ -261,38 +261,52 @@ function UploadPage() {
       }
     };
 
+    const finish = async (arr: Clip[], extra: { transcript?: any; viral_moments?: any }) => {
+      if (cancelledRef.current) return;
+      setClips(arr);
+      setStage(null);
+      setPhase("done");
+      if (arr.length === 0) {
+        // Nothing was generated — never charge for that.
+        await releaseReservation();
+        toast.error("No clips could be generated from this video — your minutes were not deducted.");
+        return;
+      }
+      reservationRef.current = { minutes: 0, active: false };
+      await saveProject({ clips: arr, transcript: extra.transcript, viral_moments: extra.viral_moments });
+    };
+
     xhr.onload = async () => {
+      if (cancelledRef.current) return;
       const raw = xhr.responseText;
       let parsed: any = null;
       try { parsed = JSON.parse(raw); } catch { /* not json */ }
 
       if (xhr.status >= 200 && xhr.status < 300) {
         if (parsed?.jobId) {
+          jobIdRef.current = String(parsed.jobId);
           setPhase("processing");
           setStage("Queued…");
           const startedAt = Date.now();
           const MAX_WAIT_MS = 30 * 60 * 1000;
 
           const poll = async () => {
+            if (cancelledRef.current) return;
             try {
               const res = await fetch(`${BACKEND_BASE}/jobs/${parsed.jobId}`);
               const job = await res.json();
+              if (cancelledRef.current) return;
 
               if (job.status === "completed") {
-                const jobClips = (job.result?.clips || []) as Clip[];
-                setClips(jobClips);
-                setStage(null);
-                setPhase("done");
-                await saveProject({
-                  clips: jobClips,
+                await finish((job.result?.clips || []) as Clip[], {
                   transcript: job.result?.transcript,
                   viral_moments: job.result?.viral_moments ?? job.result?.moments,
                 });
                 return;
               }
 
-              if (job.status === "failed") {
-                setError(job.error || "The processing server could not finish this video.");
+              if (job.status === "failed" || job.status === "cancelled") {
+                setError(job.error || "The processing server could not finish this video. Your minutes were not deducted.");
                 setStage(null);
                 setPhase("error");
                 await releaseReservation();
@@ -303,16 +317,16 @@ function UploadPage() {
               setStage(job.stage || "Processing…");
 
               if (Date.now() - startedAt > MAX_WAIT_MS) {
-                setError("Processing is taking unusually long. Please try again or use a shorter video.");
+                setError("Processing is taking unusually long, so we stopped it and returned your minutes. Please try again or use a shorter video.");
                 setStage(null);
                 setPhase("error");
                 await releaseReservation();
                 return;
               }
 
-              setTimeout(poll, 2500);
+              pollTimerRef.current = setTimeout(poll, 2500);
             } catch {
-              setTimeout(poll, 4000);
+              if (!cancelledRef.current) pollTimerRef.current = setTimeout(poll, 4000);
             }
           };
 
@@ -324,11 +338,7 @@ function UploadPage() {
               ? parsed
               : [];
 
-          setClips(arr);
-          setStage(null);
-          setPhase("done");
-          await saveProject({
-            clips: arr,
+          await finish(arr, {
             transcript: parsed?.transcript,
             viral_moments: parsed?.viral_moments ?? parsed?.moments,
           });
