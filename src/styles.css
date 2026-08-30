@@ -217,6 +217,15 @@
     box-shadow: 0 20px 50px -20px oklch(0 0 0 / 0.6), 0 0 0 1px oklch(1 0 0 / 0.1);
   }
 
+  /* 3D deck card sheen */
+  .deck-sheen {
+    background: linear-gradient(115deg, transparent 35%, oklch(1 0 0 / 0.18) 50%, transparent 65%);
+    background-size: 250% 100%;
+    animation: sheen 6s linear infinite;
+    mix-blend-mode: screen;
+  }
+  .deck-card { backface-visibility: hidden; }
+
   /* Glow badge */
   .glow-badge {
     position: relative;
@@ -261,6 +270,10 @@
   0%, 100% { opacity: 0.4; transform: scale(1); }
   50% { opacity: 0.7; transform: scale(1.1); }
 }
+@keyframes sheen {
+  0% { background-position: 150% 0; }
+  100% { background-position: -150% 0; }
+}
 @keyframes tilt {
   0%, 50%, 100% { transform: rotate(0deg); }
   25% { transform: rotate(0.5deg); }
@@ -281,4 +294,16 @@
 .animate-gradient-shift {
   background-size: 200% 200%;
   animation: gradient-shift 8s ease infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-pulse-glow,
+  .animate-aurora,
+  .animate-aurora-drift,
+  .animate-aurora-breathe,
+  .animate-tilt,
+  .animate-gradient-shift,
+  .deck-sheen { animation: none !important; }
+  html { scroll-behavior: auto; }
 }

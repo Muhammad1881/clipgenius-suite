@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useRef } from "react";
-import { Sparkles, Upload, ArrowRight, Play, Star, Trophy } from "lucide-react";
+import { Upload, ArrowRight, Play, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -9,9 +9,8 @@ import { PricingCards } from "@/components/PricingCards";
 import { Reveal, RevealGroup, RevealItem } from "@/components/Reveal";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { HeroClipDeck } from "@/components/HeroClipDeck";
 import heroBg from "@/assets/hero-bg.jpg";
-import clip1Video from "@/assets/clip-9.mp4.asset.json";
-import clip2Video from "@/assets/cristiano-saudi.mp4.asset.json";
 
 export const Route = createFileRoute("/")({
   component: Landing,
@@ -132,54 +131,7 @@ function Landing() {
             </div>
           </motion.div>
 
-          {/* Floating 3D preview card */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="mt-14 sm:mt-16 relative w-full max-w-4xl mx-auto group"
-          >
-            <div className="absolute -inset-4 bg-gradient-to-br from-cyan-glow/20 to-purple-glow/20 blur-3xl opacity-50 group-hover:opacity-70 transition-opacity duration-700" />
-            <div className="relative float-3d glass-strong rounded-3xl p-2 sm:p-3 border-gradient">
-              <div className="rounded-2xl bg-card/60 aspect-video grid grid-cols-3 gap-2 sm:gap-3 p-3 sm:p-4">
-                {[1, 2, 3].map((i) => (
-                  <div
-                    key={i}
-                    className="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary/30 to-accent/20 border border-white/10 flex flex-col justify-between p-3 sm:p-4 animate-float shadow-card"
-                    style={{ animationDelay: `${i * 0.3}s` }}
-                  >
-                    {i === 1 && (
-                      <video
-                        src={clip1Video.url}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        preload="none"
-                        className="absolute inset-0 w-full h-full object-cover"
-                      />
-                    )}
-                    {i === 2 && (
-                      <video
-                        src={clip2Video.url}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        preload="none"
-                        className="absolute inset-0 w-full h-full object-cover"
-                      />
-                    )}
-                    <div className="relative text-[10px] uppercase tracking-wider text-muted-foreground">Clip 0{i}</div>
-                    <div className="relative">
-                      <div className="text-[11px] sm:text-xs text-foreground font-medium leading-tight">{i === 1 ? "Alternative Terms For Early Risers" : i === 2 ? "Cristiano on adapting to life in Saudi Arabia" : "\"You won't believe what happened next…\""}</div>
-                      <div className="mt-2 flex items-center gap-1 text-[10px] text-accent"><Trophy className="size-3" /> 94% viral score</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
+          <HeroClipDeck />
         </motion.div>
       </section>
 
