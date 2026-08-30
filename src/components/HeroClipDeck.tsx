@@ -17,9 +17,9 @@ type DeckCard = {
 };
 
 const cards: DeckCard[] = [
-  { label: "Clip 01", title: "Alternative terms for early risers", score: "94%", video: clip1Video.url, rotate: -9, x: "-58%", y: "6%", z: -80 },
+  { label: "Clip 01", title: "Alternative terms for early risers", score: "94%", video: clip1Video.url, rotate: -8, x: "-92%", y: "7%", z: -120 },
   { label: "Clip 02", title: "Cristiano on life in Saudi Arabia", score: "97%", video: clip2Video.url, rotate: 0, x: "0%", y: "0%", z: 40 },
-  { label: "Clip 03", title: "\"You won't believe what happened next…\"", score: "91%", rotate: 9, x: "58%", y: "6%", z: -80 },
+  { label: "Clip 03", title: "\"You won't believe what happened next…\"", score: "91%", rotate: 8, x: "92%", y: "7%", z: -120 },
 ];
 
 /**
@@ -95,7 +95,7 @@ export function HeroClipDeck() {
                 loop
                 muted
                 playsInline
-                preload="none"
+                preload="metadata"
                 className="absolute inset-0 h-full w-full object-cover opacity-90"
               />
             ) : (
@@ -109,7 +109,7 @@ export function HeroClipDeck() {
             <div className="relative flex h-full flex-col justify-between p-3 sm:p-4">
               <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{c.label}</span>
               <div>
-                <p className="text-[11px] font-medium leading-tight text-foreground sm:text-xs">{c.title}</p>
+                <p className="line-clamp-2 text-[11px] font-medium leading-tight text-foreground sm:text-xs">{c.title}</p>
                 <div className="mt-2 flex items-center gap-1 text-[10px] text-accent">
                   <Trophy className="size-3" /> {c.score} viral score
                 </div>
