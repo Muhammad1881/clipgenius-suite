@@ -82,13 +82,10 @@ export function HeroClipDeck() {
         {cards.map((c, i) => (
           <motion.article
             key={c.label}
-            initial={{ opacity: 0, y: 60, rotate: 0 }}
-            animate={{ opacity: 1, y: 0, rotate: c.rotate }}
+            initial={{ opacity: 0, y: "40%", x: "0%", z: 0, rotate: 0 }}
+            animate={{ opacity: 1, y: c.y, x: c.x, z: c.z, rotate: c.rotate }}
             transition={{ duration: 0.8, delay: 0.15 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              transform: `translate3d(${c.x}, ${c.y}, ${c.z}px)`,
-              zIndex: c.z > 0 ? 2 : 1,
-            }}
+            style={{ zIndex: c.z > 0 ? 2 : 1, transformStyle: "preserve-3d" }}
             className="absolute aspect-[9/16] h-full max-h-[420px] overflow-hidden rounded-[1.4rem] glass-strong border-gradient shadow-elevated transition-transform duration-500 will-change-transform hover:!scale-[1.04] deck-card"
           >
             {c.video ? (
