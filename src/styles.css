@@ -350,6 +350,7 @@
   .animate-aurora-breathe,
   .animate-tilt,
   .animate-gradient-shift,
-  .deck-sheen { animation: none !important; }
+  .deck-sheen,
+  .aurora-streak { animation: none !important; }
   html { scroll-behavior: auto; }
 }

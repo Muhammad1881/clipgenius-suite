@@ -10,6 +10,7 @@ import { Reveal, RevealGroup, RevealItem } from "@/components/Reveal";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { HeroClipDeck } from "@/components/HeroClipDeck";
+import { AuroraStreaks } from "@/components/AuroraStreaks";
 import heroBg from "@/assets/hero-bg.jpg";
 
 export const Route = createFileRoute("/")({
@@ -26,7 +27,7 @@ export const Route = createFileRoute("/")({
     ],
     links: [
       { rel: "canonical", href: "https://clipra.bond/" },
-      { rel: "preload", as: "image", href: heroBg, fetchpriority: "high" } as any,
+      { rel: "preload", as: "image", href: heroBg, fetchPriority: "high" } as any,
     ],
     scripts: [
       {
@@ -81,6 +82,7 @@ function Landing() {
       {/* HERO */}
       <section ref={heroRef} className="relative pt-32 sm:pt-40 pb-24 sm:pb-32 overflow-hidden bg-aurora-hero">
         {/* Animated Aurora Background */}
+        <AuroraStreaks />
         <motion.div
           style={reduce ? undefined : { y: blobY }}
           className="absolute inset-0 overflow-hidden pointer-events-none -z-10"
