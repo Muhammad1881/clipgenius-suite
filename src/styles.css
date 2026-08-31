@@ -315,6 +315,11 @@
   0% { background-position: 150% 0; }
   100% { background-position: -150% 0; }
 }
+@keyframes streak-drift {
+  0%, 100% { transform: rotate(18deg) translate3d(0, -4%, 0) scaleY(1); opacity: 0.22; }
+  50% { transform: rotate(14deg) translate3d(6%, 6%, 0) scaleY(1.12); opacity: 0.5; }
+}
+
 @keyframes tilt {
   0%, 50%, 100% { transform: rotate(0deg); }
   25% { transform: rotate(0.5deg); }
