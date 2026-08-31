@@ -226,6 +226,47 @@
   }
   .deck-card { backface-visibility: hidden; }
 
+  /* Animated aurora light streaks (GPU-only) */
+  .aurora-streaks { mask-image: linear-gradient(180deg, transparent, #000 18%, #000 70%, transparent); }
+  .aurora-streak {
+    position: absolute;
+    top: -30%;
+    height: 160%;
+    width: 22rem;
+    border-radius: 999px;
+    filter: blur(60px);
+    opacity: 0.35;
+    will-change: transform, opacity;
+    transform: rotate(18deg) translate3d(0, 0, 0);
+  }
+  .aurora-streak-1 {
+    left: 2%;
+    background: linear-gradient(180deg, transparent, oklch(0.72 0.24 320 / 0.75), transparent);
+    animation: streak-drift 18s var(--ease-premium) infinite;
+  }
+  .aurora-streak-2 {
+    left: 28%;
+    width: 14rem;
+    background: linear-gradient(180deg, transparent, oklch(0.82 0.16 200 / 0.7), transparent);
+    animation: streak-drift 24s var(--ease-premium) infinite reverse;
+    animation-delay: -6s;
+  }
+  .aurora-streak-3 {
+    right: 24%;
+    width: 18rem;
+    background: linear-gradient(180deg, transparent, oklch(0.65 0.22 300 / 0.7), transparent);
+    animation: streak-drift 21s var(--ease-premium) infinite;
+    animation-delay: -11s;
+  }
+  .aurora-streak-4 {
+    right: 0%;
+    width: 26rem;
+    background: linear-gradient(180deg, transparent, oklch(0.58 0.18 270 / 0.65), transparent);
+    animation: streak-drift 28s var(--ease-premium) infinite reverse;
+    animation-delay: -3s;
+  }
+
+
   /* Glow badge */
   .glow-badge {
     position: relative;
@@ -274,6 +315,11 @@
   0% { background-position: 150% 0; }
   100% { background-position: -150% 0; }
 }
+@keyframes streak-drift {
+  0%, 100% { transform: rotate(18deg) translate3d(0, -4%, 0) scaleY(1); opacity: 0.22; }
+  50% { transform: rotate(14deg) translate3d(6%, 6%, 0) scaleY(1.12); opacity: 0.5; }
+}
+
 @keyframes tilt {
   0%, 50%, 100% { transform: rotate(0deg); }
   25% { transform: rotate(0.5deg); }
@@ -304,6 +350,7 @@
   .animate-aurora-breathe,
   .animate-tilt,
   .animate-gradient-shift,
-  .deck-sheen { animation: none !important; }
+  .deck-sheen,
+  .aurora-streak { animation: none !important; }
   html { scroll-behavior: auto; }
 }
