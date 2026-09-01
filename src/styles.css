@@ -200,6 +200,27 @@
   .btn-premium:hover::after { transform: translateX(100%); }
   .btn-premium:active { transform: translateY(0); }
 
+  /* Equal-weight secondary CTA — same presence as .btn-premium, cooler tone */
+  .btn-premium-soft {
+    position: relative;
+    background: linear-gradient(135deg, oklch(0.72 0.22 295 / 0.22), oklch(0.78 0.16 220 / 0.18));
+    color: var(--color-foreground);
+    border: 1px solid oklch(0.72 0.22 295 / 0.45);
+    font-weight: 600;
+    box-shadow:
+      0 10px 30px -14px oklch(0.72 0.22 295 / 0.5),
+      inset 0 1px 0 oklch(1 0 0 / 0.14);
+    transition: transform 0.4s var(--ease-premium), box-shadow 0.4s var(--ease-premium), background-color 0.3s;
+  }
+  .btn-premium-soft:hover {
+    transform: translateY(-1px);
+    background: linear-gradient(135deg, oklch(0.72 0.22 295 / 0.34), oklch(0.78 0.16 220 / 0.26));
+    box-shadow: 0 18px 45px -16px oklch(0.72 0.22 295 / 0.6), inset 0 1px 0 oklch(1 0 0 / 0.2);
+  }
+  .btn-premium-soft:active { transform: translateY(0); }
+
+
+
   /* 3D floating card */
   .float-3d {
     transform-style: preserve-3d;
