@@ -9,12 +9,8 @@ import { Tilt3D } from "@/components/Tilt3D";
 
 export const Route = createFileRoute("/_app/dashboard")({ component: Dashboard });
 
-// Real user data would come from the backend. New users start with no projects.
-const userProjects: Array<{ title: string; date: string; clips: number; score: number; status: string }> = [];
-
 function Dashboard() {
   const { profile, loading } = useProfile();
-  const hasProjects = userProjects.length > 0;
 
   const total = profile?.monthly_minutes ?? 30;
   const used = profile?.minutes_used ?? 0;
