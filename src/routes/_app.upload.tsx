@@ -225,8 +225,15 @@ function UploadPage() {
 
     const form = new FormData();
     form.append("video", file);
-    form.append("plan", (profile?.plan as string) ?? "free");
-    form.append("subtitleLanguage", subtitleLanguage);
+    form.append("plan", planKey);
+    if (planKey !== "free") {
+      form.append("clipSize", clipSize);
+      form.append("translate", translate ? "true" : "false");
+      if (translate) form.append("targetLanguage", targetLanguage);
+    } else {
+      form.append("translate", "false");
+    }
+
 
     const xhr = new XMLHttpRequest();
     xhrRef.current = xhr;
