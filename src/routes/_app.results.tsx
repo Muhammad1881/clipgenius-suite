@@ -67,9 +67,14 @@ function Results() {
 
 
   const load = async () => {
+    // Clips only live 24h on the render server, so purge expired projects.
+    const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    await supabase.from("projects").delete().lt("created_at", cutoff);
+
     const { data, error } = await supabase
       .from("projects")
       .select("id, video_name, clips, created_at")
+      .gte("created_at", cutoff)
       .order("created_at", { ascending: false });
     if (error) {
       toast.error(error.message);
@@ -103,6 +108,7 @@ function Results() {
           <div className="text-xs uppercase tracking-widest text-accent">Library</div>
           <h1 className="text-2xl sm:text-3xl font-semibold mt-1 tracking-tight">Your projects</h1>
           <p className="text-muted-foreground mt-1">Every upload and its generated clips, saved automatically.</p>
+          <p className="text-xs text-muted-foreground/80 mt-1">Projects are automatically removed 24 hours after creation — download your clips before then.</p>
         </div>
         <Button asChild className="btn-premium rounded-xl h-11 px-5">
           <Link to="/upload"><UploadIcon className="size-4 mr-2" /> New upload</Link>
