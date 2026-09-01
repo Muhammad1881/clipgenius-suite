@@ -162,7 +162,7 @@ function Dashboard() {
               {isPaid ? (
                 <span>{renewalLabel ? <>Renews on <span className="text-foreground font-medium">{renewalLabel}</span></> : "Renewal date loading…"}</span>
               ) : (
-                <span>Your 60 free minutes reset every 30 days.</span>
+                <span>{freeResetLabel ? <>Minutes reset on <span className="text-foreground font-medium">{freeResetLabel}</span></> : "Your 60 free minutes reset every 30 days."}</span>
               )}
             </div>
             <div className="mt-2 text-sm text-muted-foreground">
