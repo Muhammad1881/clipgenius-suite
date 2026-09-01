@@ -696,7 +696,7 @@ function UploadPage() {
                         title={title}
                         reason={(c.reason as string) ?? null}
                         transcript={(c.transcript as string) ?? null}
-                        isPaid={isPaid}
+                        isPaid={planKey !== "free"}
                       />
                       <div className="mt-4">
                         <Button
