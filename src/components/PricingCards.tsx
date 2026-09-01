@@ -178,7 +178,7 @@ function FeatureRow({ f, featured }: { f: Feature; featured?: boolean }) {
   );
 
   return (
-    <li className={`flex items-start gap-3 ${f.locked ? "text-muted-foreground" : ""}`}>
+    <>
       {icon}
       <span className="min-w-0 flex items-center gap-1.5 leading-snug">
         {f.label}
@@ -193,7 +193,7 @@ function FeatureRow({ f, featured }: { f: Feature; featured?: boolean }) {
           </Tooltip>
         )}
       </span>
-    </li>
+    </>
   );
 }
 
@@ -309,10 +309,13 @@ export function PricingCards() {
                     <div className="text-[11px] uppercase tracking-widest text-muted-foreground mb-3">{g.label}</div>
                     <ul className="space-y-3 text-sm">
                       {items.map(({ it, hiddenOnMobile }) => (
-                        <li key={it.label} className={hiddenOnMobile ? "hidden md:block" : ""}>
-                          <ul>
-                            <FeatureRow f={it} featured={p.featured} />
-                          </ul>
+                        <li
+                          key={it.label}
+                          className={`flex items-start gap-3 ${it.locked ? "text-muted-foreground" : ""} ${
+                            hiddenOnMobile ? "hidden md:flex" : ""
+                          }`}
+                        >
+                          <FeatureRow f={it} featured={p.featured} />
                         </li>
                       ))}
                     </ul>
