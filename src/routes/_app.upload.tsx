@@ -70,11 +70,16 @@ function UploadPage() {
 
   const [error, setError] = useState<string | null>(null);
   const [clips, setClips] = useState<Clip[]>([]);
-  const [subtitleLanguage, setSubtitleLanguage] = useState<"same" | "english">("same");
+  const [clipSize, setClipSize] = useState<ClipSize>("30-60");
+  const [translate, setTranslate] = useState(false);
+  const [targetLanguage, setTargetLanguage] = useState(TARGET_LANGUAGES[0]);
   const { profile } = useProfile();
   const consume = useServerFn(consumeMinutes);
   const refund = useServerFn(refundMinutes);
-  const isPaid = (profile?.plan ?? "free") !== "free";
+  const planKey: PlanKey = (["free", "starter", "creator"] as const).includes(profile?.plan as PlanKey)
+    ? (profile!.plan as PlanKey)
+    : "free";
+
   const refetchProfile = async () => {
     if (typeof window !== "undefined") window.dispatchEvent(new Event("profile:refresh"));
   };
