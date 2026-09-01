@@ -561,6 +561,11 @@ function UploadPage() {
             </div>
           </div>
 
+          <p className="text-xs text-muted-foreground mb-4">
+            Generated files are automatically deleted after 24 hours.
+          </p>
+
+
           {clips.length === 0 ? (
             <div className="glass rounded-2xl p-8 text-center text-muted-foreground">
               The server returned no clips.
