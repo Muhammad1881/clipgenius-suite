@@ -184,6 +184,8 @@ function UploadPage() {
       if (reservationRef.current.active) {
         cancelledRef.current = true;
         try { xhrRef.current?.abort(); } catch { /* noop */ }
+        // Kill the GPU job on the backend too when the user leaves mid-processing.
+        if (jobIdRef.current) notifyBackendCancel(jobIdRef.current);
         void releaseReservation();
       }
     };
