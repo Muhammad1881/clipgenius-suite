@@ -9,6 +9,7 @@ import { PricingCards } from "@/components/PricingCards";
 import { Reveal, RevealGroup, RevealItem } from "@/components/Reveal";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Tilt3D } from "@/components/Tilt3D";
 import { HeroClipDeck } from "@/components/HeroClipDeck";
 import { AuroraStreaks } from "@/components/AuroraStreaks";
 import heroBg from "@/assets/hero-bg.jpg";
@@ -152,15 +153,17 @@ function Landing() {
           {steps.map((s) => {
             const Icon = s.icon;
             return (
-              <RevealItem key={s.n} className="glass rounded-2xl p-6 relative hover-lift border-gradient">
-                <div className="flex items-center justify-between">
-                  <div className="text-4xl font-display text-gradient-aurora">{s.n}</div>
-                  <div className="grid place-items-center size-10 rounded-xl bg-white/5 border border-white/10">
-                    <Icon className="size-5 text-accent" />
+              <RevealItem key={s.n}>
+                <Tilt3D className="glass rounded-2xl p-6 border-gradient h-full hover:shadow-[0_24px_60px_-20px_hsl(var(--primary)/0.55)]">
+                  <div className="flex items-center justify-between">
+                    <div className="text-4xl font-display text-gradient-aurora">{s.n}</div>
+                    <div className="grid place-items-center size-10 rounded-xl bg-white/5 border border-white/10">
+                      <Icon className="size-5 text-accent" />
+                    </div>
                   </div>
-                </div>
-                <div className="mt-4 text-lg font-semibold tracking-tight">{s.t}</div>
-                <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{s.d}</p>
+                  <div className="mt-4 text-lg font-semibold tracking-tight">{s.t}</div>
+                  <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{s.d}</p>
+                </Tilt3D>
               </RevealItem>
             );
           })}
@@ -178,14 +181,16 @@ function Landing() {
           {features.map((f) => {
             const Icon = f.icon;
             return (
-              <RevealItem key={f.t} className="glass rounded-2xl p-7 hover-lift border-gradient flex items-start gap-4">
-                <div className="grid place-items-center size-12 rounded-xl bg-gradient-vivid shrink-0 glow">
-                  <Icon className="size-6 text-primary-foreground" />
-                </div>
-                <div>
-                  <div className="text-lg font-semibold tracking-tight">{f.t}</div>
-                  <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">{f.d}</p>
-                </div>
+              <RevealItem key={f.t}>
+                <Tilt3D max={6} className="glass rounded-2xl p-7 border-gradient h-full flex items-start gap-4 hover:shadow-[0_24px_60px_-20px_hsl(var(--primary)/0.5)]">
+                  <div className="grid place-items-center size-12 rounded-xl bg-gradient-vivid shrink-0 glow">
+                    <Icon className="size-6 text-primary-foreground" />
+                  </div>
+                  <div>
+                    <div className="text-lg font-semibold tracking-tight">{f.t}</div>
+                    <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">{f.d}</p>
+                  </div>
+                </Tilt3D>
               </RevealItem>
             );
           })}

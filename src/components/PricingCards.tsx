@@ -185,8 +185,12 @@ function FeatureRow({ f, featured }: { f: Feature; featured?: boolean }) {
         {f.tip && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <button type="button" aria-label={`About ${f.label}`} className="shrink-0 text-muted-foreground/70 hover:text-accent transition-colors">
-                <Info className="size-3.5" />
+              <button
+                type="button"
+                aria-label={`About ${f.label}`}
+                className="shrink-0 -my-1.5 -mx-1 size-7 grid place-items-center rounded-full text-muted-foreground/80 hover:text-accent hover:bg-white/10 transition-colors"
+              >
+                <Info className="size-4" />
               </button>
             </TooltipTrigger>
             <TooltipContent className="max-w-[220px] text-xs leading-relaxed">{f.tip}</TooltipContent>
@@ -281,7 +285,7 @@ export function PricingCards() {
                   onClick={() => handleUpgrade(p.planKey!)}
                   disabled={loadingPlan !== null}
                   className={`w-full mt-6 rounded-xl h-11 ${
-                    p.featured ? "btn-premium" : "glass hover:bg-white/10 border border-white/10 transition-all"
+                    p.featured ? "btn-premium" : "btn-premium-soft"
                   }`}
                 >
                   {loadingPlan === p.planKey ? <Loader2 className="size-4 animate-spin" /> : p.cta}
@@ -294,7 +298,7 @@ export function PricingCards() {
                 <Button
                   asChild
                   className={`w-full mt-6 rounded-xl h-11 ${
-                    p.featured ? "btn-premium" : "glass hover:bg-white/10 border border-white/10 transition-all"
+                    p.featured ? "btn-premium" : "btn-premium-soft"
                   }`}
                 >
                   <Link to="/dashboard">{p.cta}</Link>
