@@ -1,8 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Upload, TrendingUp, Clock, Sparkles, FolderOpen } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { Upload, TrendingUp, Clock, FolderOpen, CalendarClock, BadgeCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ExampleClips } from "@/components/ExampleClips";
 import { useProfile } from "@/hooks/useProfile";
+import { getSubscriptionInfo } from "@/lib/billing.functions";
+import { Tilt3D } from "@/components/Tilt3D";
 
 export const Route = createFileRoute("/_app/dashboard")({ component: Dashboard });
 
@@ -25,9 +28,22 @@ function Dashboard() {
     : "Free";
   const isPaid = !!profile?.plan && profile.plan !== "free";
 
+  const getInfo = useServerFn(getSubscriptionInfo);
+  const [renewal, setRenewal] = useState<string | null>(null);
+  useEffect(() => {
+    if (!isPaid) return;
+    let alive = true;
+    getInfo({})
+      .then((r) => { if (alive) setRenewal(r?.renewal_date ?? null); })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, [isPaid, getInfo]);
+  const renewalLabel = renewal
+    ? new Date(renewal).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })
+    : null;
+
   const stats = [
     { label: "Remaining minutes", value: loading ? "—" : String(remaining), icon: Clock, change: "—" },
-    { label: "Clips generated", value: "0", icon: Sparkles, change: "—" },
     { label: "Avg viral score", value: "—", icon: TrendingUp, change: "—" },
     { label: "Processing time saved", value: "0h", icon: Clock, change: "—" },
   ];
@@ -47,7 +63,7 @@ function Dashboard() {
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
         {stats.map((s) => (
-          <div key={s.label} className="glass rounded-2xl p-5 hover-lift border-gradient">
+          <Tilt3D key={s.label} max={7} lift={6} className="glass rounded-2xl p-5 border-gradient">
             <div className="flex items-center justify-between">
               <div className="size-9 rounded-lg bg-gradient-vivid grid place-items-center shadow-card">
                 <s.icon className="size-4 text-primary-foreground" />
@@ -56,7 +72,7 @@ function Dashboard() {
             </div>
             <div className="mt-4 text-3xl font-display font-semibold tracking-tight">{s.value}</div>
             <div className="text-sm text-muted-foreground mt-1">{s.label}</div>
-          </div>
+          </Tilt3D>
         ))}
       </div>
 
@@ -110,20 +126,38 @@ function Dashboard() {
             </Button>
           </div>
           <div className="glass rounded-2xl p-6 border-gradient">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <BadgeCheck className={`size-4 ${isPaid ? "text-accent" : "text-muted-foreground"}`} />
+                <span className="font-semibold tracking-tight">{planLabel} plan</span>
+              </div>
+              <span className={`text-[11px] px-2 py-0.5 rounded-full border ${isPaid ? "bg-gradient-vivid text-primary-foreground border-transparent" : "glass border-white/10 text-muted-foreground"}`}>
+                {isPaid ? "Active" : "Free"}
+              </span>
+            </div>
+            <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
+              <CalendarClock className="size-4 shrink-0" />
+              {isPaid ? (
+                <span>{renewalLabel ? <>Renews on <span className="text-foreground font-medium">{renewalLabel}</span></> : "Renewal date loading…"}</span>
+              ) : (
+                <span>Your 60 free minutes reset every 30 days.</span>
+              )}
+            </div>
+            <div className="mt-2 text-sm text-muted-foreground">
+              <span className="text-foreground font-medium">{used}</span> / {total} minutes used this cycle
+            </div>
+            <Button asChild variant="ghost" className="mt-4 w-full glass border border-white/10 rounded-xl h-10">
+              <Link to="/pricing">{isPaid ? "Manage subscription" : "See plans"}</Link>
+            </Button>
+          </div>
+
+          <div className="glass rounded-2xl p-6 border-gradient">
             <div className="font-semibold tracking-tight">💡 Tip of the day</div>
             <p className="text-sm text-muted-foreground mt-2 leading-relaxed">Add a hook in the first 1.5 seconds — Clipra's data shows it doubles retention on TikTok.</p>
           </div>
         </div>
       </div>
 
-      {/* EXAMPLE CLIPS — separate showcase, not user content */}
-      <div className="mt-12">
-        <ExampleClips
-          compact
-          eyebrow="Example clips"
-          title="See what Clipra can do"
-        />
-      </div>
     </div>
   );
 }
