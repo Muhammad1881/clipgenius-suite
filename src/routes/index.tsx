@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useRef } from "react";
-import { Upload, ArrowRight, Play, Star } from "lucide-react";
+import { Upload, ArrowRight, Play, Sparkles, Wand2, Crop, Languages, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -13,14 +13,17 @@ import { HeroClipDeck } from "@/components/HeroClipDeck";
 import { AuroraStreaks } from "@/components/AuroraStreaks";
 import heroBg from "@/assets/hero-bg.jpg";
 
+const HERO_TITLE = "Clipra — Turn long videos into viral shorts with AI";
+const HERO_DESC = "Drop in one long video. Clipra's AI finds the moments most likely to blow up, reframes them to 9:16, and drops animated captions — turning hours of footage into a week of posts in minutes.";
+
 export const Route = createFileRoute("/")({
   component: Landing,
   head: () => ({
     meta: [
-      { title: "Clipra — Turn long videos into viral shorts with AI" },
-      { name: "description", content: "Clipra uses AI to find your most viral moments, auto-reframe them, add captions, and ship them to every platform — while you sleep." },
-      { property: "og:title", content: "Clipra — Turn long videos into viral shorts with AI" },
-      { property: "og:description", content: "Clipra uses AI to find your most viral moments, auto-reframe them, add captions, and ship them to every platform — while you sleep." },
+      { title: HERO_TITLE },
+      { name: "description", content: HERO_DESC },
+      { property: "og:title", content: HERO_TITLE },
+      { property: "og:description", content: HERO_DESC },
       { property: "og:url", content: "https://clipra.bond/" },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/12b2dfda-f1cd-4c24-969b-577ec332e625/id-preview-73ce43b2--b72c6876-6188-4025-9601-5368f65970f8.lovable.app-1781448753872.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/12b2dfda-f1cd-4c24-969b-577ec332e625/id-preview-73ce43b2--b72c6876-6188-4025-9601-5368f65970f8.lovable.app-1781448753872.png" },
@@ -47,20 +50,22 @@ export const Route = createFileRoute("/")({
 });
 
 const steps = [
-  { n: "01", t: "Upload your video", d: "Drag a podcast, webinar, YouTube link or raw footage. Up to 4 hours." },
-  { n: "02", t: "AI finds the gold", d: "Clipra transcribes, scores moments and picks your most viral segments." },
-  { n: "03", t: "Export & post", d: "Download captioned, reframed shorts ready for TikTok, Reels and Shorts." },
+  { n: "01", t: "Upload your video", d: "Drag in a podcast, webinar, YouTube link or raw footage. We handle files up to 4 hours long.", icon: Upload },
+  { n: "02", t: "AI finds the gold", d: "Clipra transcribes your video, scores every moment for viral potential, and picks the segments most likely to pop off.", icon: TrendingUp },
+  { n: "03", t: "Auto-reframes to 9:16", d: "Smart face tracking reframes each clip to perfect vertical — no manual cropping, no wasted edges, always on-subject.", icon: Crop },
+  { n: "04", t: "Caption & download", d: "Animated captions in 30+ languages, hook-first titles, and ready-to-post shorts for TikTok, Reels and Shorts.", icon: Languages },
 ];
 
-const testimonials = [
-  { name: "Maya Chen", role: "Creator, 1.2M followers", quote: "I went from posting twice a week to twice a day. Clipra basically runs my shorts pipeline." },
-  { name: "Jordan Reyes", role: "Podcast host", quote: "It picked the exact moment that made one of my episodes hit 3M views. Spooky good." },
-  { name: "Aisha Khan", role: "Agency founder", quote: "We replaced three editors with Clipra and our clients' engagement actually went up." },
+const features = [
+  { icon: TrendingUp, t: "Viral scoring on every moment", d: "Every second is ranked for hook strength, pacing and sentiment — so you only export clips that hit." },
+  { icon: Crop, t: "9:16 auto-reframe", d: "AI keeps the speaker centered as they move. Perfect vertical every time, with zero manual editing." },
+  { icon: Languages, t: "Captions in 30+ languages", d: "Animated, burn-in subtitles in your language — or auto-translated to English with one click." },
+  { icon: Wand2, t: "Hook-first titles & hashtags", d: "Each clip ships with a scroll-stopping title and hashtag set tuned for the platform it's going to." },
 ];
 
 const faqs = [
   { q: "What kinds of videos work best?", a: "Podcasts, interviews, webinars, vlogs, and any long-form talking-head content. Clipra also handles gameplay and educational footage." },
-  { q: "How long does processing take?", a: "Most one-hour videos finish in under 5 minutes on the Pro plan. Free users may wait a bit longer in the shared queue." },
+  { q: "How long does processing take?", a: "Most one-hour videos finish in under 5 minutes on the Creator plan. Free users may wait a bit longer in the shared queue." },
   { q: "Can I edit the clips after?", a: "Yes — every clip opens in our editor where you can tweak captions, trim, and adjust framing before exporting." },
   { q: "Do you support other languages?", a: "We transcribe and caption in 30+ languages and can translate captions to English (and back)." },
   { q: "Is there a free trial?", a: "Yes. The Free plan gives you 60 minutes of clipping every month, forever — no credit card required." },
@@ -115,7 +120,7 @@ function Landing() {
               <span className="text-gradient-aurora">viral shorts</span> in minutes.
             </h1>
             <p className="mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Clipra uses AI to find your most viral moments, auto-reframe them, add captions, and ship them to every platform — while you sleep.
+              {HERO_DESC}
             </p>
 
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
@@ -128,8 +133,8 @@ function Landing() {
             </div>
 
             <div className="mt-10 flex items-center justify-center gap-2 text-sm text-muted-foreground">
-              <div className="flex">{Array.from({ length: 5 }).map((_, i) => <Star key={i} className="size-4 fill-accent text-accent" />)}</div>
-              <span>Trusted by 10,000+ creators</span>
+              <Sparkles className="size-4 text-accent" />
+              <span>60 free minutes monthly · No credit card required</span>
             </div>
           </motion.div>
 
@@ -141,39 +146,49 @@ function Landing() {
       <section id="how" className="py-20 sm:py-28 mx-auto max-w-7xl px-5 sm:px-6">
         <Reveal direction="blur" className="text-center max-w-2xl mx-auto">
           <div className="text-xs uppercase tracking-widest text-accent">How it works</div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mt-3">From raw footage to viral, in 3 steps.</h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mt-3">From raw footage to viral, in 4 steps.</h2>
         </Reveal>
-        <RevealGroup className="mt-12 sm:mt-14 grid md:grid-cols-3 gap-4 sm:gap-5 relative">
-          {steps.map((s) => (
-            <RevealItem key={s.n} className="glass rounded-2xl p-7 relative hover-lift border-gradient">
-              <div className="text-5xl font-display text-gradient-aurora">{s.n}</div>
-              <div className="mt-4 text-xl font-semibold tracking-tight">{s.t}</div>
-              <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{s.d}</p>
-            </RevealItem>
-          ))}
+        <RevealGroup className="mt-12 sm:mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 relative">
+          {steps.map((s) => {
+            const Icon = s.icon;
+            return (
+              <RevealItem key={s.n} className="glass rounded-2xl p-6 relative hover-lift border-gradient">
+                <div className="flex items-center justify-between">
+                  <div className="text-4xl font-display text-gradient-aurora">{s.n}</div>
+                  <div className="grid place-items-center size-10 rounded-xl bg-white/5 border border-white/10">
+                    <Icon className="size-5 text-accent" />
+                  </div>
+                </div>
+                <div className="mt-4 text-lg font-semibold tracking-tight">{s.t}</div>
+                <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{s.d}</p>
+              </RevealItem>
+            );
+          })}
         </RevealGroup>
       </section>
 
-      {/* TESTIMONIALS */}
+      {/* WHY CLIPRA (feature showcase — replaces fake testimonials) */}
       <section className="py-20 sm:py-28 mx-auto max-w-7xl px-5 sm:px-6">
         <Reveal direction="blur" className="text-center max-w-2xl mx-auto">
-          <div className="text-xs uppercase tracking-widest text-accent">Loved by creators</div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mt-3">Built for the next billion views.</h2>
+          <div className="text-xs uppercase tracking-widest text-accent">Why Clipra</div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mt-3">Engineered to make you go viral.</h2>
+          <p className="text-muted-foreground mt-4">No editor. No guesswork. Just the clips most likely to blow up — already vertical, captioned and ready.</p>
         </Reveal>
-        <RevealGroup className="mt-12 sm:mt-14 grid md:grid-cols-3 gap-4 sm:gap-5">
-          {testimonials.map((t) => (
-            <RevealItem key={t.name} className="glass rounded-2xl p-7 hover-lift border-gradient">
-              <div className="flex gap-0.5">{Array.from({ length: 5 }).map((_, i) => <Star key={i} className="size-4 fill-accent text-accent" />)}</div>
-              <p className="mt-4 text-foreground/90 leading-relaxed">"{t.quote}"</p>
-              <div className="mt-6 flex items-center gap-3">
-                <div className="size-10 rounded-full bg-gradient-vivid shadow-card" />
-                <div>
-                  <div className="text-sm font-semibold">{t.name}</div>
-                  <div className="text-xs text-muted-foreground">{t.role}</div>
+        <RevealGroup className="mt-12 sm:mt-14 grid md:grid-cols-2 gap-4 sm:gap-5">
+          {features.map((f) => {
+            const Icon = f.icon;
+            return (
+              <RevealItem key={f.t} className="glass rounded-2xl p-7 hover-lift border-gradient flex items-start gap-4">
+                <div className="grid place-items-center size-12 rounded-xl bg-gradient-vivid shrink-0 glow">
+                  <Icon className="size-6 text-primary-foreground" />
                 </div>
-              </div>
-            </RevealItem>
-          ))}
+                <div>
+                  <div className="text-lg font-semibold tracking-tight">{f.t}</div>
+                  <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">{f.d}</p>
+                </div>
+              </RevealItem>
+            );
+          })}
         </RevealGroup>
       </section>
 
