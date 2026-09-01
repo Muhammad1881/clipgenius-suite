@@ -65,7 +65,7 @@ export function Tilt3D({ children, className = "", max = 9, lift = 8, glare = tr
           style={{
             opacity: hovered ? 1 : 0,
             background:
-              "radial-gradient(600px circle at var(--mx,50%) var(--my,50%), hsl(var(--accent-hsl,270 90% 70%) / 0.12), transparent 45%)",
+              "radial-gradient(500px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.10), transparent 45%)",
           }}
         />
       )}
