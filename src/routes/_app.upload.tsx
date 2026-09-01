@@ -129,6 +129,18 @@ function UploadPage() {
   const reservationRef = useRef<{ minutes: number; active: boolean }>({ minutes: 0, active: false });
   const [cancelling, setCancelling] = useState(false);
 
+  // Best-effort immediate cancel on the backend so the GPU job stops now.
+  const notifyBackendCancel = useCallback((jobId: string) => {
+    const url = `${BACKEND_BASE}/jobs/${jobId}/cancel`;
+    // sendBeacon survives page unload; fetch(keepalive) is the fallback.
+    try {
+      if (typeof navigator !== "undefined" && navigator.sendBeacon) {
+        navigator.sendBeacon(url, new Blob([], { type: "text/plain" }));
+      }
+    } catch { /* noop */ }
+    void fetch(url, { method: "POST", keepalive: true }).catch(() => { /* backend may not support cancel */ });
+  }, []);
+
   const releaseReservation = useCallback(async () => {
     const res = reservationRef.current;
     if (!res.active || res.minutes <= 0) return;
