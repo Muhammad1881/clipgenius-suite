@@ -129,6 +129,18 @@ function UploadPage() {
   const reservationRef = useRef<{ minutes: number; active: boolean }>({ minutes: 0, active: false });
   const [cancelling, setCancelling] = useState(false);
 
+  // Best-effort immediate cancel on the backend so the GPU job stops now.
+  const notifyBackendCancel = useCallback((jobId: string) => {
+    const url = `${BACKEND_BASE}/jobs/${jobId}/cancel`;
+    // sendBeacon survives page unload; fetch(keepalive) is the fallback.
+    try {
+      if (typeof navigator !== "undefined" && navigator.sendBeacon) {
+        navigator.sendBeacon(url, new Blob([], { type: "text/plain" }));
+      }
+    } catch { /* noop */ }
+    void fetch(url, { method: "POST", keepalive: true }).catch(() => { /* backend may not support cancel */ });
+  }, []);
+
   const releaseReservation = useCallback(async () => {
     const res = reservationRef.current;
     if (!res.active || res.minutes <= 0) return;
@@ -151,9 +163,8 @@ function UploadPage() {
     const jobId = jobIdRef.current;
     jobIdRef.current = null;
     if (jobId) {
-      try {
-        await fetch(`${BACKEND_BASE}/jobs/${jobId}/cancel`, { method: "POST", keepalive: true });
-      } catch { /* backend may not support cancel; ignore */ }
+      // Tell the backend to kill the GPU/RunPod job immediately.
+      void notifyBackendCancel(jobId);
     }
 
     await releaseReservation();
@@ -173,10 +184,12 @@ function UploadPage() {
       if (reservationRef.current.active) {
         cancelledRef.current = true;
         try { xhrRef.current?.abort(); } catch { /* noop */ }
+        // Kill the GPU job on the backend too when the user leaves mid-processing.
+        if (jobIdRef.current) notifyBackendCancel(jobIdRef.current);
         void releaseReservation();
       }
     };
-  }, [releaseReservation]);
+  }, [releaseReservation, notifyBackendCancel]);
 
   const readDurationMinutes = (f: File): Promise<number> =>
     new Promise((resolve, reject) => {
