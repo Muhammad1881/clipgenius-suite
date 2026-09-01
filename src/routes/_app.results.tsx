@@ -164,11 +164,21 @@ function Results() {
                       return (
                         <div key={i} className="glass rounded-2xl overflow-hidden hover-lift border-gradient flex flex-col">
                           <div className="aspect-[9/16] max-h-[50vh] relative bg-gradient-to-br from-primary/40 via-card to-accent/30 overflow-hidden rounded-t-2xl">
-                            {videoSrc ? (
-                              <video src={videoSrc} controls className="w-full h-full object-contain rounded-t-2xl" />
+                            {videoSrc && !failed[`${p.id}-${i}`] ? (
+                              <video
+                                src={videoSrc}
+                                controls
+                                preload="metadata"
+                                playsInline
+                                onError={() => setFailed((f) => ({ ...f, [`${p.id}-${i}`]: true }))}
+                                className="w-full h-full object-contain rounded-t-2xl"
+                              />
                             ) : (
-                              <div className="absolute inset-0 grid place-items-center text-xs text-muted-foreground">No preview</div>
+                              <div className="absolute inset-0 grid place-items-center px-4 text-center text-xs text-muted-foreground">
+                                {videoSrc ? "This clip file is no longer available on the server." : "No preview"}
+                              </div>
                             )}
+
                             {score !== undefined && (
                               <div className="absolute top-3 left-3 glass px-2 py-1 rounded-md text-xs flex items-center gap-1 pointer-events-none">
                                 <TrendingUp className="size-3 text-accent" />
