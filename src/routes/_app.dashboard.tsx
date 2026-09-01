@@ -41,6 +41,11 @@ function Dashboard() {
   const renewalLabel = renewal
     ? new Date(renewal).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })
     : null;
+  // Free plan: minutes reset 30 days after cycle_start
+  const freeResetLabel = profile?.cycle_start
+    ? new Date(new Date(profile.cycle_start).getTime() + 30 * 24 * 60 * 60 * 1000)
+        .toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })
+    : null;
 
   const stats = [
     { label: "Remaining minutes", value: loading ? "—" : String(remaining), icon: Clock, change: "—" },
