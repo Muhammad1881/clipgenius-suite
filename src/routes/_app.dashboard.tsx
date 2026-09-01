@@ -82,33 +82,54 @@ function Dashboard() {
       </div>
 
       <div className="mt-10 grid lg:grid-cols-3 gap-5 sm:gap-6">
-        <div className="lg:col-span-2 glass rounded-2xl p-5 sm:p-6 border-gradient">
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="text-lg font-semibold tracking-tight">Your projects</h2>
-            {hasProjects && (
-              <Link to="/results" className="text-sm text-muted-foreground hover:text-foreground transition-colors">View all →</Link>
-            )}
+        <Tilt3D max={4} lift={4} className="lg:col-span-2 glass-strong rounded-2xl p-6 sm:p-7 border-gradient">
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center gap-3">
+              <span className="grid place-items-center size-10 rounded-xl bg-gradient-vivid shadow-card">
+                <Sparkles className="size-5 text-primary-foreground" />
+              </span>
+              <div>
+                <div className="text-xs uppercase tracking-widest text-accent">Your plan</div>
+                <div className="text-xl font-display font-semibold tracking-tight">{planLabel} Plan</div>
+              </div>
+            </div>
+            <span className={`text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full font-medium ${
+              isPaid ? "bg-gradient-vivid text-primary-foreground" : "glass border border-white/10 text-muted-foreground"
+            }`}>
+              {isPaid ? "Active" : "Free"}
+            </span>
           </div>
 
-          {hasProjects ? (
-            <div className="space-y-1.5">
-              {/* Real projects render here once the backend is wired up */}
+          <div className="grid sm:grid-cols-3 gap-4 mt-6">
+            <div className="glass rounded-2xl p-4">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground"><Gauge className="size-3.5" /> Monthly minutes</div>
+              <div className="mt-1.5 text-2xl font-display font-semibold">{total}</div>
             </div>
-          ) : (
-            <div className="text-center py-12 px-4 rounded-xl border border-dashed border-white/10 bg-white/[0.015]">
-              <div className="mx-auto size-14 rounded-2xl glass grid place-items-center mb-4">
-                <FolderOpen className="size-6 text-muted-foreground" />
+            <div className="glass rounded-2xl p-4">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground"><Clock className="size-3.5" /> Used this cycle</div>
+              <div className="mt-1.5 text-2xl font-display font-semibold">{used} <span className="text-sm text-muted-foreground font-normal">/ {total}</span></div>
+              <div className="mt-2 h-1.5 rounded-full bg-white/10 overflow-hidden">
+                <div className={`h-full transition-all ${barColor}`} style={{ width: `${usedPct}%` }} />
               </div>
-              <h3 className="font-semibold tracking-tight">No projects yet</h3>
-              <p className="text-sm text-muted-foreground mt-1.5 max-w-sm mx-auto leading-relaxed">
-                Your uploaded videos and generated clips will appear here. Get started with your first upload.
-              </p>
-              <Button asChild className="btn-premium rounded-xl h-10 px-5 mt-5">
-                <Link to="/upload"><Upload className="size-4 mr-2" /> Upload your first video</Link>
-              </Button>
             </div>
-          )}
-        </div>
+            <div className="glass rounded-2xl p-4">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <CalendarDays className="size-3.5" /> {isPaid ? "Renews" : "Minutes reset"}
+              </div>
+              <div className="mt-1.5 text-2xl font-display font-semibold">
+                {isPaid
+                  ? (renewalLabel ?? <span className="inline-block h-6 w-24 rounded-md bg-white/10 animate-pulse" />)
+                  : (freeResetLabel ?? "—")}
+              </div>
+            </div>
+          </div>
+
+          <p className="text-xs text-muted-foreground mt-4 leading-relaxed">
+            {isPaid
+              ? "Your subscription renews automatically. Manage billing or cancel anytime from the Billing page."
+              : `Free plan includes ${total} minutes every 30 days${freeResetLabel ? ` — your minutes reset on ${freeResetLabel}` : ""}. Upgrade for more minutes, 1080p and no watermark.`}
+          </p>
+        </Tilt3D>
 
         <div className="space-y-5 sm:space-y-6">
           <div className="glass-strong rounded-2xl p-6 glow border-gradient relative overflow-hidden">
