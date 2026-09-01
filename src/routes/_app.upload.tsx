@@ -435,33 +435,75 @@ function UploadPage() {
             </button>
           </div>
 
-          <div className="mt-5">
-            <div className="text-sm font-medium mb-2">Subtitle language</div>
-            <div className="grid grid-cols-2 gap-2">
-              {([
-                { v: "same", label: "Same as video", desc: "Keep original language" },
-                { v: "english", label: "English", desc: "Translate to English" },
-              ] as const).map((opt) => {
-                const active = subtitleLanguage === opt.v;
-                return (
-                  <button
-                    key={opt.v}
-                    type="button"
-                    onClick={() => setSubtitleLanguage(opt.v)}
-                    disabled={phase === "uploading" || phase === "processing"}
-                    className={`text-left rounded-xl px-4 py-3 border transition-all ${
-                      active
-                        ? "border-primary bg-primary/10 shadow-card"
-                        : "border-white/10 hover:border-white/20 bg-white/[0.02]"
-                    }`}
+          <div className="mt-5 space-y-5">
+            {planKey !== "free" && (
+              <div>
+                <div className="text-sm font-medium mb-2">Clip Length</div>
+                <div className="grid grid-cols-2 gap-2">
+                  {CLIP_SIZES.map((opt) => {
+                    const active = clipSize === opt.v;
+                    return (
+                      <button
+                        key={opt.v}
+                        type="button"
+                        onClick={() => setClipSize(opt.v)}
+                        disabled={busy}
+                        className={`text-left rounded-xl px-4 py-3 border transition-all ${
+                          active
+                            ? "border-primary bg-primary/10 shadow-card"
+                            : "border-white/10 hover:border-white/20 bg-white/[0.02]"
+                        }`}
+                      >
+                        <div className="text-sm font-medium">{opt.label}</div>
+                        <div className="text-xs text-muted-foreground mt-0.5">{opt.desc}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            <div>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">Translate Subtitles</span>
+                  {planKey === "free" && (
+                    <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-muted-foreground">
+                      <Lock className="size-3" /> Upgrade
+                    </span>
+                  )}
+                </div>
+                <Switch
+                  checked={translate}
+                  disabled={planKey === "free" || busy}
+                  onCheckedChange={(v) => setTranslate(v)}
+                  aria-label="Translate subtitles"
+                />
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                {planKey === "free"
+                  ? "Subtitle translation is available on Starter and Creator."
+                  : "Burn translated subtitles into your clips."}
+              </p>
+
+              {planKey !== "free" && translate && (
+                <div className="mt-3">
+                  <div className="text-xs text-muted-foreground mb-1.5">Target language</div>
+                  <select
+                    value={targetLanguage}
+                    disabled={busy}
+                    onChange={(e) => setTargetLanguage(e.target.value)}
+                    className="w-full rounded-xl bg-white/[0.03] border border-white/10 px-3 py-2.5 text-sm outline-none focus:border-primary transition-colors"
                   >
-                    <div className="text-sm font-medium">{opt.label}</div>
-                    <div className="text-xs text-muted-foreground mt-0.5">{opt.desc}</div>
-                  </button>
-                );
-              })}
+                    {TARGET_LANGUAGES.map((l) => (
+                      <option key={l} value={l} className="bg-background">{l}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
           </div>
+
 
           {(phase === "uploading" || phase === "processing") && (
             <div className="mt-5">
