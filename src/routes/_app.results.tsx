@@ -57,8 +57,13 @@ function avgScore(clips: Clip[]): number | null {
 
 function Results() {
   const { profile } = useProfile();
-  const isPaid = (profile?.plan ?? "free") !== "free";
+  const plan = profile?.plan ?? "free";
+  const isPaid = plan !== "free";
+  // Auto-reframe / smart tracking is a Creator-only capability.
+  const badges = plan === "creator" ? ["✨ AI Auto Reframed", "🎯 Smart Tracking", "📝 AI Subtitles"] : ["📝 AI Subtitles"];
   const [projects, setProjects] = useState<Project[] | null>(null);
+  const [failed, setFailed] = useState<Record<string, boolean>>({});
+
 
 
   const load = async () => {
