@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Upload, TrendingUp, Clock, FolderOpen, CalendarClock, BadgeCheck } from "lucide-react";
+import { Upload, TrendingUp, Clock, CalendarClock, BadgeCheck, Sparkles, Gauge, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useProfile } from "@/hooks/useProfile";
 import { getSubscriptionInfo } from "@/lib/billing.functions";
