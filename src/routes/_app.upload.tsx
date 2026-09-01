@@ -187,7 +187,7 @@ function UploadPage() {
         void releaseReservation();
       }
     };
-  }, [releaseReservation]);
+  }, [releaseReservation, notifyBackendCancel]);
 
   const readDurationMinutes = (f: File): Promise<number> =>
     new Promise((resolve, reject) => {
