@@ -61,7 +61,7 @@ function Dashboard() {
         </Button>
       </div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
         {stats.map((s) => (
           <Tilt3D key={s.label} max={7} lift={6} className="glass rounded-2xl p-5 border-gradient">
             <div className="flex items-center justify-between">
