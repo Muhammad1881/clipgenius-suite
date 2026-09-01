@@ -151,9 +151,8 @@ function UploadPage() {
     const jobId = jobIdRef.current;
     jobIdRef.current = null;
     if (jobId) {
-      try {
-        await fetch(`${BACKEND_BASE}/jobs/${jobId}/cancel`, { method: "POST", keepalive: true });
-      } catch { /* backend may not support cancel; ignore */ }
+      // Tell the backend to kill the GPU/RunPod job immediately.
+      void notifyBackendCancel(jobId);
     }
 
     await releaseReservation();
