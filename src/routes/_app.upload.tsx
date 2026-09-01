@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Upload as UploadIcon, FileVideo, Link2, X, Sparkles, Loader2, Download, TrendingUp, AlertCircle } from "lucide-react";
+import { Upload as UploadIcon, FileVideo, Link2, X, Sparkles, Loader2, Download, TrendingUp, AlertCircle, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useProfile } from "@/hooks/useProfile";
@@ -60,6 +61,38 @@ type Clip = {
 
 type Phase = "idle" | "uploading" | "processing" | "done" | "error";
 
+type PlanKey = "free" | "starter" | "creator";
+type ClipSize = "30-60" | "60-90";
+
+const PLAN_RULES: Record<PlanKey, { maxInputMinutes: number; summary: string; tooLongMessage: string }> = {
+  free: {
+    maxInputMinutes: 30,
+    summary: "720p • 9:16 Center Crop • Up to 30 min",
+    tooLongMessage: "Free supports videos up to 30 minutes. Upgrade to process longer videos.",
+  },
+  starter: {
+    maxInputMinutes: 60,
+    summary: "1080p • 9:16 Center Crop • Translation • Up to 60 min",
+    tooLongMessage: "Starter supports videos up to 60 minutes. Upgrade to Creator for videos up to 120 minutes.",
+  },
+  creator: {
+    maxInputMinutes: 120,
+    summary: "1080p • AI Reframe • Translation • Up to 120 min",
+    tooLongMessage: "Creator supports videos up to 120 minutes.",
+  },
+};
+
+const CLIP_SIZES: { v: ClipSize; label: string; desc: string }[] = [
+  { v: "30-60", label: "30–60 sec", desc: "Punchy, fast-paced clips" },
+  { v: "60-90", label: "60–90 sec", desc: "More context per clip" },
+];
+
+const TARGET_LANGUAGES = [
+  "English", "Spanish", "French", "German", "Portuguese", "Italian",
+  "Hindi", "Urdu", "Arabic", "Turkish", "Russian", "Japanese", "Korean", "Chinese",
+];
+
+
 function UploadPage() {
   const [drag, setDrag] = useState(false);
   const [file, setFile] = useState<File | null>(null);
@@ -70,16 +103,23 @@ function UploadPage() {
 
   const [error, setError] = useState<string | null>(null);
   const [clips, setClips] = useState<Clip[]>([]);
-  const [subtitleLanguage, setSubtitleLanguage] = useState<"same" | "english">("same");
+  const [clipSize, setClipSize] = useState<ClipSize>("30-60");
+  const [translate, setTranslate] = useState(false);
+  const [targetLanguage, setTargetLanguage] = useState(TARGET_LANGUAGES[0]);
   const { profile } = useProfile();
   const consume = useServerFn(consumeMinutes);
   const refund = useServerFn(refundMinutes);
-  const isPaid = (profile?.plan ?? "free") !== "free";
+  const planKey: PlanKey = (["free", "starter", "creator"] as const).includes(profile?.plan as PlanKey)
+    ? (profile!.plan as PlanKey)
+    : "free";
+
   const refetchProfile = async () => {
     if (typeof window !== "undefined") window.dispatchEvent(new Event("profile:refresh"));
   };
 
   const remainingMinutes = profile ? profile.monthly_minutes - profile.minutes_used : 0;
+  const busy = phase === "uploading" || phase === "processing";
+
 
   // Cancellation / refund bookkeeping
   const xhrRef = useRef<XMLHttpRequest | null>(null);
@@ -178,14 +218,14 @@ function UploadPage() {
       return;
     }
 
-    const FREE_MAX_UPLOAD_MIN = 30;
-    if (!isPaid && minutesNeeded > FREE_MAX_UPLOAD_MIN) {
-      const msg = `Free plan supports videos up to ${FREE_MAX_UPLOAD_MIN} minutes. Upgrade to upload longer videos.`;
-      setError(msg);
+    const rules = PLAN_RULES[planKey];
+    if (minutesNeeded > rules.maxInputMinutes) {
+      setError(rules.tooLongMessage);
       setPhase("error");
-      toast.error(msg);
+      toast.error(rules.tooLongMessage);
       return;
     }
+
 
     const MAX_UPLOAD_BYTES = 100 * 1024 * 1024; // Cloudflare proxy body limit
     if (file.size > MAX_UPLOAD_BYTES) {
@@ -225,8 +265,15 @@ function UploadPage() {
 
     const form = new FormData();
     form.append("video", file);
-    form.append("plan", (profile?.plan as string) ?? "free");
-    form.append("subtitleLanguage", subtitleLanguage);
+    form.append("plan", planKey);
+    if (planKey !== "free") {
+      form.append("clipSize", clipSize);
+      form.append("translate", translate ? "true" : "false");
+      if (translate) form.append("targetLanguage", targetLanguage);
+    } else {
+      form.append("translate", "false");
+    }
+
 
     const xhr = new XMLHttpRequest();
     xhrRef.current = xhr;
@@ -377,6 +424,12 @@ function UploadPage() {
       <div className="absolute inset-x-0 top-0 h-80 bg-mesh opacity-40 -z-10 pointer-events-none" />
       <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Upload a video</h1>
       <p className="text-muted-foreground mt-1.5">Drop a file or paste a link.</p>
+      <div className="mt-4 inline-flex flex-wrap items-center gap-2 glass rounded-full px-4 py-2 border border-white/10">
+        <span className="text-[10px] uppercase tracking-widest text-accent">{planKey} plan</span>
+        <span className="h-3 w-px bg-white/10" />
+        <span className="text-xs text-muted-foreground">{PLAN_RULES[planKey].summary}</span>
+      </div>
+
 
       <div
         onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
@@ -435,33 +488,75 @@ function UploadPage() {
             </button>
           </div>
 
-          <div className="mt-5">
-            <div className="text-sm font-medium mb-2">Subtitle language</div>
-            <div className="grid grid-cols-2 gap-2">
-              {([
-                { v: "same", label: "Same as video", desc: "Keep original language" },
-                { v: "english", label: "English", desc: "Translate to English" },
-              ] as const).map((opt) => {
-                const active = subtitleLanguage === opt.v;
-                return (
-                  <button
-                    key={opt.v}
-                    type="button"
-                    onClick={() => setSubtitleLanguage(opt.v)}
-                    disabled={phase === "uploading" || phase === "processing"}
-                    className={`text-left rounded-xl px-4 py-3 border transition-all ${
-                      active
-                        ? "border-primary bg-primary/10 shadow-card"
-                        : "border-white/10 hover:border-white/20 bg-white/[0.02]"
-                    }`}
+          <div className="mt-5 space-y-5">
+            {planKey !== "free" && (
+              <div>
+                <div className="text-sm font-medium mb-2">Clip Length</div>
+                <div className="grid grid-cols-2 gap-2">
+                  {CLIP_SIZES.map((opt) => {
+                    const active = clipSize === opt.v;
+                    return (
+                      <button
+                        key={opt.v}
+                        type="button"
+                        onClick={() => setClipSize(opt.v)}
+                        disabled={busy}
+                        className={`text-left rounded-xl px-4 py-3 border transition-all ${
+                          active
+                            ? "border-primary bg-primary/10 shadow-card"
+                            : "border-white/10 hover:border-white/20 bg-white/[0.02]"
+                        }`}
+                      >
+                        <div className="text-sm font-medium">{opt.label}</div>
+                        <div className="text-xs text-muted-foreground mt-0.5">{opt.desc}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            <div>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">Translate Subtitles</span>
+                  {planKey === "free" && (
+                    <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-muted-foreground">
+                      <Lock className="size-3" /> Upgrade
+                    </span>
+                  )}
+                </div>
+                <Switch
+                  checked={translate}
+                  disabled={planKey === "free" || busy}
+                  onCheckedChange={(v) => setTranslate(v)}
+                  aria-label="Translate subtitles"
+                />
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                {planKey === "free"
+                  ? "Subtitle translation is available on Starter and Creator."
+                  : "Burn translated subtitles into your clips."}
+              </p>
+
+              {planKey !== "free" && translate && (
+                <div className="mt-3">
+                  <div className="text-xs text-muted-foreground mb-1.5">Target language</div>
+                  <select
+                    value={targetLanguage}
+                    disabled={busy}
+                    onChange={(e) => setTargetLanguage(e.target.value)}
+                    className="w-full rounded-xl bg-white/[0.03] border border-white/10 px-3 py-2.5 text-sm outline-none focus:border-primary transition-colors"
                   >
-                    <div className="text-sm font-medium">{opt.label}</div>
-                    <div className="text-xs text-muted-foreground mt-0.5">{opt.desc}</div>
-                  </button>
-                );
-              })}
+                    {TARGET_LANGUAGES.map((l) => (
+                      <option key={l} value={l} className="bg-background">{l}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
           </div>
+
 
           {(phase === "uploading" || phase === "processing") && (
             <div className="mt-5">
@@ -561,6 +656,11 @@ function UploadPage() {
             </div>
           </div>
 
+          <p className="text-xs text-muted-foreground mb-4">
+            Generated files are automatically deleted after 24 hours.
+          </p>
+
+
           {clips.length === 0 ? (
             <div className="glass rounded-2xl p-8 text-center text-muted-foreground">
               The server returned no clips.
@@ -596,7 +696,7 @@ function UploadPage() {
                         title={title}
                         reason={(c.reason as string) ?? null}
                         transcript={(c.transcript as string) ?? null}
-                        isPaid={isPaid}
+                        isPaid={planKey !== "free"}
                       />
                       <div className="mt-4">
                         <Button
