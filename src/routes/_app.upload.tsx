@@ -85,6 +85,8 @@ function UploadPage() {
   };
 
   const remainingMinutes = profile ? profile.monthly_minutes - profile.minutes_used : 0;
+  const busy = phase === "uploading" || phase === "processing";
+
 
   // Cancellation / refund bookkeeping
   const xhrRef = useRef<XMLHttpRequest | null>(null);
