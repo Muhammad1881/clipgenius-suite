@@ -60,6 +60,38 @@ type Clip = {
 
 type Phase = "idle" | "uploading" | "processing" | "done" | "error";
 
+type PlanKey = "free" | "starter" | "creator";
+type ClipSize = "30-60" | "60-90";
+
+const PLAN_RULES: Record<PlanKey, { maxInputMinutes: number; summary: string; tooLongMessage: string }> = {
+  free: {
+    maxInputMinutes: 30,
+    summary: "720p • 9:16 Center Crop • Up to 30 min",
+    tooLongMessage: "Free supports videos up to 30 minutes. Upgrade to process longer videos.",
+  },
+  starter: {
+    maxInputMinutes: 60,
+    summary: "1080p • 9:16 Center Crop • Translation • Up to 60 min",
+    tooLongMessage: "Starter supports videos up to 60 minutes. Upgrade to Creator for videos up to 120 minutes.",
+  },
+  creator: {
+    maxInputMinutes: 120,
+    summary: "1080p • AI Reframe • Translation • Up to 120 min",
+    tooLongMessage: "Creator supports videos up to 120 minutes.",
+  },
+};
+
+const CLIP_SIZES: { v: ClipSize; label: string; desc: string }[] = [
+  { v: "30-60", label: "30–60 sec", desc: "Punchy, fast-paced clips" },
+  { v: "60-90", label: "60–90 sec", desc: "More context per clip" },
+];
+
+const TARGET_LANGUAGES = [
+  "English", "Spanish", "French", "German", "Portuguese", "Italian",
+  "Hindi", "Urdu", "Arabic", "Turkish", "Russian", "Japanese", "Korean", "Chinese",
+];
+
+
 function UploadPage() {
   const [drag, setDrag] = useState(false);
   const [file, setFile] = useState<File | null>(null);
