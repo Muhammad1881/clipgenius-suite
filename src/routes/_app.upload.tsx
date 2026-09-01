@@ -178,14 +178,14 @@ function UploadPage() {
       return;
     }
 
-    const FREE_MAX_UPLOAD_MIN = 30;
-    if (!isPaid && minutesNeeded > FREE_MAX_UPLOAD_MIN) {
-      const msg = `Free plan supports videos up to ${FREE_MAX_UPLOAD_MIN} minutes. Upgrade to upload longer videos.`;
-      setError(msg);
+    const rules = PLAN_RULES[planKey];
+    if (minutesNeeded > rules.maxInputMinutes) {
+      setError(rules.tooLongMessage);
       setPhase("error");
-      toast.error(msg);
+      toast.error(rules.tooLongMessage);
       return;
     }
+
 
     const MAX_UPLOAD_BYTES = 100 * 1024 * 1024; // Cloudflare proxy body limit
     if (file.size > MAX_UPLOAD_BYTES) {
