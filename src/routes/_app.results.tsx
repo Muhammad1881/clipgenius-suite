@@ -192,16 +192,19 @@ function Results() {
                               <CopyButton value={title} label="Title" />
                             </div>
 
-                            <div className="mt-2 flex flex-wrap gap-1.5">
-                              {["✨ AI Auto Reframed", "🎯 Smart Tracking", "📝 AI Subtitles"].map((b) => (
-                                <span
-                                  key={b}
-                                  className="text-[10px] px-2 py-0.5 rounded-full glass border border-white/10 text-muted-foreground"
-                                >
-                                  {b}
-                                </span>
-                              ))}
-                            </div>
+                            {badges.length > 0 && (
+                              <div className="mt-2 flex flex-wrap gap-1.5">
+                                {badges.map((b) => (
+                                  <span
+                                    key={b}
+                                    className="text-[10px] px-2 py-0.5 rounded-full glass border border-white/10 text-muted-foreground"
+                                  >
+                                    {b}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+
 
 
                             <SocialMetaBlock
