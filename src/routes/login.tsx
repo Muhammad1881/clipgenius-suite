@@ -68,7 +68,14 @@ function LoginPage() {
     const { error } = await supabase.auth.signInWithPassword(parsed.data);
     setLoading(false);
     if (error) {
-      toast.error(error.message);
+      const msg = error.message.toLowerCase();
+      if (msg.includes("invalid login credentials")) {
+        toast.error("Wrong email or password. If you signed up with Google, use “Continue with Google”, or reset your password.");
+      } else if (msg.includes("email not confirmed")) {
+        toast.error("Please confirm your email first — check your inbox (and spam) for the confirmation link.");
+      } else {
+        toast.error(error.message);
+      }
       return;
     }
     toast.success("Welcome back!");
