@@ -74,6 +74,13 @@ function SignupPage() {
       toast.error(error.message);
       return;
     }
+    // Supabase returns a user with an empty identities array when the email
+    // is already registered (it hides existence by default).
+    if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+      toast.error("An account with this email already exists. Sign in instead — or reset your password if you forgot it.");
+      navigate({ to: "/login", search: { redirect: search.redirect } });
+      return;
+    }
     if (data.session) {
       toast.success("Account created!");
       goToRedirect();
