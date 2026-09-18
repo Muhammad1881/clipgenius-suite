@@ -9,7 +9,7 @@ import { EmailChangeEmail } from '@/lib/email-templates/email-change'
 import { ReauthenticationEmail } from '@/lib/email-templates/reauthentication'
 
 // Configuration
-const SITE_NAME = "clipra"
+const SITE_NAME = "Clipra"
 const SENDER_DOMAIN = "notify.clipra.bond"
 const ROOT_DOMAIN = "clipra.bond"
 const FROM_DOMAIN = "clipra.bond"

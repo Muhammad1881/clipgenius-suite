@@ -18,7 +18,7 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 }
 
 // Configuration
-const SITE_NAME = "clipra"
+const SITE_NAME = "Clipra"
 const ROOT_DOMAIN = "clipra.bond"
 
 // Sample data for preview mode ONLY (not used in actual email sending).
