@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ToolLanding, toolLandingHead } from "@/components/ToolLanding";
 
-const URL_ = "https://clipra.bond/tiktok-clip-maker";
+const URL_ = "https://theclipra.com/tiktok-clip-maker";
 const TITLE = "TikTok Clip Maker — AI Vertical Clips with Captions | Clipra";
 const DESCRIPTION = "Make TikTok-ready clips from any long video. Clipra's AI picks viral moments, reframes to 9:16, and adds animated captions optimised for TikTok.";
 

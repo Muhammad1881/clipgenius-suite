@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ToolLanding, toolLandingHead } from "@/components/ToolLanding";
 
-const URL_ = "https://clipra.bond/instagram-reels-maker";
+const URL_ = "https://theclipra.com/instagram-reels-maker";
 const TITLE = "Instagram Reels Maker — AI Reels from Long Videos | Clipra";
 const DESCRIPTION = "Create Instagram Reels from any long video with AI. Clipra picks viral moments, reframes vertically, and adds captions optimised for the Reels feed.";
 

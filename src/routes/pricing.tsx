@@ -12,9 +12,9 @@ export const Route = createFileRoute("/pricing")({
       { name: "description", content: "Simple plans for every creator. Start free, then unlock more monthly minutes on Starter or Creator." },
       { property: "og:title", content: "Clipra Pricing — Plans for every creator" },
       { property: "og:description", content: "Free, Starter, and Creator plans. Scale your monthly clipping minutes as you grow." },
-      { property: "og:url", content: "https://clipra.bond/pricing" },
+      { property: "og:url", content: "https://theclipra.com/pricing" },
     ],
-    links: [{ rel: "canonical", href: "https://clipra.bond/pricing" }],
+    links: [{ rel: "canonical", href: "https://theclipra.com/pricing" }],
   }),
 });
 

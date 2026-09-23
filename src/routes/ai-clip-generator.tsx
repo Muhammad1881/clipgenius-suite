@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ToolLanding, toolLandingHead } from "@/components/ToolLanding";
 
-const URL_ = "https://clipra.bond/ai-clip-generator";
+const URL_ = "https://theclipra.com/ai-clip-generator";
 const TITLE = "AI Clip Generator — Turn Long Videos into Viral Shorts | Clipra";
 const DESCRIPTION = "Clipra's AI clip generator finds your most viral moments, auto-reframes to 9:16, and adds captions in minutes. Free to try, 30 minutes included.";
 

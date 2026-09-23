@@ -19,10 +19,10 @@ export const Route = createFileRoute("/trust")({
         content:
           "Clipra's approach to security, privacy, and data handling — written and maintained by the Clipra team.",
       },
-      { property: "og:url", content: "https://clipra.bond/trust" },
+      { property: "og:url", content: "https://theclipra.com/trust" },
       { property: "og:type", content: "article" },
     ],
-    links: [{ rel: "canonical", href: "https://clipra.bond/trust" }],
+    links: [{ rel: "canonical", href: "https://theclipra.com/trust" }],
   }),
 });
 
@@ -105,7 +105,7 @@ function TrustPage() {
             <ul className="list-disc space-y-1 pl-5">
               <li>Lovable Cloud (hosting, database, authentication, storage)</li>
               <li>Stripe (billing and subscription management)</li>
-              <li>Our video processing backend at api.clipra.bond (clip generation)</li>
+              <li>Our video processing backend at api.theclipra.com (clip generation)</li>
             </ul>
             <p>
               These providers process data only to deliver the service. We do not sell your data.
@@ -131,10 +131,10 @@ function TrustPage() {
             <p>
               Contact:{" "}
               <a
-                href="mailto:security@clipra.bond"
+                href="mailto:security@theclipra.com"
                 className="text-primary underline-offset-4 hover:underline"
               >
-                security@clipra.bond
+                security@theclipra.com
               </a>
             </p>
           </Section>

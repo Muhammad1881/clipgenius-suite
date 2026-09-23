@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-const CLIP_ORIGIN = "https://api.clipra.bond/clips";
+const CLIP_ORIGIN = "https://api.theclipra.com/clips";
 
 export const Route = createFileRoute("/api/clips/$")({
   server: {

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ToolLanding, toolLandingHead } from "@/components/ToolLanding";
 
-const URL_ = "https://clipra.bond/podcast-clip-maker";
+const URL_ = "https://theclipra.com/podcast-clip-maker";
 const TITLE = "Podcast Clip Maker — AI Clips from Podcast Episodes | Clipra";
 const DESCRIPTION = "Repurpose podcast episodes into viral short clips. Clipra's AI finds the best soundbites, adds captions, and reframes for TikTok, Reels and Shorts.";
 

@@ -39,9 +39,9 @@ export const Route = createFileRoute("/login")({
       { name: "description", content: "Sign in to Clipra to turn your long videos into viral short clips with AI." },
       { property: "og:title", content: "Sign In — Clipra" },
       { property: "og:description", content: "Access your Clipra account and keep clipping viral shorts from your long videos." },
-      { property: "og:url", content: "https://clipra.bond/login" },
+      { property: "og:url", content: "https://theclipra.com/login" },
     ],
-    links: [{ rel: "canonical", href: "https://clipra.bond/login" }],
+    links: [{ rel: "canonical", href: "https://theclipra.com/login" }],
   }),
 });
 

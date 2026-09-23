@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
 
 const PUBLISHED = "2026-06-30";
-const URL_ = "https://clipra.bond/blog/how-to-repurpose-podcasts-into-shorts";
+const URL_ = "https://theclipra.com/blog/how-to-repurpose-podcasts-into-shorts";
 const TITLE = "How to Repurpose a Podcast into Viral Shorts (2026 Guide)";
 const DESCRIPTION =
   "A step-by-step workflow to turn a 60-minute podcast into 10+ viral shorts for TikTok, Reels, and YouTube Shorts using AI.";
@@ -53,7 +53,7 @@ export const Route = createFileRoute("/blog/how-to-repurpose-podcasts-into-short
           headline: TITLE,
           description: DESCRIPTION,
           author: { "@type": "Organization", name: "Clipra" },
-          publisher: { "@type": "Organization", name: "Clipra", url: "https://clipra.bond" },
+          publisher: { "@type": "Organization", name: "Clipra", url: "https://theclipra.com" },
           datePublished: PUBLISHED,
           dateModified: PUBLISHED,
           mainEntityOfPage: URL_,
@@ -77,8 +77,8 @@ export const Route = createFileRoute("/blog/how-to-repurpose-podcasts-into-short
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Home", item: "https://clipra.bond/" },
-            { "@type": "ListItem", position: 2, name: "Blog", item: "https://clipra.bond/blog" },
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://theclipra.com/" },
+            { "@type": "ListItem", position: 2, name: "Blog", item: "https://theclipra.com/blog" },
             { "@type": "ListItem", position: 3, name: TITLE, item: URL_ },
           ],
         }),

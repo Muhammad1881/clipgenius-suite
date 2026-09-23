@@ -3,7 +3,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ArrowRight } from "lucide-react";
 
-const URL_ = "https://clipra.bond/blog";
+const URL_ = "https://theclipra.com/blog";
 const TITLE = "Clipra Blog — AI Video Clipping, Shorts & Creator Growth";
 const DESCRIPTION =
   "Guides on turning long videos into viral shorts: AI clip generators, podcast repurposing, TikTok and Reels strategy, and honest tool comparisons.";
@@ -65,11 +65,11 @@ export const Route = createFileRoute("/blog/")({
           "@type": "Blog",
           name: "Clipra Blog",
           url: URL_,
-          publisher: { "@type": "Organization", name: "Clipra", url: "https://clipra.bond" },
+          publisher: { "@type": "Organization", name: "Clipra", url: "https://theclipra.com" },
           blogPost: POSTS.map((p) => ({
             "@type": "BlogPosting",
             headline: p.title,
-            url: `https://clipra.bond${p.slug}`,
+            url: `https://theclipra.com${p.slug}`,
             datePublished: p.date,
           })),
         }),
