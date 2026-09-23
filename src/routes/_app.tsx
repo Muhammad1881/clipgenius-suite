@@ -1,5 +1,6 @@
 import { Link, Outlet, useRouterState, useNavigate, createFileRoute, redirect } from "@tanstack/react-router";
-import { LayoutDashboard, Upload, FolderOpen, CreditCard, Sparkles, LogOut, Menu, ExternalLink } from "lucide-react";
+import { LayoutDashboard, Upload, FolderOpen, CreditCard, LogOut, Menu, ExternalLink } from "lucide-react";
+import logo from "@/assets/logo.png";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
