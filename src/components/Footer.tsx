@@ -1,4 +1,4 @@
-import { Sparkles } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 export function Footer() {
   return (
@@ -7,9 +7,7 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-5 sm:px-6 py-12 sm:py-14 grid sm:grid-cols-2 md:grid-cols-5 gap-10">
         <div>
           <div className="flex items-center gap-2 font-display font-semibold text-lg">
-            <span className="grid place-items-center size-8 rounded-lg bg-gradient-vivid glow">
-              <Sparkles className="size-4 text-primary-foreground" />
-            </span>
+            <img src={logo} alt="Clipra logo" className="size-8 rounded-lg glow" width={32} height={32} loading="lazy" />
             Clipra
           </div>
           <p className="text-sm text-muted-foreground mt-3 max-w-xs">

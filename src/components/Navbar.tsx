@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { Sparkles, Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import logo from "@/assets/logo.png";
 
 const tools = [
   { to: "/ai-clip-generator", label: "AI Clip Generator" },
@@ -36,9 +37,7 @@ export function Navbar() {
       <div className={`mx-auto max-w-7xl px-3 sm:px-4 transition-all duration-500 ${scrolled ? "mt-2" : "mt-4"}`}>
         <nav className={`glass rounded-2xl flex items-center justify-between px-4 sm:px-5 py-3 transition-all duration-500 ${scrolled ? "shadow-elevated" : ""}`}>
           <Link to="/" className="flex items-center gap-2 font-display font-bold">
-            <span className="grid place-items-center size-8 rounded-lg bg-gradient-vivid glow">
-              <Sparkles className="size-4 text-primary-foreground" />
-            </span>
+            <img src={logo} alt="Clipra logo" className="size-8 rounded-lg glow" width={32} height={32} />
             <span className="text-lg">Clipra</span>
           </Link>
           <div className="hidden md:flex items-center gap-7 text-sm text-muted-foreground">
