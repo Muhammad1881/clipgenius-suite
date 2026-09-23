@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ToolLanding, toolLandingHead } from "@/components/ToolLanding";
 
-const URL_ = "https://clipra.bond/youtube-shorts-generator";
+const URL_ = "https://theclipra.com/youtube-shorts-generator";
 const TITLE = "YouTube Shorts Generator — AI Clips from Long Videos | Clipra";
 const DESCRIPTION = "Turn long YouTube videos into Shorts automatically. Clipra's AI picks viral moments, reframes vertically, and adds captions — built for YouTube creators.";
 

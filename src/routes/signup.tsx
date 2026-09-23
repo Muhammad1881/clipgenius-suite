@@ -24,9 +24,9 @@ export const Route = createFileRoute("/signup")({
       { name: "description", content: "Create your free Clipra account and start turning long videos into viral short clips today." },
       { property: "og:title", content: "Create Your Account — Clipra" },
       { property: "og:description", content: "Sign up free for Clipra and ship viral-ready shorts from your long videos in minutes." },
-      { property: "og:url", content: "https://clipra.bond/signup" },
+      { property: "og:url", content: "https://theclipra.com/signup" },
     ],
-    links: [{ rel: "canonical", href: "https://clipra.bond/signup" }],
+    links: [{ rel: "canonical", href: "https://theclipra.com/signup" }],
   }),
 });
 

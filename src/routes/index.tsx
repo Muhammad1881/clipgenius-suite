@@ -25,12 +25,12 @@ export const Route = createFileRoute("/")({
       { name: "description", content: HERO_DESC },
       { property: "og:title", content: HERO_TITLE },
       { property: "og:description", content: HERO_DESC },
-      { property: "og:url", content: "https://clipra.bond/" },
+      { property: "og:url", content: "https://theclipra.com/" },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/12b2dfda-f1cd-4c24-969b-577ec332e625/id-preview-73ce43b2--b72c6876-6188-4025-9601-5368f65970f8.lovable.app-1781448753872.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/12b2dfda-f1cd-4c24-969b-577ec332e625/id-preview-73ce43b2--b72c6876-6188-4025-9601-5368f65970f8.lovable.app-1781448753872.png" },
     ],
     links: [
-      { rel: "canonical", href: "https://clipra.bond/" },
+      { rel: "canonical", href: "https://theclipra.com/" },
       { rel: "preload", as: "image", href: heroBg, fetchPriority: "high" } as any,
     ],
     scripts: [

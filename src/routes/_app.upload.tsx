@@ -26,7 +26,7 @@ export const Route = createFileRoute("/_app/upload")({
 });
 
 const API_URL = "/api/video-upload";
-const BACKEND_BASE = "https://api.clipra.bond";
+const BACKEND_BASE = "https://api.theclipra.com";
 
 function resolveClipUrl(url: string | undefined): string | undefined {
   if (!url) return undefined;

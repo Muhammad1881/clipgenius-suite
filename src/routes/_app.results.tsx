@@ -10,7 +10,7 @@ import { CopyButton, SocialMetaBlock } from "@/components/ClipSocialMeta";
 
 export const Route = createFileRoute("/_app/results")({ component: Results });
 
-const BACKEND_BASE = "https://api.clipra.bond";
+const BACKEND_BASE = "https://api.theclipra.com";
 
 function resolveClipUrl(url: string | undefined): string | undefined {
   if (!url) return undefined;

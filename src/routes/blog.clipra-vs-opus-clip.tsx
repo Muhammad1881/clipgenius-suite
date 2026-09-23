@@ -5,7 +5,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 
 const PUBLISHED = "2026-06-30";
-const URL = "https://clipra.bond/blog/clipra-vs-opus-clip";
+const URL = "https://theclipra.com/blog/clipra-vs-opus-clip";
 const TITLE = "Clipra vs Opus Clip: The Honest 2026 Comparison";
 const DESCRIPTION =
   "Looking for an Opus Clip alternative? Compare Clipra vs Opus Clip on pricing, viral scoring accuracy, speed, captions and languages — and pick the right AI short-clip generator.";
@@ -35,7 +35,7 @@ export const Route = createFileRoute("/blog/clipra-vs-opus-clip")({
           headline: TITLE,
           description: DESCRIPTION,
           author: { "@type": "Organization", name: "Clipra" },
-          publisher: { "@type": "Organization", name: "Clipra", url: "https://clipra.bond" },
+          publisher: { "@type": "Organization", name: "Clipra", url: "https://theclipra.com" },
           datePublished: PUBLISHED,
           dateModified: PUBLISHED,
           mainEntityOfPage: URL,
@@ -47,8 +47,8 @@ export const Route = createFileRoute("/blog/clipra-vs-opus-clip")({
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Home", item: "https://clipra.bond/" },
-            { "@type": "ListItem", position: 2, name: "Blog", item: "https://clipra.bond/blog" },
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://theclipra.com/" },
+            { "@type": "ListItem", position: 2, name: "Blog", item: "https://theclipra.com/blog" },
             { "@type": "ListItem", position: 3, name: "Clipra vs Opus Clip", item: URL },
           ],
         }),

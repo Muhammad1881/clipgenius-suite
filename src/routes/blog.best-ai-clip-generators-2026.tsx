@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Star, Sparkles } from "lucide-react";
 
 const PUBLISHED = "2026-06-30";
-const URL_ = "https://clipra.bond/blog/best-ai-clip-generators-2026";
+const URL_ = "https://theclipra.com/blog/best-ai-clip-generators-2026";
 const TITLE = "The 7 Best AI Clip Generators in 2026 (Tested & Ranked)";
 const DESCRIPTION =
   "We tested every major AI tool that turns long videos into vertical shorts. Here are the seven that actually deliver — with pricing, strengths, and weaknesses.";
@@ -102,7 +102,7 @@ export const Route = createFileRoute("/blog/best-ai-clip-generators-2026")({
           headline: TITLE,
           description: DESCRIPTION,
           author: { "@type": "Organization", name: "Clipra" },
-          publisher: { "@type": "Organization", name: "Clipra", url: "https://clipra.bond" },
+          publisher: { "@type": "Organization", name: "Clipra", url: "https://theclipra.com" },
           datePublished: PUBLISHED,
           dateModified: PUBLISHED,
           mainEntityOfPage: URL_,
@@ -126,8 +126,8 @@ export const Route = createFileRoute("/blog/best-ai-clip-generators-2026")({
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Home", item: "https://clipra.bond/" },
-            { "@type": "ListItem", position: 2, name: "Blog", item: "https://clipra.bond/blog" },
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://theclipra.com/" },
+            { "@type": "ListItem", position: 2, name: "Blog", item: "https://theclipra.com/blog" },
             { "@type": "ListItem", position: 3, name: "Best AI Clip Generators 2026", item: URL_ },
           ],
         }),

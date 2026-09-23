@@ -10,9 +10,9 @@ import { ReauthenticationEmail } from '@/lib/email-templates/reauthentication'
 
 // Configuration
 const SITE_NAME = "Clipra"
-const SENDER_DOMAIN = "notify.clipra.bond"
-const ROOT_DOMAIN = "clipra.bond"
-const FROM_DOMAIN = "clipra.bond"
+const SENDER_DOMAIN = "notify.theclipra.com"
+const ROOT_DOMAIN = "theclipra.com"
+const FROM_DOMAIN = "theclipra.com"
 const SITE_URL = `https://${ROOT_DOMAIN}`
 
 // The SDK handler owns verification, dispatch, and retry semantics; this file

@@ -9,5 +9,5 @@ Disallow: /forgot-password
 Disallow: /reset-password
 Disallow: /lovable/
 
-Sitemap: https://clipra.bond/sitemap.xml
+Sitemap: https://theclipra.com/sitemap.xml
 
