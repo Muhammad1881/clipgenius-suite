@@ -72,9 +72,7 @@ function AppLayout() {
   const SidebarBody = (
     <>
       <Link to="/" className="flex items-center gap-2 font-display font-semibold px-2 py-3" onClick={() => setMobileOpen(false)}>
-        <span className="grid place-items-center size-8 rounded-lg bg-gradient-vivid glow">
-          <Sparkles className="size-4 text-primary-foreground" />
-        </span>
+        <img src={logo} alt="Clipra logo" className="size-8 rounded-lg glow" width={32} height={32} />
         Clipra
       </Link>
       <nav className="mt-6 space-y-1">
@@ -151,9 +149,7 @@ function AppLayout() {
         {/* Mobile top bar */}
         <div className="md:hidden sticky top-0 z-30 flex items-center justify-between gap-3 px-4 h-14 border-b border-border/60 bg-background/80 backdrop-blur-xl">
           <Link to="/" className="flex items-center gap-2 font-display font-semibold">
-            <span className="grid place-items-center size-7 rounded-lg bg-gradient-vivid glow">
-              <Sparkles className="size-3.5 text-primary-foreground" />
-            </span>
+            <img src={logo} alt="Clipra logo" className="size-7 rounded-lg glow" width={28} height={28} />
             Clipra
           </Link>
           <div className="flex items-center gap-2">
