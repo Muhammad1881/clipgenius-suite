@@ -233,6 +233,208 @@ function UploadPage() {
     setFile(null); setProgress(0); setPhase("idle"); setError(null); setClips([]); setDurationMin(null); setStage(null);
   };
 
+  const saveProject = useCallback(async (payload: { clips: Clip[]; transcript?: any; viral_moments?: any }, sourceName: string) => {
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      const uid = userData.user?.id;
+      if (!uid) return;
+      const { error: insertErr } = await supabase.from("projects").insert({
+        user_id: uid,
+        video_name: sourceName,
+        transcript: (payload.transcript ?? null) as string | null,
+        viral_moments: payload.viral_moments ?? null,
+        clips: payload.clips as any,
+      });
+      if (insertErr) {
+        console.error("Failed to save project:", insertErr);
+        toast.error("Clips generated, but couldn't save project history.");
+      } else {
+        toast.success("Project saved to your history.");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  const finish = useCallback(async (arr: Clip[], extra: { transcript?: any; viral_moments?: any }, sourceName: string) => {
+    if (cancelledRef.current) return;
+    setClips(arr);
+    setStage(null);
+    setPhase("done");
+    if (arr.length === 0) {
+      // Nothing was generated — never charge for that.
+      await releaseReservation();
+      toast.error("No clips could be generated from this video — your minutes were not deducted.");
+      return;
+    }
+    reservationRef.current = { minutes: 0, active: false };
+    await saveProject({ clips: arr, transcript: extra.transcript, viral_moments: extra.viral_moments }, sourceName);
+  }, [releaseReservation, saveProject]);
+
+  // Shared job polling for both file uploads and link imports.
+  const runJob = useCallback(async (jobId: string, sourceName: string, deductOnFinish: boolean) => {
+    jobIdRef.current = jobId;
+    setPhase("processing");
+    setStage("Queued…");
+    const startedAt = Date.now();
+    const MAX_WAIT_MS = 30 * 60 * 1000;
+
+    const poll = async () => {
+      if (cancelledRef.current) return;
+      try {
+        const res = await fetch(`${BACKEND_BASE}/jobs/${jobId}`);
+        const job = await res.json();
+        if (cancelledRef.current) return;
+
+        if (job.status === "completed") {
+          const arr: Clip[] = (job.result?.clips || []) as Clip[];
+          // Link imports have no upfront reservation: deduct once, only for a real result.
+          if (deductOnFinish && arr.length > 0) {
+            const secs = Number(
+              job.result?.duration ??
+              job.result?.duration_seconds ??
+              job.result?.video_duration ??
+              job.result?.input_duration ??
+              0,
+            );
+            if (secs > 0) {
+              const minutes = Math.min(240, Math.ceil(secs / 60));
+              try {
+                const r = await consume({ data: { minutes } });
+                if (!r.ok) toast.error("Your plan ran out of minutes while processing — upgrade to keep importing.");
+                await refetchProfile();
+              } catch (e) {
+                console.error("Failed to deduct minutes for imported video:", e);
+              }
+            } else {
+              console.warn("Import finished without a reported duration — minutes were not deducted.");
+            }
+          }
+          await finish(arr, {
+            transcript: job.result?.transcript,
+            viral_moments: job.result?.viral_moments ?? job.result?.moments,
+          }, sourceName);
+          return;
+        }
+
+        if (job.status === "failed" || job.status === "cancelled") {
+          setError(job.error || "The processing server could not finish this video. Your minutes were not deducted.");
+          setStage(null);
+          setPhase("error");
+          await releaseReservation();
+          return;
+        }
+
+        if (typeof job.progress === "number") setProgress(job.progress);
+        setStage(job.stage || "Processing…");
+
+        if (Date.now() - startedAt > MAX_WAIT_MS) {
+          setError("Processing is taking unusually long, so we stopped it and returned your minutes. Please try again or use a shorter video.");
+          setStage(null);
+          setPhase("error");
+          await releaseReservation();
+          return;
+        }
+
+        pollTimerRef.current = setTimeout(poll, 2500);
+      } catch {
+        if (!cancelledRef.current) pollTimerRef.current = setTimeout(poll, 4000);
+      }
+    };
+
+    poll();
+  }, [consume, finish, releaseReservation]);
+
+  const importFromUrl = async () => {
+    if (busy) return;
+    const rawLink = videoUrl.trim();
+    if (!rawLink) {
+      setError("Paste a video link first, or drop a file above.");
+      return;
+    }
+    let parsedLink: URL;
+    try {
+      parsedLink = new URL(/^https?:\/\//i.test(rawLink) ? rawLink : `https://${rawLink}`);
+    } catch {
+      setError("That doesn't look like a valid link — paste the full URL.");
+      return;
+    }
+    if (parsedLink.protocol !== "http:" && parsedLink.protocol !== "https:") {
+      setError("Only http(s) links are supported.");
+      return;
+    }
+
+    const host = parsedLink.hostname.replace(/^www\./, "").toLowerCase();
+    const SOCIAL_HOSTS = [
+      "youtube.com", "youtu.be", "tiktok.com", "instagram.com", "vimeo.com",
+      "facebook.com", "fb.watch", "twitter.com", "x.com", "twitch.tv",
+      "dailymotion.com", "reddit.com",
+    ];
+    if (SOCIAL_HOSTS.some((s) => host === s || host.endsWith(`.${s}`))) {
+      const msg = "YouTube and social links aren't supported yet. Direct video file links (.mp4, .mov, .webm) import today — or upload the file above.";
+      setError(msg);
+      toast.error(msg);
+      return;
+    }
+
+    if (remainingMinutes <= 0) {
+      const msg = "You do not have enough minutes remaining.";
+      setError(msg);
+      toast.error(msg);
+      return;
+    }
+
+    cancelledRef.current = false;
+    jobIdRef.current = null;
+    setPhase("processing");
+    setStage("Downloading video from link…");
+    setProgress(0);
+    setError(null);
+    setClips([]);
+    setFile(null);
+    setDurationMin(null);
+
+    const controller = new AbortController();
+    importAbortRef.current = controller;
+
+    try {
+      const res = await fetch("/api/video-import", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          url: parsedLink.toString(),
+          plan: planKey,
+          clipSize: planKey !== "free" ? clipSize : undefined,
+          translate: planKey !== "free" ? translate : false,
+          targetLanguage: planKey !== "free" && translate ? targetLanguage : undefined,
+        }),
+        signal: controller.signal,
+      });
+      importAbortRef.current = null;
+      if (cancelledRef.current) return;
+      const data = await res.json().catch(() => null);
+      if (res.ok && data?.jobId) {
+        await runJob(String(data.jobId), nameFromUrl(parsedLink), true);
+      } else {
+        const msg =
+          data?.error ||
+          data?.detail ||
+          (res.status === 415 ? "That link isn't a direct video file." : undefined) ||
+          "Could not import from this link. Try a direct .mp4 link or upload the file.";
+        setError(msg);
+        setPhase("error");
+        toast.error(msg);
+      }
+    } catch (e: any) {
+      importAbortRef.current = null;
+      if (cancelledRef.current || e?.name === "AbortError") return;
+      const msg = "Could not reach that link. Check it and try again, or upload the file directly.";
+      setError(msg);
+      setPhase("error");
+      toast.error(msg);
+    }
+  };
+
   const upload = async () => {
     if (!file) return;
     const minutesNeeded = durationMin != null ? Math.ceil(durationMin) : null;
@@ -309,43 +511,6 @@ function UploadPage() {
     xhr.upload.onload = () => { if (!cancelledRef.current) setPhase("processing"); };
     xhr.onabort = () => { /* handled by cancelJob */ };
 
-    const saveProject = async (payload: { clips: Clip[]; transcript?: any; viral_moments?: any }) => {
-      try {
-        const { data: userData } = await supabase.auth.getUser();
-        const uid = userData.user?.id;
-        if (!uid) return;
-        const { error: insertErr } = await supabase.from("projects").insert({
-          user_id: uid,
-          video_name: file.name,
-          transcript: (payload.transcript ?? null) as string | null,
-          viral_moments: payload.viral_moments ?? null,
-          clips: payload.clips as any,
-        });
-        if (insertErr) {
-          console.error("Failed to save project:", insertErr);
-          toast.error("Clips generated, but couldn't save project history.");
-        } else {
-          toast.success("Project saved to your history.");
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    };
-
-    const finish = async (arr: Clip[], extra: { transcript?: any; viral_moments?: any }) => {
-      if (cancelledRef.current) return;
-      setClips(arr);
-      setStage(null);
-      setPhase("done");
-      if (arr.length === 0) {
-        // Nothing was generated — never charge for that.
-        await releaseReservation();
-        toast.error("No clips could be generated from this video — your minutes were not deducted.");
-        return;
-      }
-      reservationRef.current = { minutes: 0, active: false };
-      await saveProject({ clips: arr, transcript: extra.transcript, viral_moments: extra.viral_moments });
-    };
 
     xhr.onload = async () => {
       if (cancelledRef.current) return;
@@ -479,13 +644,28 @@ function UploadPage() {
           <span className="text-xs text-muted-foreground">or</span>
           <div className="h-px flex-1 bg-white/10" />
         </div>
-        <div className="mt-4 flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
+        <form
+          className="mt-4 flex flex-col sm:flex-row gap-2 max-w-md mx-auto"
+          onSubmit={(e) => { e.preventDefault(); void importFromUrl(); }}
+        >
           <div className="relative flex-1">
             <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-            <Input placeholder="Paste YouTube or video URL" className="pl-9 glass border-white/10" />
+            <Input
+              value={videoUrl}
+              onChange={(e) => { setVideoUrl(e.target.value); if (error && !file) setError(null); }}
+              placeholder="Paste YouTube or video URL"
+              disabled={busy}
+              className="pl-9 glass border-white/10"
+            />
           </div>
-          <Button className="btn-premium rounded-xl">Import</Button>
-        </div>
+          <Button type="submit" disabled={busy} className="btn-premium rounded-xl">Import</Button>
+        </form>
+        {error && !file && (
+          <div className="mt-4 flex items-start gap-3 rounded-xl border border-destructive/40 bg-destructive/10 p-3 text-sm max-w-md mx-auto">
+            <AlertCircle className="size-4 text-destructive mt-0.5 shrink-0" />
+            <div className="text-destructive text-left">{error}</div>
+          </div>
+        )}
       </div>
 
       {file && (
@@ -664,7 +844,7 @@ function UploadPage() {
             onClick={() => void cancelJob()}
             className="mt-5 rounded-xl border-white/15"
           >
-            {cancelling ? <><Loader2 className="size-3.5 mr-1.5 animate-spin" /> Cancelling</> : <><X className="size-3.5 mr-1.5" /> Cancel and refund minutes</>}
+            {cancelling ? <><Loader2 className="size-3.5 mr-1.5 animate-spin" /> Cancelling</> : <><X className="size-3.5 mr-1.5" /> {reservationRef.current.active ? "Cancel and refund minutes" : "Cancel"}</>}
           </Button>
         </div>
       )}
