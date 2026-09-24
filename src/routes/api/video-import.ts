@@ -127,7 +127,7 @@ export const Route = createFileRoute("/api/video-import")({
         parts.push(enc.encode(`\r\n--${boundary}--\r\n`));
         const closing = parts.pop()!;
         const prelude = parts;
-        const totalLength = prelude.reduce((acc, p) => acc + p.length, 0) + size;
+        const totalLength = prelude.reduce((acc, p) => acc + p.length, 0) + closing.length + size;
 
         // Pull-based stream: prelude fields, then the remote file bytes, then the
         // closing boundary — with backpressure, so memory stays flat.
