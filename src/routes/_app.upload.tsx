@@ -520,53 +520,7 @@ function UploadPage() {
 
       if (xhr.status >= 200 && xhr.status < 300) {
         if (parsed?.jobId) {
-          jobIdRef.current = String(parsed.jobId);
-          setPhase("processing");
-          setStage("Queued…");
-          const startedAt = Date.now();
-          const MAX_WAIT_MS = 30 * 60 * 1000;
-
-          const poll = async () => {
-            if (cancelledRef.current) return;
-            try {
-              const res = await fetch(`${BACKEND_BASE}/jobs/${parsed.jobId}`);
-              const job = await res.json();
-              if (cancelledRef.current) return;
-
-              if (job.status === "completed") {
-                await finish((job.result?.clips || []) as Clip[], {
-                  transcript: job.result?.transcript,
-                  viral_moments: job.result?.viral_moments ?? job.result?.moments,
-                });
-                return;
-              }
-
-              if (job.status === "failed" || job.status === "cancelled") {
-                setError(job.error || "The processing server could not finish this video. Your minutes were not deducted.");
-                setStage(null);
-                setPhase("error");
-                await releaseReservation();
-                return;
-              }
-
-              if (typeof job.progress === "number") setProgress(job.progress);
-              setStage(job.stage || "Processing…");
-
-              if (Date.now() - startedAt > MAX_WAIT_MS) {
-                setError("Processing is taking unusually long, so we stopped it and returned your minutes. Please try again or use a shorter video.");
-                setStage(null);
-                setPhase("error");
-                await releaseReservation();
-                return;
-              }
-
-              pollTimerRef.current = setTimeout(poll, 2500);
-            } catch {
-              if (!cancelledRef.current) pollTimerRef.current = setTimeout(poll, 4000);
-            }
-          };
-
-          poll();
+          await runJob(String(parsed.jobId), file.name, false);
         } else {
           const arr: Clip[] = Array.isArray(parsed?.clips)
             ? parsed.clips
@@ -577,7 +531,7 @@ function UploadPage() {
           await finish(arr, {
             transcript: parsed?.transcript,
             viral_moments: parsed?.viral_moments ?? parsed?.moments,
-          });
+          }, file.name);
         }
       } else {
 
