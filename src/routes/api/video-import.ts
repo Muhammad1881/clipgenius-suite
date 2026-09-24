@@ -4,6 +4,8 @@ import { z } from "zod";
 // Same upstream targets as /api/video-upload: HTTPS hostname first, direct IP
 // as a fallback for local/dev runtimes where the port is reachable.
 const UPSTREAM_URLS = [
+  "https://api.theclipra.com/upload",
+  "http://178.105.192.132:5000/upload",
 ];
 const MAX_IMPORT_BYTES = 100 * 1024 * 1024;
 
