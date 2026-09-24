@@ -47,6 +47,12 @@ function toDownloadUrl(url: string | undefined, title: string): string | undefin
   return `${resolved}?download=1&filename=${encodeURIComponent(safeFileName(title))}`;
 }
 
+function nameFromUrl(u: URL): string {
+  const seg = decodeURIComponent(u.pathname.split("/").filter(Boolean).pop() ?? "");
+  const clean = seg.replace(/[^a-zA-Z0-9._-]+/g, "-").slice(0, 60);
+  return clean || `imported-${u.hostname}`;
+}
+
 
 
 type Clip = {
@@ -96,6 +102,7 @@ const TARGET_LANGUAGES = [
 function UploadPage() {
   const [drag, setDrag] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+  const [videoUrl, setVideoUrl] = useState("");
   const [durationMin, setDurationMin] = useState<number | null>(null);
   const [progress, setProgress] = useState(0);
   const [phase, setPhase] = useState<Phase>("idle");
@@ -123,6 +130,7 @@ function UploadPage() {
 
   // Cancellation / refund bookkeeping
   const xhrRef = useRef<XMLHttpRequest | null>(null);
+  const importAbortRef = useRef<AbortController | null>(null);
   const jobIdRef = useRef<string | null>(null);
   const cancelledRef = useRef(false);
   const pollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -159,6 +167,8 @@ function UploadPage() {
     if (pollTimerRef.current) { clearTimeout(pollTimerRef.current); pollTimerRef.current = null; }
     try { xhrRef.current?.abort(); } catch { /* noop */ }
     xhrRef.current = null;
+    try { importAbortRef.current?.abort(); } catch { /* noop */ }
+    importAbortRef.current = null;
 
     const jobId = jobIdRef.current;
     jobIdRef.current = null;
@@ -184,6 +194,7 @@ function UploadPage() {
       if (reservationRef.current.active) {
         cancelledRef.current = true;
         try { xhrRef.current?.abort(); } catch { /* noop */ }
+        try { importAbortRef.current?.abort(); } catch { /* noop */ }
         // Kill the GPU job on the backend too when the user leaves mid-processing.
         if (jobIdRef.current) notifyBackendCancel(jobIdRef.current);
         void releaseReservation();
