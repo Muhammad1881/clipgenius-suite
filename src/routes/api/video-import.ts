@@ -129,52 +129,66 @@ export const Route = createFileRoute("/api/video-import")({
         const prelude = parts;
         const totalLength = prelude.reduce((acc, p) => acc + p.length, 0) + closing.length + size;
 
-        // Pull-based stream: prelude fields, then the remote file bytes, then the
-        // closing boundary — with backpressure, so memory stays flat.
-        const fileReader = upstream.body ? upstream.body.getReader() : null;
-        let preludeIdx = 0;
-        let closed = false;
-        const stream = new ReadableStream<Uint8Array>({
-          pull(controller) {
-            if (preludeIdx < prelude.length) {
-              controller.enqueue(prelude[preludeIdx++]);
-              return;
-            }
-            if (fileReader) {
-              return fileReader.read().then(({ done, value }) => {
-                if (done) {
-                  controller.enqueue(closing);
-                  controller.close();
-                  closed = true;
-                  return;
-                }
-                if (value) controller.enqueue(value);
-              });
-            }
-            if (!closed) {
-              controller.enqueue(closing);
-              controller.close();
-              closed = true;
-            }
-          },
-          cancel() {
-            try {
-              fileReader?.cancel();
-            } catch {
-              /* noop */
-            }
-          },
-        });
+        // Production (workerd) supports streaming request bodies — stream the
+        // remote file through with flat memory. Dev runtimes (Bun/Node) reject
+        // streaming bodies ("disturbed or locked"), so buffer there instead.
+        const isWorkerd = typeof (globalThis as { WebSocketPair?: unknown }).WebSocketPair !== "undefined";
 
-        const init = {
-          method: "POST",
-          headers: {
-            "content-type": `multipart/form-data; boundary=${boundary}`,
-            "content-length": String(totalLength),
-          },
-          body: stream,
-          duplex: "half",
-        } as RequestInit;
+        let init: RequestInit;
+        if (isWorkerd) {
+          // Pull-based stream: prelude fields, then the remote file bytes, then
+          // the closing boundary — with backpressure, so memory stays flat.
+          const fileReader = upstream.body ? upstream.body.getReader() : null;
+          let preludeIdx = 0;
+          let closed = false;
+          const stream = new ReadableStream<Uint8Array>({
+            pull(controller) {
+              if (preludeIdx < prelude.length) {
+                controller.enqueue(prelude[preludeIdx++]);
+                return;
+              }
+              if (fileReader) {
+                return fileReader.read().then(({ done, value }) => {
+                  if (done) {
+                    controller.enqueue(closing);
+                    controller.close();
+                    closed = true;
+                    return;
+                  }
+                  if (value) controller.enqueue(value);
+                });
+              }
+              if (!closed) {
+                controller.enqueue(closing);
+                controller.close();
+                closed = true;
+              }
+            },
+            cancel() {
+              try {
+                fileReader?.cancel();
+              } catch {
+                /* noop */
+              }
+            },
+          });
+
+          init = {
+            method: "POST",
+            headers: {
+              "content-type": `multipart/form-data; boundary=${boundary}`,
+              "content-length": String(totalLength),
+            },
+            body: stream,
+            duplex: "half",
+          } as RequestInit;
+        } else {
+          const buf = await upstream.arrayBuffer();
+          const fd = new FormData();
+          for (const [n, v] of fields) fd.append(n, v);
+          fd.append("video", new File([buf], filename, { type: mime }));
+          init = { method: "POST", body: fd };
+        }
 
         let relay: Response | null = null;
         let lastError: unknown = null;
