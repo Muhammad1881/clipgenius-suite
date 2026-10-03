@@ -288,7 +288,8 @@ function UploadPage() {
 
         if (job.status === "completed") {
           const arr: Clip[] = (job.result?.clips || []) as Clip[];
-          // Link imports have no upfront reservation: deduct once, only for a real result.
+          // Link imports have no upfront reservation: deduct once, only for a real
+          // result — and only hand over the clips if the deduction succeeds.
           if (deductOnFinish && arr.length > 0) {
             const secs = Number(
               job.result?.duration ??
@@ -297,17 +298,24 @@ function UploadPage() {
               job.result?.input_duration ??
               0,
             );
-            if (secs > 0) {
-              const minutes = Math.min(240, Math.ceil(secs / 60));
-              try {
-                const r = await consume({ data: { minutes } });
-                if (!r.ok) toast.error("Your plan ran out of minutes while processing — upgrade to keep importing.");
-                await refetchProfile();
-              } catch (e) {
-                console.error("Failed to deduct minutes for imported video:", e);
-              }
-            } else {
-              console.warn("Import finished without a reported duration — minutes were not deducted.");
+            // If the processor doesn't report a duration, charge the plan's max
+            // upload length — the same worst case a file upload would reserve.
+            const minutes = secs > 0
+              ? Math.min(240, Math.ceil(secs / 60))
+              : PLAN_RULES[planKey].maxInputMinutes;
+            let paid = false;
+            try {
+              const r = await consume({ data: { minutes } });
+              paid = !!r.ok;
+              await refetchProfile();
+            } catch (e) {
+              console.error("Failed to deduct minutes for imported video:", e);
+            }
+            if (!paid) {
+              setError(`This video needed ${minutes} minutes, but your plan doesn't have enough left. Upgrade your plan and import it again — you were not charged.`);
+              setStage(null);
+              setPhase("error");
+              return;
             }
           }
           await finish(arr, {
@@ -343,7 +351,7 @@ function UploadPage() {
     };
 
     poll();
-  }, [consume, finish, releaseReservation]);
+  }, [consume, finish, releaseReservation, planKey, refetchProfile]);
 
   const importFromUrl = async () => {
     if (busy) return;
