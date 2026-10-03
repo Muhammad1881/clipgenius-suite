@@ -351,7 +351,7 @@ function UploadPage() {
     };
 
     poll();
-  }, [consume, finish, releaseReservation]);
+  }, [consume, finish, releaseReservation, planKey, refetchProfile]);
 
   const importFromUrl = async () => {
     if (busy) return;
