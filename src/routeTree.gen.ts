@@ -9,104 +9,45 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AppRouteImport } from './routes/_app'
-import { Route as AiClipGeneratorRouteImport } from './routes/ai-clip-generator'
-import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
-import { Route as InstagramReelsMakerRouteImport } from './routes/instagram-reels-maker'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as McpRouteImport } from './routes/mcp'
-import { Route as PodcastClipMakerRouteImport } from './routes/podcast-clip-maker'
-import { Route as PricingRouteImport } from './routes/pricing'
-import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as SignupRouteImport } from './routes/signup'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as TiktokClipMakerRouteImport } from './routes/tiktok-clip-maker'
-import { Route as TrustRouteImport } from './routes/trust'
 import { Route as YoutubeShortsGeneratorRouteImport } from './routes/youtube-shorts-generator'
-import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
-import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
-import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
-import { Route as AppProcessingRouteImport } from './routes/_app.processing'
-import { Route as AppResultsRouteImport } from './routes/_app.results'
-import { Route as AppUploadRouteImport } from './routes/_app.upload'
-import { Route as ApiVideoImportRouteImport } from './routes/api/video-import'
-import { Route as ApiVideoUploadRouteImport } from './routes/api/video-upload'
-import { Route as BillingCancelRouteImport } from './routes/billing.cancel'
-import { Route as BillingSuccessRouteImport } from './routes/billing.success'
+import { Route as TrustRouteImport } from './routes/trust'
+import { Route as TiktokClipMakerRouteImport } from './routes/tiktok-clip-maker'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as PodcastClipMakerRouteImport } from './routes/podcast-clip-maker'
+import { Route as McpRouteImport } from './routes/mcp'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as InstagramReelsMakerRouteImport } from './routes/instagram-reels-maker'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as AiClipGeneratorRouteImport } from './routes/ai-clip-generator'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
-import { Route as BlogBestAiClipGenerators2026RouteImport } from './routes/blog.best-ai-clip-generators-2026'
-import { Route as BlogClipraVsOpusClipRouteImport } from './routes/blog.clipra-vs-opus-clip'
 import { Route as BlogHowToRepurposePodcastsIntoShortsRouteImport } from './routes/blog.how-to-repurpose-podcasts-into-shorts'
-import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
-import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
-import { Route as ApiClipsSplatRouteImport } from './routes/api/clips/$'
+import { Route as BlogClipraVsOpusClipRouteImport } from './routes/blog.clipra-vs-opus-clip'
+import { Route as BlogBestAiClipGenerators2026RouteImport } from './routes/blog.best-ai-clip-generators-2026'
+import { Route as BillingSuccessRouteImport } from './routes/billing.success'
+import { Route as BillingCancelRouteImport } from './routes/billing.cancel'
+import { Route as ApiVideoUploadRouteImport } from './routes/api/video-upload'
+import { Route as ApiVideoImportRouteImport } from './routes/api/video-import'
+import { Route as AppUploadRouteImport } from './routes/_app.upload'
+import { Route as AppResultsRouteImport } from './routes/_app.results'
+import { Route as AppProcessingRouteImport } from './routes/_app.processing'
+import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
-import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
+import { Route as ApiClipsSplatRouteImport } from './routes/api/clips/$'
+import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
+import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AppRoute = AppRouteImport.update({
-  id: '/_app',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AiClipGeneratorRoute = AiClipGeneratorRouteImport.update({
-  id: '/ai-clip-generator',
-  path: '/ai-clip-generator',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
-  id: '/forgot-password',
-  path: '/forgot-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InstagramReelsMakerRoute = InstagramReelsMakerRouteImport.update({
-  id: '/instagram-reels-maker',
-  path: '/instagram-reels-maker',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const McpRoute = McpRouteImport.update({
-  id: '/mcp',
-  path: '/mcp',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PodcastClipMakerRoute = PodcastClipMakerRouteImport.update({
-  id: '/podcast-clip-maker',
-  path: '/podcast-clip-maker',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PricingRoute = PricingRouteImport.update({
-  id: '/pricing',
-  path: '/pricing',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResetPasswordRoute = ResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SignupRoute = SignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TiktokClipMakerRoute = TiktokClipMakerRouteImport.update({
-  id: '/tiktok-clip-maker',
-  path: '/tiktok-clip-maker',
+const YoutubeShortsGeneratorRoute = YoutubeShortsGeneratorRouteImport.update({
+  id: '/youtube-shorts-generator',
+  path: '/youtube-shorts-generator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TrustRoute = TrustRouteImport.update({
@@ -114,77 +55,73 @@ const TrustRoute = TrustRouteImport.update({
   path: '/trust',
   getParentRoute: () => rootRouteImport,
 } as any)
-const YoutubeShortsGeneratorRoute = YoutubeShortsGeneratorRouteImport.update({
-  id: '/youtube-shorts-generator',
-  path: '/youtube-shorts-generator',
+const TiktokClipMakerRoute = TiktokClipMakerRouteImport.update({
+  id: '/tiktok-clip-maker',
+  path: '/tiktok-clip-maker',
   getParentRoute: () => rootRouteImport,
 } as any)
-const Char91DotmcpChar93ListToolsRoute =
-  Char91DotmcpChar93ListToolsRouteImport.update({
-    id: '/.mcp/list-tools',
-    path: '/.mcp/list-tools',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const Char91DotwellKnownChar93OauthProtectedResourceRoute =
-  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
-    id: '/.well-known/oauth-protected-resource',
-    path: '/.well-known/oauth-protected-resource',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const AppDashboardRoute = AppDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppProcessingRoute = AppProcessingRouteImport.update({
-  id: '/processing',
-  path: '/processing',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppResultsRoute = AppResultsRouteImport.update({
-  id: '/results',
-  path: '/results',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppUploadRoute = AppUploadRouteImport.update({
-  id: '/upload',
-  path: '/upload',
-  getParentRoute: () => AppRoute,
-} as any)
-const ApiVideoImportRoute = ApiVideoImportRouteImport.update({
-  id: '/api/video-import',
-  path: '/api/video-import',
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiVideoUploadRoute = ApiVideoUploadRouteImport.update({
-  id: '/api/video-upload',
-  path: '/api/video-upload',
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BillingCancelRoute = BillingCancelRouteImport.update({
-  id: '/billing/cancel',
-  path: '/billing/cancel',
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BillingSuccessRoute = BillingSuccessRouteImport.update({
-  id: '/billing/success',
-  path: '/billing/success',
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PodcastClipMakerRoute = PodcastClipMakerRouteImport.update({
+  id: '/podcast-clip-maker',
+  path: '/podcast-clip-maker',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InstagramReelsMakerRoute = InstagramReelsMakerRouteImport.update({
+  id: '/instagram-reels-maker',
+  path: '/instagram-reels-maker',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiClipGeneratorRoute = AiClipGeneratorRouteImport.update({
+  id: '/ai-clip-generator',
+  path: '/ai-clip-generator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogBestAiClipGenerators2026Route =
-  BlogBestAiClipGenerators2026RouteImport.update({
-    id: '/blog/best-ai-clip-generators-2026',
-    path: '/blog/best-ai-clip-generators-2026',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const BlogClipraVsOpusClipRoute = BlogClipraVsOpusClipRouteImport.update({
-  id: '/blog/clipra-vs-opus-clip',
-  path: '/blog/clipra-vs-opus-clip',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogHowToRepurposePodcastsIntoShortsRoute =
@@ -193,9 +130,77 @@ const BlogHowToRepurposePodcastsIntoShortsRoute =
     path: '/blog/how-to-repurpose-podcasts-into-shorts',
     getParentRoute: () => rootRouteImport,
   } as any)
-const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
-  id: '/.lovable/oauth/consent',
-  path: '/.lovable/oauth/consent',
+const BlogClipraVsOpusClipRoute = BlogClipraVsOpusClipRouteImport.update({
+  id: '/blog/clipra-vs-opus-clip',
+  path: '/blog/clipra-vs-opus-clip',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogBestAiClipGenerators2026Route =
+  BlogBestAiClipGenerators2026RouteImport.update({
+    id: '/blog/best-ai-clip-generators-2026',
+    path: '/blog/best-ai-clip-generators-2026',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const BillingSuccessRoute = BillingSuccessRouteImport.update({
+  id: '/billing/success',
+  path: '/billing/success',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BillingCancelRoute = BillingCancelRouteImport.update({
+  id: '/billing/cancel',
+  path: '/billing/cancel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiVideoUploadRoute = ApiVideoUploadRouteImport.update({
+  id: '/api/video-upload',
+  path: '/api/video-upload',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiVideoImportRoute = ApiVideoImportRouteImport.update({
+  id: '/api/video-import',
+  path: '/api/video-import',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppUploadRoute = AppUploadRouteImport.update({
+  id: '/upload',
+  path: '/upload',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppResultsRoute = AppResultsRouteImport.update({
+  id: '/results',
+  path: '/results',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProcessingRoute = AppProcessingRouteImport.update({
+  id: '/processing',
+  path: '/processing',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char91DotmcpChar93ListToolsRoute =
+  Char91DotmcpChar93ListToolsRouteImport.update({
+    id: '/.mcp/list-tools',
+    path: '/.mcp/list-tools',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicStripeWebhookRoute = ApiPublicStripeWebhookRouteImport.update({
+  id: '/api/public/stripe-webhook',
+  path: '/api/public/stripe-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiClipsSplatRoute = ApiClipsSplatRouteImport.update({
+  id: '/api/clips/$',
+  path: '/api/clips/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
@@ -204,24 +209,19 @@ const Char91DotmcpChar93InvokeToolToolRoute =
     path: '/.mcp/invoke-tool/$tool',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiClipsSplatRoute = ApiClipsSplatRouteImport.update({
-  id: '/api/clips/$',
-  path: '/api/clips/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicStripeWebhookRoute = ApiPublicStripeWebhookRouteImport.update({
-  id: '/api/public/stripe-webhook',
-  path: '/api/public/stripe-webhook',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
-  id: '/lovable/email/auth/preview',
-  path: '/lovable/email/auth/preview',
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LovableEmailAuthWebhookRoute = LovableEmailAuthWebhookRouteImport.update({
   id: '/lovable/email/auth/webhook',
   path: '/lovable/email/auth/webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
+  id: '/lovable/email/auth/preview',
+  path: '/lovable/email/auth/preview',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -483,95 +483,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_app': {
-      id: '/_app'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof AppRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ai-clip-generator': {
-      id: '/ai-clip-generator'
-      path: '/ai-clip-generator'
-      fullPath: '/ai-clip-generator'
-      preLoaderRoute: typeof AiClipGeneratorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/forgot-password': {
-      id: '/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/forgot-password'
-      preLoaderRoute: typeof ForgotPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/instagram-reels-maker': {
-      id: '/instagram-reels-maker'
-      path: '/instagram-reels-maker'
-      fullPath: '/instagram-reels-maker'
-      preLoaderRoute: typeof InstagramReelsMakerRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mcp': {
-      id: '/mcp'
-      path: '/mcp'
-      fullPath: '/mcp'
-      preLoaderRoute: typeof McpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/podcast-clip-maker': {
-      id: '/podcast-clip-maker'
-      path: '/podcast-clip-maker'
-      fullPath: '/podcast-clip-maker'
-      preLoaderRoute: typeof PodcastClipMakerRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pricing': {
-      id: '/pricing'
-      path: '/pricing'
-      fullPath: '/pricing'
-      preLoaderRoute: typeof PricingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reset-password': {
-      id: '/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/tiktok-clip-maker': {
-      id: '/tiktok-clip-maker'
-      path: '/tiktok-clip-maker'
-      fullPath: '/tiktok-clip-maker'
-      preLoaderRoute: typeof TiktokClipMakerRouteImport
+    '/youtube-shorts-generator': {
+      id: '/youtube-shorts-generator'
+      path: '/youtube-shorts-generator'
+      fullPath: '/youtube-shorts-generator'
+      preLoaderRoute: typeof YoutubeShortsGeneratorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/trust': {
@@ -581,81 +497,95 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrustRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/youtube-shorts-generator': {
-      id: '/youtube-shorts-generator'
-      path: '/youtube-shorts-generator'
-      fullPath: '/youtube-shorts-generator'
-      preLoaderRoute: typeof YoutubeShortsGeneratorRouteImport
+    '/tiktok-clip-maker': {
+      id: '/tiktok-clip-maker'
+      path: '/tiktok-clip-maker'
+      fullPath: '/tiktok-clip-maker'
+      preLoaderRoute: typeof TiktokClipMakerRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/.mcp/list-tools': {
-      id: '/.mcp/list-tools'
-      path: '/.mcp/list-tools'
-      fullPath: '/.mcp/list-tools'
-      preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/.well-known/oauth-protected-resource': {
-      id: '/.well-known/oauth-protected-resource'
-      path: '/.well-known/oauth-protected-resource'
-      fullPath: '/.well-known/oauth-protected-resource'
-      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app/dashboard': {
-      id: '/_app/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AppDashboardRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/processing': {
-      id: '/_app/processing'
-      path: '/processing'
-      fullPath: '/processing'
-      preLoaderRoute: typeof AppProcessingRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/results': {
-      id: '/_app/results'
-      path: '/results'
-      fullPath: '/results'
-      preLoaderRoute: typeof AppResultsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/upload': {
-      id: '/_app/upload'
-      path: '/upload'
-      fullPath: '/upload'
-      preLoaderRoute: typeof AppUploadRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/api/video-import': {
-      id: '/api/video-import'
-      path: '/api/video-import'
-      fullPath: '/api/video-import'
-      preLoaderRoute: typeof ApiVideoImportRouteImport
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/video-upload': {
-      id: '/api/video-upload'
-      path: '/api/video-upload'
-      fullPath: '/api/video-upload'
-      preLoaderRoute: typeof ApiVideoUploadRouteImport
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/billing/cancel': {
-      id: '/billing/cancel'
-      path: '/billing/cancel'
-      fullPath: '/billing/cancel'
-      preLoaderRoute: typeof BillingCancelRouteImport
+    '/podcast-clip-maker': {
+      id: '/podcast-clip-maker'
+      path: '/podcast-clip-maker'
+      fullPath: '/podcast-clip-maker'
+      preLoaderRoute: typeof PodcastClipMakerRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/billing/success': {
-      id: '/billing/success'
-      path: '/billing/success'
-      fullPath: '/billing/success'
-      preLoaderRoute: typeof BillingSuccessRouteImport
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/instagram-reels-maker': {
+      id: '/instagram-reels-maker'
+      path: '/instagram-reels-maker'
+      fullPath: '/instagram-reels-maker'
+      preLoaderRoute: typeof InstagramReelsMakerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-clip-generator': {
+      id: '/ai-clip-generator'
+      path: '/ai-clip-generator'
+      fullPath: '/ai-clip-generator'
+      preLoaderRoute: typeof AiClipGeneratorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/': {
@@ -665,11 +595,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog/best-ai-clip-generators-2026': {
-      id: '/blog/best-ai-clip-generators-2026'
-      path: '/blog/best-ai-clip-generators-2026'
-      fullPath: '/blog/best-ai-clip-generators-2026'
-      preLoaderRoute: typeof BlogBestAiClipGenerators2026RouteImport
+    '/blog/how-to-repurpose-podcasts-into-shorts': {
+      id: '/blog/how-to-repurpose-podcasts-into-shorts'
+      path: '/blog/how-to-repurpose-podcasts-into-shorts'
+      fullPath: '/blog/how-to-repurpose-podcasts-into-shorts'
+      preLoaderRoute: typeof BlogHowToRepurposePodcastsIntoShortsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/clipra-vs-opus-clip': {
@@ -679,32 +609,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogClipraVsOpusClipRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog/how-to-repurpose-podcasts-into-shorts': {
-      id: '/blog/how-to-repurpose-podcasts-into-shorts'
-      path: '/blog/how-to-repurpose-podcasts-into-shorts'
-      fullPath: '/blog/how-to-repurpose-podcasts-into-shorts'
-      preLoaderRoute: typeof BlogHowToRepurposePodcastsIntoShortsRouteImport
+    '/blog/best-ai-clip-generators-2026': {
+      id: '/blog/best-ai-clip-generators-2026'
+      path: '/blog/best-ai-clip-generators-2026'
+      fullPath: '/blog/best-ai-clip-generators-2026'
+      preLoaderRoute: typeof BlogBestAiClipGenerators2026RouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/.lovable/oauth/consent': {
-      id: '/.lovable/oauth/consent'
-      path: '/.lovable/oauth/consent'
-      fullPath: '/.lovable/oauth/consent'
-      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+    '/billing/success': {
+      id: '/billing/success'
+      path: '/billing/success'
+      fullPath: '/billing/success'
+      preLoaderRoute: typeof BillingSuccessRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/.mcp/invoke-tool/$tool': {
-      id: '/.mcp/invoke-tool/$tool'
-      path: '/.mcp/invoke-tool/$tool'
-      fullPath: '/.mcp/invoke-tool/$tool'
-      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
+    '/billing/cancel': {
+      id: '/billing/cancel'
+      path: '/billing/cancel'
+      fullPath: '/billing/cancel'
+      preLoaderRoute: typeof BillingCancelRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/clips/$': {
-      id: '/api/clips/$'
-      path: '/api/clips/$'
-      fullPath: '/api/clips/$'
-      preLoaderRoute: typeof ApiClipsSplatRouteImport
+    '/api/video-upload': {
+      id: '/api/video-upload'
+      path: '/api/video-upload'
+      fullPath: '/api/video-upload'
+      preLoaderRoute: typeof ApiVideoUploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/video-import': {
+      id: '/api/video-import'
+      path: '/api/video-import'
+      fullPath: '/api/video-import'
+      preLoaderRoute: typeof ApiVideoImportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/upload': {
+      id: '/_app/upload'
+      path: '/upload'
+      fullPath: '/upload'
+      preLoaderRoute: typeof AppUploadRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/results': {
+      id: '/_app/results'
+      path: '/results'
+      fullPath: '/results'
+      preLoaderRoute: typeof AppResultsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/processing': {
+      id: '/_app/processing'
+      path: '/processing'
+      fullPath: '/processing'
+      preLoaderRoute: typeof AppProcessingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.mcp/list-tools': {
+      id: '/.mcp/list-tools'
+      path: '/.mcp/list-tools'
+      fullPath: '/.mcp/list-tools'
+      preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/stripe-webhook': {
@@ -714,11 +693,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicStripeWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/lovable/email/auth/preview': {
-      id: '/lovable/email/auth/preview'
-      path: '/lovable/email/auth/preview'
-      fullPath: '/lovable/email/auth/preview'
-      preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
+    '/api/clips/$': {
+      id: '/api/clips/$'
+      path: '/api/clips/$'
+      fullPath: '/api/clips/$'
+      preLoaderRoute: typeof ApiClipsSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.mcp/invoke-tool/$tool': {
+      id: '/.mcp/invoke-tool/$tool'
+      path: '/.mcp/invoke-tool/$tool'
+      fullPath: '/.mcp/invoke-tool/$tool'
+      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lovable/email/auth/webhook': {
@@ -726,6 +719,13 @@ declare module '@tanstack/react-router' {
       path: '/lovable/email/auth/webhook'
       fullPath: '/lovable/email/auth/webhook'
       preLoaderRoute: typeof LovableEmailAuthWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/auth/preview': {
+      id: '/lovable/email/auth/preview'
+      path: '/lovable/email/auth/preview'
+      fullPath: '/lovable/email/auth/preview'
+      preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
