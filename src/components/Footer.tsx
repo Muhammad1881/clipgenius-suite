@@ -18,7 +18,7 @@ export function Footer() {
           { t: "Product", l: [["Pricing", "/pricing"], ["Sign up", "/signup"], ["Sign in", "/login"]] },
           { t: "Tools", l: [["AI Clip Generator", "/ai-clip-generator"], ["YouTube Shorts Generator", "/youtube-shorts-generator"], ["Podcast Clip Maker", "/podcast-clip-maker"], ["TikTok Clip Maker", "/tiktok-clip-maker"], ["Instagram Reels Maker", "/instagram-reels-maker"]] },
           { t: "Resources", l: [["Blog", "/blog"], ["Clipra vs Opus Clip", "/blog/clipra-vs-opus-clip"], ["Best AI clip tools", "/blog/best-ai-clip-generators-2026"], ["Podcast → Shorts guide", "/blog/how-to-repurpose-podcasts-into-shorts"]] },
-          { t: "Company", l: [["Trust & Security", "/trust"], ["Contact", "mailto:muhammad.bhatti1616@gmail.com"]] },
+          { t: "Company", l: [["Trust & Security", "/trust"], ["Contact", "mailto:support@theclipra.com"]] },
         ].map((c) => (
           <div key={c.t}>
             <div className="text-sm font-semibold mb-3">{c.t}</div>

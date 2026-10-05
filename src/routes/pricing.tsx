@@ -37,7 +37,7 @@ function Pricing() {
         <div className="mt-16 sm:mt-20 glass rounded-3xl p-8 sm:p-10 text-center max-w-3xl mx-auto border-gradient">
           <h2 className="text-2xl font-semibold tracking-tight">Need something custom?</h2>
           <p className="text-muted-foreground mt-2 leading-relaxed">Enterprise teams, education and large agencies get custom pricing and dedicated support.</p>
-          <a href="mailto:sales@clipra.ai" className="btn-premium inline-block mt-5 rounded-xl px-6 py-2.5 text-sm font-medium">
+          <a href="mailto:support@theclipra.com" className="btn-premium inline-block mt-5 rounded-xl px-6 py-2.5 text-sm font-medium">
             Talk to sales
           </a>
         </div>
