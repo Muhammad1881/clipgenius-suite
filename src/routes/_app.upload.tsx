@@ -136,9 +136,8 @@ function UploadPage() {
   const { profile } = useProfile();
   const consume = useServerFn(consumeMinutes);
   const refund = useServerFn(refundMinutes);
-  const planKey: PlanKey = (["free", "starter", "creator"] as const).includes(profile?.plan as PlanKey)
-    ? (profile!.plan as PlanKey)
-    : "free";
+  const profilePlan = profile?.plan;
+  const planKey: PlanKey = profilePlan === "starter" || profilePlan === "creator" ? profilePlan : "free";
 
   const refetchProfile = async () => {
     if (typeof window !== "undefined") window.dispatchEvent(new Event("profile:refresh"));
