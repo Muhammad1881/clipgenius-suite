@@ -29,7 +29,7 @@ export function Navbar() {
     { href: "/#features", label: "Features" },
     { href: "/pricing", label: "Pricing", to: true },
     { href: "/#faq", label: "FAQ" },
-    { href: "mailto:muhammad.bhatti1616@gmail.com", label: "Contact us" },
+    { href: "mailto:support@theclipra.com", label: "Contact us" },
   ];
 
   return (
