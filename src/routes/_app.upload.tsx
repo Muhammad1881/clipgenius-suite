@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Upload as UploadIcon, FileVideo, Link2, X, Sparkles, Loader2, Download, TrendingUp, AlertCircle, Lock } from "lucide-react";
+import { Upload as UploadIcon, FileVideo, Link2, X, Sparkles, Loader2, Download, TrendingUp, AlertCircle, Lock, FileText, Scissors, Captions, Hash, ScanLine, Languages } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -20,6 +20,8 @@ export const Route = createFileRoute("/_app/upload")({
       { name: "description", content: "Upload a long video to Clipra and let AI clip the most viral moments with captions." },
       { property: "og:title", content: "Upload Video — Clipra" },
       { property: "og:description", content: "Drop a video or paste a link — Clipra finds the most viral moments and clips them for you." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -98,6 +100,23 @@ const TARGET_LANGUAGES = [
   "Hindi", "Urdu", "Arabic", "Turkish", "Russian", "Japanese", "Korean", "Chinese",
 ];
 
+const PAID_PROCESSING_STEPS = {
+  starter: [
+    { icon: FileText, label: "Reading the conversation", detail: "Building a precise transcript" },
+    { icon: TrendingUp, label: "Finding viral moments", detail: "Looking for hooks and standout moments" },
+    { icon: Scissors, label: "Creating vertical clips", detail: "Cutting polished 9:16 clips in 1080p" },
+    { icon: Captions, label: "Styling captions", detail: "Preparing clear, engaging subtitles" },
+    { icon: Hash, label: "Preparing social copy", detail: "Generating captions and relevant hashtags" },
+  ],
+  creator: [
+    { icon: FileText, label: "Understanding your video", detail: "Mapping speakers, topics, and key moments" },
+    { icon: TrendingUp, label: "Finding viral moments", detail: "Scoring hooks, emotion, and audience value" },
+    { icon: ScanLine, label: "AI reframing speakers", detail: "Tracking the action for a natural 9:16 frame" },
+    { icon: Captions, label: "Styling captions", detail: "Creating polished, word-perfect subtitles" },
+    { icon: Hash, label: "Preparing social copy", detail: "Generating captions and relevant hashtags" },
+  ],
+} as const;
+
 
 function UploadPage() {
   const [drag, setDrag] = useState(false);
@@ -107,6 +126,7 @@ function UploadPage() {
   const [progress, setProgress] = useState(0);
   const [phase, setPhase] = useState<Phase>("idle");
   const [stage, setStage] = useState<string | null>(null);
+  const [waitingStep, setWaitingStep] = useState(0);
 
   const [error, setError] = useState<string | null>(null);
   const [clips, setClips] = useState<Clip[]>([]);
@@ -116,9 +136,8 @@ function UploadPage() {
   const { profile } = useProfile();
   const consume = useServerFn(consumeMinutes);
   const refund = useServerFn(refundMinutes);
-  const planKey: PlanKey = (["free", "starter", "creator"] as const).includes(profile?.plan as PlanKey)
-    ? (profile!.plan as PlanKey)
-    : "free";
+  const profilePlan = profile?.plan;
+  const planKey: PlanKey = profilePlan === "starter" || profilePlan === "creator" ? profilePlan : "free";
 
   const refetchProfile = async () => {
     if (typeof window !== "undefined") window.dispatchEvent(new Event("profile:refresh"));
@@ -126,6 +145,19 @@ function UploadPage() {
 
   const remainingMinutes = profile ? profile.monthly_minutes - profile.minutes_used : 0;
   const busy = phase === "uploading" || phase === "processing";
+
+  const processingSteps = planKey === "creator" ? PAID_PROCESSING_STEPS.creator : PAID_PROCESSING_STEPS.starter;
+
+  useEffect(() => {
+    if (phase !== "processing" || planKey === "free") {
+      setWaitingStep(0);
+      return;
+    }
+    const timer = window.setInterval(() => {
+      setWaitingStep((current) => (current + 1) % processingSteps.length);
+    }, 4500);
+    return () => window.clearInterval(timer);
+  }, [phase, planKey, processingSteps.length]);
 
 
   // Cancellation / refund bookkeeping
@@ -275,6 +307,7 @@ function UploadPage() {
   const runJob = useCallback(async (jobId: string, sourceName: string, deductOnFinish: boolean) => {
     jobIdRef.current = jobId;
     setPhase("processing");
+    setProgress(0);
     setStage("Queued…");
     const startedAt = Date.now();
     const MAX_WAIT_MS = 30 * 60 * 1000;
@@ -516,7 +549,13 @@ function UploadPage() {
     xhr.upload.onprogress = (e) => {
       if (e.lengthComputable) setProgress(Math.round((e.loaded / e.total) * 100));
     };
-    xhr.upload.onload = () => { if (!cancelledRef.current) setPhase("processing"); };
+    xhr.upload.onload = () => {
+      if (!cancelledRef.current) {
+        setProgress(0);
+        setStage("Queued…");
+        setPhase("processing");
+      }
+    };
     xhr.onabort = () => { /* handled by cancelJob */ };
 
 
@@ -724,18 +763,16 @@ function UploadPage() {
           </div>
 
 
-          {(phase === "uploading" || phase === "processing") && (
+          {phase === "uploading" && (
             <div className="mt-5">
               <div className="flex items-center justify-between text-xs mb-2">
-                <span className="text-muted-foreground">
-                  {phase === "uploading" ? "Uploading..." : (stage || "Processing on server...")}
-                </span>
-                <span className="text-foreground font-medium">{progress ? `${progress}%` : ""}</span>
+                <span className="text-muted-foreground">Uploading securely…</span>
+                <span className="text-foreground font-medium">{progress}%</span>
               </div>
               <div className="h-2 rounded-full bg-white/10 overflow-hidden">
                 <div
-                  className={`h-full bg-gradient-vivid transition-all duration-300 ${phase === "processing" && !progress ? "animate-pulse w-full" : ""}`}
-                  style={{ width: progress ? `${progress}%` : undefined }}
+                  className="h-full bg-gradient-vivid transition-all duration-300"
+                  style={{ width: `${progress}%` }}
                 />
 
               </div>
@@ -789,15 +826,62 @@ function UploadPage() {
       )}
 
       {phase === "processing" && (
-        <div className="mt-8 glass rounded-2xl p-8 text-center border-gradient">
+        <div className="mt-8 glass rounded-2xl p-6 sm:p-8 border-gradient" aria-live="polite">
           <div className="relative mx-auto size-20 grid place-items-center">
             <div className="absolute inset-0 rounded-full bg-gradient-vivid opacity-40 blur-2xl animate-pulse-glow" />
             <div className="relative size-14 rounded-2xl bg-gradient-vivid grid place-items-center glow">
               <Loader2 className="size-6 text-primary-foreground animate-spin" />
             </div>
           </div>
-          <h2 className="text-lg font-semibold mt-5">Finding viral moments…</h2>
-          <p className="text-sm text-muted-foreground mt-1">{stage ? `${stage}${progress ? ` · ${progress}%` : ""}` : "Our AI is analyzing your video. This may take a few minutes."}</p>
+          {planKey === "free" ? (
+            <div className="text-center">
+              <h2 className="text-lg font-semibold mt-5">Waiting for your clips…</h2>
+              <p className="text-sm text-muted-foreground mt-1 max-w-md mx-auto">
+                Your video is safely processing on the server. Keep this page open and your clips will appear here when ready.
+              </p>
+              <div className="mt-5 h-1.5 max-w-sm mx-auto overflow-hidden rounded-full bg-white/10">
+                <div className="h-full w-1/3 rounded-full bg-gradient-vivid animate-processing-wait" />
+              </div>
+            </div>
+          ) : (
+            <div className="mt-5">
+              <div className="text-center">
+                <div className="text-[10px] uppercase tracking-widest text-accent">
+                  {planKey === "creator" ? "Creator AI workflow" : "Starter workflow"}
+                </div>
+                <h2 className="text-lg font-semibold mt-1">{processingSteps[waitingStep]?.label}</h2>
+                <p className="text-sm text-muted-foreground mt-1">{processingSteps[waitingStep]?.detail}</p>
+                {translate && (
+                  <div className="mt-2 inline-flex items-center gap-1.5 text-xs text-accent">
+                    <Languages className="size-3.5" /> Translating subtitles to {targetLanguage}
+                  </div>
+                )}
+              </div>
+              <div className="mt-6 grid gap-2 sm:grid-cols-2">
+                {processingSteps.map((item, index) => {
+                  const Icon = item.icon;
+                  const active = index === waitingStep;
+                  return (
+                    <div
+                      key={item.label}
+                      className={`flex min-h-14 items-center gap-3 rounded-lg border px-3 py-2.5 transition-all duration-500 ${active ? "border-primary/40 bg-primary/10 shadow-card" : "border-white/5 bg-white/[0.02] opacity-55"}`}
+                    >
+                      <div className={`grid size-8 shrink-0 place-items-center rounded-lg ${active ? "bg-gradient-vivid text-primary-foreground" : "bg-white/5 text-muted-foreground"}`}>
+                        {active ? <Loader2 className="size-4 animate-spin" /> : <Icon className="size-4" />}
+                      </div>
+                      <div className="min-w-0 text-left">
+                        <div className="text-xs font-medium">{item.label}</div>
+                        <div className="text-[11px] text-muted-foreground truncate">{item.detail}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <p className="mt-4 text-center text-xs text-muted-foreground">
+                {stage && stage !== "Processing…" ? `Server status: ${stage}` : "This can take a few minutes. Your video keeps processing while you wait."}
+              </p>
+            </div>
+          )}
           <Button
             type="button"
             variant="outline"
