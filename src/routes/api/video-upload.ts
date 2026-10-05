@@ -55,6 +55,18 @@ export const Route = createFileRoute("/api/video-upload")({
             );
           }
 
+          if (upstream.status >= 500) {
+            const text = await upstream.text().catch(() => "");
+            console.error(`Video processor returned ${upstream.status}`, text.slice(0, 500));
+            return Response.json(
+              {
+                error: "The video server had a problem processing this upload. Please try again in a moment.",
+                detail: `Processor status ${upstream.status}: ${text.slice(0, 200)}`,
+              },
+              { status: 502 },
+            );
+          }
+
           const headers = new Headers();
           headers.set("content-type", upstream.headers.get("content-type") ?? "application/json");
           headers.set("cache-control", "no-store");
