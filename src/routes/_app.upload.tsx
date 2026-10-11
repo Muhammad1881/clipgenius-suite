@@ -331,20 +331,29 @@ function UploadPage() {
               job.result?.input_duration ??
               0,
             );
-            // If the processor doesn't report a duration, charge the plan's max
-            // upload length — the same worst case a file upload would reserve.
-            const minutes = secs > 0
-              ? Math.min(240, Math.ceil(secs / 60))
-              : PLAN_RULES[planKey].maxInputMinutes;
+            // No reported duration: estimate from the furthest clip end time,
+            // capped at the plan max. When the length is truly unknown, never
+            // charge more than the user has left, so finished clips aren't lost.
+            const clipEnd = arr.reduce((m, c) => {
+              const e = Number((c as Record<string, unknown>).end ?? (c as Record<string, unknown>).end_time ?? 0);
+              return Number.isFinite(e) && e > m ? e : m;
+            }, 0);
+            const knownSecs = secs > 0 ? secs : clipEnd;
+            const planMax = PLAN_RULES[planKey].maxInputMinutes;
+            const minutes = knownSecs > 0
+              ? Math.min(240, Math.max(1, Math.ceil(knownSecs / 60)))
+              : Math.max(1, Math.min(planMax, remainingMinutes));
             let paid = false;
+            let chargeFailed = false;
             try {
               const r = await consume({ data: { minutes } });
               paid = !!r.ok;
               await refetchProfile();
             } catch (e) {
+              chargeFailed = true;
               console.error("Failed to deduct minutes for imported video:", e);
             }
-            if (!paid) {
+            if (!paid && !chargeFailed) {
               setError(`This video needed ${minutes} minutes, but your plan doesn't have enough left. Upgrade your plan and import it again — you were not charged.`);
               setStage(null);
               setPhase("error");
@@ -384,7 +393,7 @@ function UploadPage() {
     };
 
     poll();
-  }, [consume, finish, releaseReservation, planKey, refetchProfile]);
+  }, [consume, finish, releaseReservation, planKey, refetchProfile, remainingMinutes]);
 
   const importFromUrl = async () => {
     if (busy) return;
