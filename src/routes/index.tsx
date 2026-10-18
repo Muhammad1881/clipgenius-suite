@@ -84,7 +84,6 @@ function Landing() {
       {/* Ambient Canvas & Textures */}
       <ParticleCanvas />
 
-      {/* Live Social Proof Banner (Bottom-Left) */}
 
       {/* Top Announcement Bar */}
       <TopAnnouncementBar />
