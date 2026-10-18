@@ -5,8 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --radius: 1rem;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -15,7 +15,16 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
 
-  --color-background: #18042f;
+  --color-bgbase: #07080e;
+  --color-bgpanel: #0f111a;
+  --color-bgelevated: #171a26;
+  --color-ultraviolet: #8b5cf6;
+  --color-electricaqua: #06b6d4;
+  --color-emeraldlight: #10b981;
+  --color-borderline: rgba(255, 255, 255, 0.07);
+  --color-borderglow: rgba(255, 255, 255, 0.15);
+
+  --color-background: #07080e;
   --color-foreground: #f7f8fc;
   --color-card: #220b3d;
   --color-card-foreground: #f7f8fc;
@@ -377,7 +386,170 @@
   .animate-aurora-breathe,
   .animate-tilt,
   .animate-gradient-shift,
+  .animate-marquee,
   .deck-sheen,
   .aurora-streak { animation: none !important; }
   html { scroll-behavior: auto; }
 }
+
+/* ==========================================================================
+   Authentic Clipra Landing Page Utilities & Effects
+   ========================================================================== */
+
+#particle-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noise)"/%3E%3C/svg%3E');
+}
+
+.glass-panel {
+  background: rgba(15, 17, 26, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.glow-card {
+  position: relative;
+  background: #0f111a;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 1.25rem;
+  overflow: hidden;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.glow-card::before {
+  content: "";
+  position: absolute;
+  top: var(--mouse-y, -1000px);
+  left: var(--mouse-x, -1000px);
+  width: 550px;
+  height: 550px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle closest-side, rgba(139, 92, 246, 0.16), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.glow-card:hover::before {
+  opacity: 1;
+}
+
+.glow-card:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.glow-content {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+}
+
+.animated-border-wrap {
+  position: relative;
+  border-radius: 1.25rem;
+  padding: 1.5px;
+  overflow: hidden;
+}
+
+.animated-border-wrap::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 0deg, transparent 0%, transparent 60%, #8b5cf6 80%, #06b6d4 100%);
+  animation: spin 5s linear infinite;
+  transform-origin: 0 0;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+.animated-border-inner {
+  background: #0d0f18;
+  border-radius: 1.2rem;
+  position: relative;
+  z-index: 1;
+  height: 100%;
+}
+
+.caption-hormozi {
+  font-family: 'Space Grotesk', sans-serif;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: #fbbf24;
+  text-shadow: 2px 2px 0 #000;
+  transform: rotate(-1.5deg);
+}
+
+.caption-mrbeast {
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  color: #fff;
+  -webkit-text-stroke: 1.5px #000;
+  text-shadow: 0 4px 0 #000;
+}
+
+.caption-minimal {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 6px 14px;
+  border-radius: 8px;
+  backdrop-filter: blur(8px);
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 35s linear infinite;
+}
+
+/* Clipra SaaS Dashboard UI Styles */
+.shadow-neon-violet {
+  box-shadow: 0 0 25px -5px rgba(139, 92, 246, 0.35);
+}
+.shadow-neon-aqua {
+  box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.35);
+}
+.shadow-inner-glass {
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
+}
+.ambient-glow {
+  position: fixed;
+  pointer-events: none;
+  border-radius: 9999px;
+  filter: blur(140px);
+  opacity: 0.18;
+  z-index: 0;
+}
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(1000%); }
+}
+.animate-scan {
+  animation: scan 4s linear infinite;
+}
+
+
