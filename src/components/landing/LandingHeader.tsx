@@ -59,18 +59,9 @@ export function LandingHeader() {
   const [authed, setAuthed] = useState(false);
 
   useEffect(() => {
-    const check = () => {
-      if (isGuestMode()) {
-        setAuthed(true);
-        return;
-      }
-      supabase.auth.getSession().then(({ data }) => {
-        setAuthed(!!data.session || isGuestMode());
-      });
-    };
-    check();
-    window.addEventListener("guest:auth:change", check);
-    return () => window.removeEventListener("guest:auth:change", check);
+    supabase.auth.getSession().then(({ data }) => setAuthed(!!data.session));
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setAuthed(!!s));
+    return () => sub.subscription.unsubscribe();
   }, []);
 
   return (
