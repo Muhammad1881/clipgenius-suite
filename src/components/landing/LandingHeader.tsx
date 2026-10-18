@@ -1,3 +1,4 @@
+import logo from "@/assets/logo.png";
 import { useState, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import {
@@ -12,7 +13,6 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import { isGuestMode } from "@/lib/guest-auth";
 import { supabase } from "@/integrations/supabase/client";
 
 const tools = [
@@ -71,7 +71,7 @@ export function LandingHeader() {
         <Link to="/" className="flex items-center gap-2.5 group">
           <div className="relative flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-[#8B5CF6] to-[#06B6D4] p-[1px] shadow-lg shadow-[#8B5CF6]/20">
             <div className="w-full h-full bg-[#0F111A] rounded-xl flex items-center justify-center group-hover:bg-transparent transition-colors duration-300">
-              <Scissors className="w-4 h-4 text-white" />
+              <img src={logo} alt="Clipra logo" className="w-full h-full object-contain rounded-xl" />
             </div>
           </div>
           <div className="flex flex-col">

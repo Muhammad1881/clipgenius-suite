@@ -1,3 +1,4 @@
+import logo from "@/assets/logo.png";
 import { Link } from "@tanstack/react-router";
 import { Scissors } from "lucide-react";
 
@@ -11,7 +12,7 @@ export function LandingFooter() {
             <Link to="/" className="flex items-center gap-2.5 mb-4 group">
               <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#8B5CF6] to-[#06B6D4] p-[1px]">
                 <div className="w-full h-full bg-[#040508] rounded-xl flex items-center justify-center">
-                  <Scissors className="w-4 h-4 text-white" />
+                  <img src={logo} alt="Clipra logo" className="w-full h-full object-contain rounded-xl" />
                 </div>
               </div>
               <span className="font-display font-bold text-xl text-white">Clipra</span>
