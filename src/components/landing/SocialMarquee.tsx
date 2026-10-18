@@ -9,9 +9,9 @@ const marqueeItems = [
   },
   {
     type: "stat",
-    val: "3.8M+",
+    val: "9:16",
     color: "text-white",
-    desc: "Clips Exported",
+    desc: "Vertical Ready",
   },
   {
     type: "label",
@@ -21,9 +21,9 @@ const marqueeItems = [
   },
   {
     type: "stat",
-    val: "97%",
+    val: "30+",
     color: "text-[#10B981]",
-    desc: "Viral Retention",
+    desc: "Caption Languages",
   },
   {
     type: "label",
@@ -33,9 +33,9 @@ const marqueeItems = [
   },
   {
     type: "stat",
-    val: "14.2x",
+    val: "1080p",
     color: "text-[#06B6D4]",
-    desc: "Faster Than Manual",
+    desc: "Paid Exports",
   },
   {
     type: "label",
@@ -50,7 +50,7 @@ export function SocialMarquee() {
     <section className="border-y border-white/[0.07] bg-[#0F111A]/40 py-8 overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-6 mb-4 flex justify-between items-center">
         <p className="text-xs text-zinc-500 font-mono tracking-wider uppercase">
-          TRUSTED BY PODCASTERS, CREATORS & EDITORIAL TEAMS WORLDWIDE
+          BUILT FOR PODCASTERS, CREATORS & EDITORIAL TEAMS
         </p>
         <div className="hidden sm:flex items-center gap-2 text-xs text-zinc-400">
           <ShieldCheck className="w-4 h-4 text-[#10B981]" />
