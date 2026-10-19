@@ -28,7 +28,7 @@ function Page() {
       bullets={[
         "Smart viral scoring on every moment",
         "Auto 9:16 reframing with face tracking",
-        "Animated captions in 30+ languages",
+        "Animated captions in multiple languages",
         "Ready-to-post TikTok, Reels & Shorts",
         "Hook-first titles and hashtags",
         INPUT_LIMIT_SUMMARY,

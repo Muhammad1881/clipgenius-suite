@@ -31,7 +31,7 @@ const faqs = [
   },
   {
     q: "Do you support other languages?",
-    a: "Yes, Clipra supports speech transcription and animated subtitles in 30+ languages including Spanish, French, German, Italian, Portuguese, Hindi, Japanese, and Mandarin, along with instant translation into English.",
+    a: "Yes, Clipra supports speech transcription and animated subtitles in multiple languages including Spanish, French, German, Italian, Portuguese, Hindi, Japanese, and Mandarin, along with instant translation into English.",
   },
   {
     q: "Is there a free trial?",

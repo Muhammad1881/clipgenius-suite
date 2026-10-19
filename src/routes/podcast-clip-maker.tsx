@@ -7,7 +7,7 @@ const TITLE = "Podcast Clip Maker — AI Clips from Podcast Episodes | Clipra";
 const DESCRIPTION = "Repurpose podcast episodes into viral short clips. Clipra's AI finds the best soundbites, adds captions, and reframes for TikTok, Reels and Shorts.";
 
 const faqs = [
-  { q: "Can Clipra handle audio-only podcasts?", a: "Clipra currently accepts video files and direct video file links. For an audio-only episode, create a video file with your own image in another editor before uploading." },
+  { q: "Can Clipra handle audio-only podcasts?", a: "Clipra currently accepts video files. For an audio-only episode, create a video file with your own image in another editor before uploading." },
   { q: "How does it pick the best podcast moments?", a: "Clipra analyses transcript sentiment, story arcs, and hook strength to find the soundbites most likely to perform on short-form." },
   { q: "Does it work with multi-speaker podcasts?", a: "Yes. Speakers are transcribed separately and captions label each one when needed." },
   { q: "Can I edit clips before posting?", a: "Yes — trim, swap captions, change framing or language before exporting." },
@@ -28,8 +28,8 @@ function Page() {
       bullets={[
         "Built for long-form interview podcasts",
         "Multi-speaker transcription and labels",
-        "Video file uploads and direct video file links",
-        "Captions in 30+ languages",
+        "Video file uploads",
+        "Captions in multiple languages",
         "Hook detection picks moments that stop the scroll",
         "Export 10+ clips from a single episode",
       ]}

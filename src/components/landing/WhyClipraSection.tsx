@@ -95,12 +95,12 @@ export function WhyClipraSection() {
             </div>
           </GlowCard>
 
-          {/* Feature 3: Captions in 30+ Languages */}
+          {/* Feature 3: Captions in Multiple Languages */}
           <GlowCard className="p-8">
             <div className="flex flex-col justify-between h-full">
               <div className="h-44 bg-black/40 border border-zinc-800 rounded-2xl mb-6 p-4 flex flex-col justify-center items-center text-center">
                 <div className="caption-hormozi text-xl mb-2 text-[#FBBF24]">
-                  30+ LANGUAGES 🌍
+                  MULTILINGUAL 🌍
                 </div>
                 <div className="text-xs text-zinc-400 font-mono bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">
                   English · Español · Deutsch · Français · हिन्दी
@@ -109,7 +109,7 @@ export function WhyClipraSection() {
               <div>
                 <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
                   <Languages className="w-5 h-5 text-[#10B981]" />
-                  Captions in 30+ languages
+                  Captions in multiple languages
                 </h3>
                 <p className="text-zinc-400 text-sm leading-relaxed">
                   Animated, burn-in subtitles in your language — or
