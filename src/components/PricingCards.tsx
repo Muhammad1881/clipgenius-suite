@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useProfile } from "@/hooks/useProfile";
 import { createCheckoutSession, type PlanKey } from "@/lib/billing.functions";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { FREE_START_PATH, PROJECT_RETENTION_HOURS } from "@/lib/public-offer";
 
 type Feature = { label: string; tip?: string; locked?: boolean };
 type FeatureGroup = { label: string; items: Feature[]; note?: string };
@@ -52,7 +53,7 @@ const plans: Plan[] = [
           { label: "AI Viral Moment Detection", tip: TIPS.viral },
           { label: "Automatic Subtitles" },
           { label: "Vertical 9:16 Smart Center Crop", tip: TIPS.crop },
-          { label: "7-Day Project History" },
+          { label: `${PROJECT_RETENTION_HOURS}-Hour Project History` },
         ],
       },
       {
@@ -83,7 +84,7 @@ const plans: Plan[] = [
           { label: "1080p Full HD Exports" },
           { label: "No Watermark" },
           { label: "Vertical 9:16 Smart Center Crop", tip: TIPS.crop },
-          { label: "30-Day Project History" },
+          { label: `${PROJECT_RETENTION_HOURS}-Hour Project History` },
         ],
       },
       {
@@ -127,7 +128,7 @@ const plans: Plan[] = [
           { label: "Up to 10 clips per video" },
           { label: "1080p Full HD Exports" },
           { label: "No Watermark" },
-          { label: "Unlimited Project History" },
+          { label: `${PROJECT_RETENTION_HOURS}-Hour Project History` },
           { label: "Priority Processing", tip: TIPS.priority },
         ],
       },
@@ -282,7 +283,7 @@ export function PricingCards() {
                 </Button>
               ) : p.planKey ? (
                 <Button
-                  onClick={() => handleUpgrade(p.planKey!)}
+                  onClick={() => { if (p.planKey) void handleUpgrade(p.planKey); }}
                   disabled={loadingPlan !== null}
                   className={`w-full mt-6 rounded-xl h-11 ${
                     p.featured ? "btn-premium" : "btn-premium-soft"
@@ -301,7 +302,7 @@ export function PricingCards() {
                     p.featured ? "btn-premium" : "btn-premium-soft"
                   }`}
                 >
-                  <Link to="/dashboard">{p.cta}</Link>
+                  <Link to={FREE_START_PATH}>{p.cta}</Link>
                 </Button>
               )}
 

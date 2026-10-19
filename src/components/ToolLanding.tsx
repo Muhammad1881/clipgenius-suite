@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { INPUT_LIMIT_SUMMARY, STORAGE_SUMMARY, UPLOAD_OPTIONS } from "@/lib/public-offer";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ export function ToolLanding(p: ToolLandingProps) {
             {p.h1.split(p.highlight)[1]}
           </h1>
           <p className="mt-5 text-lg text-muted-foreground max-w-2xl">{p.intro}</p>
+          <p className="mt-4 text-sm text-muted-foreground max-w-2xl">{UPLOAD_OPTIONS} {INPUT_LIMIT_SUMMARY} {STORAGE_SUMMARY}</p>
           <div className="mt-7 flex flex-wrap gap-3">
             <Button asChild size="lg" className="btn-premium rounded-xl h-12 px-6">
               <Link to="/signup">Start free <ArrowRight className="ml-1 size-4" /></Link>
@@ -114,6 +116,7 @@ export function toolLandingHead(opts: {
       { property: "og:description", content: opts.description },
       { property: "og:type", content: "website" },
       { property: "og:url", content: opts.url },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: opts.title },
       { name: "twitter:description", content: opts.description },
     ],

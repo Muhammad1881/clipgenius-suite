@@ -32,7 +32,7 @@ export function PreFooterCta() {
             type="text"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            placeholder="Paste YouTube link or drag video..."
+            placeholder="Paste a direct video file link..."
             className="flex-grow bg-black/70 border border-zinc-700 rounded-xl px-5 py-3.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-[#06B6D4] transition-colors font-mono"
           />
           <button
