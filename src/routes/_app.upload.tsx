@@ -663,7 +663,7 @@ function UploadPage() {
             <Input
               value={videoUrl}
               onChange={(e) => { setVideoUrl(e.target.value); if (error && !file) setError(null); }}
-              placeholder="Paste YouTube or video URL"
+              placeholder="Paste a direct video file URL"
               disabled={busy}
               className="pl-9 glass border-white/10"
             />

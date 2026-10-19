@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { FREE_START_PATH } from "@/lib/public-offer";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -87,7 +88,7 @@ export function HeroSection() {
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             <Link
-              to="/signup"
+              to={FREE_START_PATH}
               className="flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-white text-black font-bold text-base hover:scale-105 hover:bg-zinc-100 transition-all shadow-[0_0_35px_rgba(255,255,255,0.18)] group"
             >
               Start creating free{" "}

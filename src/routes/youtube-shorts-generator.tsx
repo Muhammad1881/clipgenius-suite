@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ToolLanding, toolLandingHead } from "@/components/ToolLanding";
+import { INPUT_LIMIT_SUMMARY } from "@/lib/public-offer";
 
 const URL_ = "https://theclipra.com/youtube-shorts-generator";
 const TITLE = "YouTube Shorts Generator — AI Clips from Long Videos | Clipra";
@@ -33,7 +34,7 @@ function Page() {
         "Works with podcast, vlog, gaming and tutorial footage",
       ]}
       steps={[
-        { t: "Upload your long video", d: "Drag in any video up to 4 hours." },
+        { t: "Upload your long video", d: `Upload your video file. ${INPUT_LIMIT_SUMMARY}` },
         { t: "AI picks Shorts", d: "Clipra scores viral moments and clips them." },
         { t: "Upload to YouTube", d: "Download vertical Shorts with captions baked in." },
       ]}

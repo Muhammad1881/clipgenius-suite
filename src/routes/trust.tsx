@@ -131,10 +131,10 @@ function TrustPage() {
             <p>
               Contact:{" "}
               <a
-                href="mailto:security@theclipra.com"
+                href="mailto:support@theclipra.com"
                 className="text-primary underline-offset-4 hover:underline"
               >
-                security@theclipra.com
+                support@theclipra.com
               </a>
             </p>
           </Section>

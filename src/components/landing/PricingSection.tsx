@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { PROJECT_RETENTION_HOURS } from "@/lib/public-offer";
 import { Check, Lock, Sparkles, Type, Languages, Sliders, Zap } from "lucide-react";
 
 export function PricingSection() {
@@ -97,7 +98,7 @@ export function PricingSection() {
                   <Check className="w-4 h-4 text-[#10B981]" /> Vertical 9:16 Smart Center Crop
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <Check className="w-4 h-4 text-[#10B981]" /> 7-Day Project History
+                  <Check className="w-4 h-4 text-[#10B981]" /> {PROJECT_RETENTION_HOURS}-Hour Project History
                 </li>
               </ul>
 
@@ -172,7 +173,7 @@ export function PricingSection() {
                     <Check className="w-4 h-4 text-[#8B5CF6]" /> Vertical 9:16 Smart Center Crop
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#8B5CF6]" /> 30-Day Project History
+                    <Check className="w-4 h-4 text-[#8B5CF6]" /> {PROJECT_RETENTION_HOURS}-Hour Project History
                   </li>
                 </ul>
 
@@ -254,7 +255,7 @@ export function PricingSection() {
                   <Check className="w-4 h-4 text-[#06B6D4]" /> No Watermark
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <Check className="w-4 h-4 text-[#06B6D4]" /> <strong>Unlimited Project History</strong>
+                  <Check className="w-4 h-4 text-[#06B6D4]" /> <strong>{PROJECT_RETENTION_HOURS}-Hour Project History</strong>
                 </li>
                 <li className="flex items-center gap-2.5">
                   <Check className="w-4 h-4 text-[#06B6D4]" /> <strong>Priority Processing</strong>

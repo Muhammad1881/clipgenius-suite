@@ -1,15 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ToolLanding, toolLandingHead } from "@/components/ToolLanding";
+import { INPUT_LIMIT_SUMMARY } from "@/lib/public-offer";
 
 const URL_ = "https://theclipra.com/ai-clip-generator";
 const TITLE = "AI Clip Generator — Turn Long Videos into Viral Shorts | Clipra";
-const DESCRIPTION = "Clipra's AI clip generator finds your most viral moments, auto-reframes to 9:16, and adds captions in minutes. Free to try, 30 minutes included.";
+const DESCRIPTION = "Clipra's AI clip generator finds your most viral moments, auto-reframes to 9:16, and adds captions in minutes. Free to try, 60 minutes per month included.";
 
 const faqs = [
   { q: "What is an AI clip generator?", a: "An AI clip generator analyses a long video, scores the best moments for short-form, and exports them as captioned vertical clips ready for TikTok, Reels and Shorts." },
-  { q: "Is Clipra's AI clip generator free?", a: "Yes — every account includes 30 free minutes of processing per month. Paid plans start at $13.99/mo for 300 minutes." },
+  { q: "Is Clipra's AI clip generator free?", a: "Yes — every account includes 60 free minutes of processing per month. Paid plans start at $13.99/mo for 300 minutes." },
   { q: "How accurate is the viral scoring?", a: "Clipra ranks moments using hook strength, sentiment shifts, and pacing. Most creators find 2-3 high-score clips per hour of footage." },
-  { q: "What video formats are supported?", a: "MP4, MOV, WebM and most common formats up to 4 hours per upload." },
+  { q: "What video formats are supported?", a: `MP4, MOV and WebM video files. ${INPUT_LIMIT_SUMMARY}` },
 ];
 
 export const Route = createFileRoute("/ai-clip-generator")({
@@ -30,7 +31,7 @@ function Page() {
         "Animated captions in 30+ languages",
         "Ready-to-post TikTok, Reels & Shorts",
         "Hook-first titles and hashtags",
-        "Process up to 4-hour uploads",
+        INPUT_LIMIT_SUMMARY,
       ]}
       steps={[
         { t: "Upload", d: "Drop in a podcast, webinar, vlog or any long-form video." },

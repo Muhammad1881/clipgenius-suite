@@ -1,11 +1,12 @@
 import { UploadCloud, Sparkles, Crop, Download } from "lucide-react";
 import { GlowCard } from "./GlowCard";
+import { INPUT_LIMIT_SUMMARY, UPLOAD_OPTIONS } from "@/lib/public-offer";
 
 const steps = [
   {
     num: "01",
     title: "Upload your video",
-    desc: "Drag in a podcast, webinar, YouTube link or raw footage. We handle files up to 4 hours long.",
+    desc: `${UPLOAD_OPTIONS} ${INPUT_LIMIT_SUMMARY}`,
     icon: UploadCloud,
     badgeClass: "bg-[#8B5CF6]/10 border-[#8B5CF6]/30 text-[#8B5CF6]",
   },
