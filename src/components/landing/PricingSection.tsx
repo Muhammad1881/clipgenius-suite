@@ -220,7 +220,7 @@ export function PricingSection() {
                   <Check className="w-4 h-4 text-[#06B6D4]" /> Upload videos up to 120 minutes
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <Check className="w-4 h-4 text-[#06B6D4]" /> Up to 15 clips per video
+                  <Check className="w-4 h-4 text-[#06B6D4]" /> Up to 10 clips per video
                 </li>
                 <li className="flex items-center gap-2.5">
                   <Check className="w-4 h-4 text-[#06B6D4]" /> 1080p Full HD Exports
