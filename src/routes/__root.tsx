@@ -76,7 +76,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "google-site-verification", content: "2x7vKNRUrmk77hKBqPPaCKeSlIGmZ_IOn_yWve9wIFQ" },
-      { name: "google-site-verification", content: "CW_gwa7GGHIwuE7kD39h2CjNbVeDwSlmQ2ugpbT1L3I" },
       { title: "Clipra — Turn long videos into viral shorts with AI" },
       { name: "description", content: "AI-powered video repurposing. Upload long videos and get viral-ready short clips with captions in minutes." },
       { name: "author", content: "Clipra" },
