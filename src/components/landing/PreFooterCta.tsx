@@ -1,19 +1,8 @@
-import { useState, type FormEvent } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function PreFooterCta() {
-  const [url, setUrl] = useState("");
-  const navigate = useNavigate();
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    if (url.trim()) {
-      navigate({ to: "/upload" });
-    } else {
-      navigate({ to: "/upload" });
-    }
-  };
 
   return (
     <section className="py-20 px-6 border-t border-white/[0.07] relative overflow-hidden" id="convert">
@@ -27,21 +16,9 @@ export function PreFooterCta() {
           Drop in one long video. Turn hours of footage into a week of viral posts in minutes.
         </p>
 
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row max-w-lg mx-auto gap-3">
-          <input
-            type="text"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder="Paste a direct video file link..."
-            className="flex-grow bg-black/70 border border-zinc-700 rounded-xl px-5 py-3.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-[#06B6D4] transition-colors font-mono"
-          />
-          <button
-            type="submit"
-            className="bg-white text-black px-7 py-3.5 rounded-xl font-bold text-sm hover:bg-zinc-200 transition-colors whitespace-nowrap flex items-center justify-center gap-2 cursor-pointer"
-          >
-            Upload a video <ArrowRight className="w-4 h-4" />
-          </button>
-        </form>
+        <Button asChild size="lg" className="gap-2">
+          <Link to="/upload">Upload a video <ArrowRight className="w-4 h-4" /></Link>
+        </Button>
 
         <p className="text-xs text-zinc-500 mt-4 font-mono">
           60 free minutes monthly · No credit card required
