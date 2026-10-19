@@ -27,7 +27,7 @@ const steps = [
   {
     num: "04",
     title: "Caption & download",
-    desc: "Animated captions in 30+ languages, hook-first titles, and ready-to-post shorts for TikTok, Reels and Shorts.",
+    desc: "Animated captions in multiple languages, hook-first titles, and ready-to-post shorts for TikTok, Reels and Shorts.",
     icon: Download,
     badgeClass: "bg-yellow-500/10 border-yellow-500/30 text-yellow-400",
   },

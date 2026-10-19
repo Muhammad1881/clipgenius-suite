@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Upload as UploadIcon, FileVideo, Link2, X, Sparkles, Loader2, Download, TrendingUp, AlertCircle, Lock, FileText, Scissors, Captions, Hash, ScanLine, Languages } from "lucide-react";
+import { Upload as UploadIcon, FileVideo, X, Sparkles, Loader2, Download, TrendingUp, AlertCircle, Lock, FileText, Scissors, Captions, Hash, ScanLine, Languages } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -19,7 +18,7 @@ export const Route = createFileRoute("/_app/upload")({
       { title: "Upload Video — Clipra" },
       { name: "description", content: "Upload a long video to Clipra and let AI clip the most viral moments with captions." },
       { property: "og:title", content: "Upload Video — Clipra" },
-      { property: "og:description", content: "Drop a video or paste a link — Clipra finds the most viral moments and clips them for you." },
+      { property: "og:description", content: "Upload a video — Clipra finds the most viral moments and clips them for you." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "robots", content: "noindex" },
@@ -622,7 +621,7 @@ function UploadPage() {
     <div className="p-6 sm:p-8 max-w-4xl mx-auto relative">
       <div className="absolute inset-x-0 top-0 h-80 bg-mesh opacity-40 -z-10 pointer-events-none" />
       <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Upload a video</h1>
-      <p className="text-muted-foreground mt-1.5">Drop a file or paste a link.</p>
+      <p className="text-muted-foreground mt-1.5">Drop a video file to get started.</p>
       <div className="mt-4 inline-flex flex-wrap items-center gap-2 glass rounded-full px-4 py-2 border border-white/10">
         <span className="text-[10px] uppercase tracking-widest text-accent">{planKey} plan</span>
         <span className="h-3 w-px bg-white/10" />
@@ -649,27 +648,6 @@ function UploadPage() {
             <FileVideo className="size-4" /> Select file
           </span>
         </label>
-        <div className="mt-6 flex items-center gap-3 max-w-md mx-auto">
-          <div className="h-px flex-1 bg-white/10" />
-          <span className="text-xs text-muted-foreground">or</span>
-          <div className="h-px flex-1 bg-white/10" />
-        </div>
-        <form
-          className="mt-4 flex flex-col sm:flex-row gap-2 max-w-md mx-auto"
-          onSubmit={(e) => { e.preventDefault(); void importFromUrl(); }}
-        >
-          <div className="relative flex-1">
-            <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-            <Input
-              value={videoUrl}
-              onChange={(e) => { setVideoUrl(e.target.value); if (error && !file) setError(null); }}
-              placeholder="Paste a direct video file URL"
-              disabled={busy}
-              className="pl-9 glass border-white/10"
-            />
-          </div>
-          <Button type="submit" disabled={busy} className="btn-premium rounded-xl">Import</Button>
-        </form>
         {error && !file && (
           <div className="mt-4 flex items-start gap-3 rounded-xl border border-destructive/40 bg-destructive/10 p-3 text-sm max-w-md mx-auto">
             <AlertCircle className="size-4 text-destructive mt-0.5 shrink-0" />

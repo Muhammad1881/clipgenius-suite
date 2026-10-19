@@ -22,6 +22,7 @@ export const Route = createFileRoute("/blog/clipra-vs-opus-clip")({
       { property: "og:url", content: URL },
       { property: "article:published_time", content: PUBLISHED },
       { property: "article:author", content: "Clipra" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
     ],
@@ -79,7 +80,7 @@ const rows: Array<{ feature: string; clipra: string | boolean; opus: string | bo
   { feature: "Camera smoothing", clipra: true, opus: false },
   { feature: "Dead zone stabilization", clipra: true, opus: false },
   { feature: "Animated captions", clipra: true, opus: true },
-  { feature: "Multilingual subtitles (30+)", clipra: true, opus: true },
+  { feature: "Multilingual subtitles", clipra: true, opus: true },
   { feature: "Translate captions to English", clipra: true, opus: true },
   { feature: "Average 1-hour processing time", clipra: "~5 min", opus: "8–15 min" },
   { feature: "Watermark on free plan", clipra: "Small, corner", opus: "Yes" },
@@ -106,7 +107,7 @@ const faqs = [
   },
   {
     q: "Does Clipra support languages other than English?",
-    a: "Yes. Clipra transcribes and captions in 30+ languages and can translate captions to English (and back) on every plan.",
+    a: "Yes. Clipra transcribes and captions in multiple languages with caption translation available on paid plans.",
   },
 ];
 

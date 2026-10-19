@@ -1,4 +1,6 @@
 # Visitor journey corrections
+- [x] Remove visible link-import options and promises.
+- [x] Replace numeric language claims with multilingual wording and verify.
 - [x] Align public upload and storage promises with existing plan rules.
 - [x] Ensure public contact links use the support inbox.
 - [x] Ensure free-start buttons open signup for new visitors.

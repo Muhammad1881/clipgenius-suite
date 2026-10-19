@@ -21,9 +21,9 @@ const marqueeItems = [
   },
   {
     type: "stat",
-    val: "30+",
+    val: "Multilingual",
     color: "text-[#10B981]",
-    desc: "Caption Languages",
+    desc: "Captions",
   },
   {
     type: "label",
