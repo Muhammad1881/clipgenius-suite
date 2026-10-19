@@ -1,13 +1,10 @@
-import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { PROJECT_RETENTION_HOURS } from "@/lib/public-offer";
 import { Check, Lock, Sparkles, Type, Languages, Sliders, Zap } from "lucide-react";
 
 export function PricingSection() {
-  const [isAnnual, setIsAnnual] = useState(false);
-
-  const starterPrice = isAnnual ? "$10.49" : "$13.99";
-  const creatorPrice = isAnnual ? "$14.25" : "$19";
+  const starterPrice = "$13.99";
+  const creatorPrice = "$19";
 
   return (
     <section className="py-24 px-6 relative" id="pricing">
@@ -20,31 +17,8 @@ export function PricingSection() {
             Simple plans for every creator.
           </h2>
           <p className="text-zinc-400 text-lg max-w-xl mx-auto mb-8">
-            Start free. Upgrade when you need more minutes or features.
+            Start free. Upgrade when you need more minutes or features. Billed monthly, cancel anytime.
           </p>
-
-          {/* Billing Toggle */}
-          <div className="inline-flex items-center gap-3 p-1 rounded-full border border-zinc-800 bg-[#0F111A] shadow-inner">
-            <button
-              onClick={() => setIsAnnual(false)}
-              className={`px-5 py-2 rounded-full text-xs font-semibold transition-all ${
-                !isAnnual ? "bg-white text-black" : "text-zinc-400 hover:text-white"
-              }`}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setIsAnnual(true)}
-              className={`px-5 py-2 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 ${
-                isAnnual ? "bg-white text-black" : "text-zinc-400 hover:text-white"
-              }`}
-            >
-              Annual
-              <span className="px-2 py-0.5 rounded-full bg-[#10B981] text-black text-[9px] font-bold uppercase tracking-wider">
-                Save 25%
-              </span>
-            </button>
-          </div>
         </div>
 
         {/* 3 Pricing Cards */}
