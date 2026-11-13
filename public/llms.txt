@@ -1,10 +1,23 @@
 # Clipra
 
-> AI-powered video repurposing. Upload long videos and get viral-ready short clips with captions in minutes.
+> Clipra (theclipra.com) is an AI clip generator. Upload a long video or podcast and get short vertical (9:16) clips with captions for YouTube Shorts, TikTok and Instagram Reels.
 
-Clipra turns long-form videos into short, viral-ready clips with AI captions and viral scoring. Built for creators, agencies, and marketers who want to dominate short-form algorithms without spending hours editing.
+## Key facts
+
+- Input: upload a video file from your computer.
+- Plans (monthly, USD): Free $0 (60 minutes/month, uploads up to 30 minutes, 5 clips, 720p, watermark); Starter $13.99 (uploads up to 60 minutes, 1080p, translation, clip length control); Creator $19 (uploads up to 120 minutes, 1080p, AI reframe, translation, clip length control).
+- Privacy: projects are deleted automatically after 24 hours; download clips before then.
+- Support: support@theclipra.com
+- Start free: https://theclipra.com/signup
 
 ## Pages
 
-- [Home](/): Product overview, features, and FAQ.
-- [Pricing](/pricing): Free, Starter, and Creator plans with monthly minute limits.
+- [Home](https://theclipra.com/): Product overview, features and FAQ.
+- [Pricing](https://theclipra.com/pricing): Free, Starter and Creator plans.
+- [AI Clip Generator](https://theclipra.com/ai-clip-generator)
+- [YouTube Shorts Generator](https://theclipra.com/youtube-shorts-generator)
+- [TikTok Clip Maker](https://theclipra.com/tiktok-clip-maker)
+- [Instagram Reels Maker](https://theclipra.com/instagram-reels-maker)
+- [Podcast Clip Maker](https://theclipra.com/podcast-clip-maker)
+- [Clipra vs Opus Clip](https://theclipra.com/blog/clipra-vs-opus-clip)
+- [Blog](https://theclipra.com/blog)

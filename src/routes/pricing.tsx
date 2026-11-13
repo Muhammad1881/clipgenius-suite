@@ -1,3 +1,4 @@
+import { SITE_URL, breadcrumbSchema, ldScript, softwareApplicationSchema } from "@/lib/structured-data";
 import { createFileRoute } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -13,8 +14,14 @@ export const Route = createFileRoute("/pricing")({
       { property: "og:title", content: "Clipra Pricing — Plans for every creator" },
       { property: "og:description", content: "Free, Starter, and Creator plans. Scale your monthly clipping minutes as you grow." },
       { property: "og:url", content: "https://theclipra.com/pricing" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "https://theclipra.com/pricing" }],
+    scripts: [
+      ldScript(softwareApplicationSchema(`${SITE_URL}/pricing`)),
+      ldScript(breadcrumbSchema([{ name: "Home", url: `${SITE_URL}/` }, { name: "Pricing", url: `${SITE_URL}/pricing` }])),
+    ],
   }),
 });
 

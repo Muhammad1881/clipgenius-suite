@@ -1,3 +1,4 @@
+import { SITE_URL, breadcrumbSchema, ldScript, softwareApplicationSchema } from "@/lib/structured-data";
 import { Link } from "@tanstack/react-router";
 import { INPUT_LIMIT_SUMMARY, STORAGE_SUMMARY, UPLOAD_OPTIONS } from "@/lib/public-offer";
 import { Navbar } from "@/components/Navbar";
@@ -122,6 +123,8 @@ export function toolLandingHead(opts: {
     ],
     links: [{ rel: "canonical", href: opts.url }],
     scripts: [
+      ldScript(softwareApplicationSchema(opts.url)),
+      ldScript(breadcrumbSchema([{ name: "Home", url: `${SITE_URL}/` }, { name: opts.title, url: opts.url }])),
       {
         type: "application/ld+json",
         children: JSON.stringify({

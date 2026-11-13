@@ -1,3 +1,4 @@
+import { ldScript, softwareApplicationSchema } from "@/lib/structured-data";
 import { createFileRoute } from "@tanstack/react-router";
 import { ParticleCanvas } from "@/components/landing/ParticleCanvas";
 import { TopAnnouncementBar } from "@/components/landing/TopAnnouncementBar";
@@ -62,6 +63,7 @@ export const Route = createFileRoute("/")({
     ],
     links: [{ rel: "canonical", href: "https://theclipra.com/" }],
     scripts: [
+      ldScript(softwareApplicationSchema()),
       {
         type: "application/ld+json",
         children: JSON.stringify({
